@@ -10,4 +10,12 @@ module org.zeros.bouncy_balls {
 
     opens org.zeros.bouncy_balls to javafx.fxml;
     exports org.zeros.bouncy_balls;
+    exports org.zeros.bouncy_balls.Model;
+    exports org.zeros.bouncy_balls.Animation;
+    exports org.zeros.bouncy_balls.Calculations;
+    exports org.zeros.bouncy_balls.Controllers;
+    exports org.zeros.bouncy_balls.Views;
+    exports org.zeros.bouncy_balls.Objects.MovingObjects;
+    exports org.zeros.bouncy_balls.Objects.Obstacles;
+
 }
