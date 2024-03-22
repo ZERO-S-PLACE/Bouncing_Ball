@@ -9,6 +9,7 @@ module org.zeros.bouncy_balls {
     requires com.almasb.fxgl.all;
 
     opens org.zeros.bouncy_balls to javafx.fxml;
+
     exports org.zeros.bouncy_balls;
     exports org.zeros.bouncy_balls.Model;
     exports org.zeros.bouncy_balls.Animation;
