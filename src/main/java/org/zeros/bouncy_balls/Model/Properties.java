@@ -5,7 +5,7 @@ public class Properties {
 
     private static int GAME_WIDTH =700;
 
-    private static double FRAME_RATE =60;
+    private static double FRAME_RATE =120;
 
     public static double getFRAME_RATE() {
         return FRAME_RATE;

@@ -5,6 +5,10 @@ import javafx.geometry.Point2D;
 import static java.lang.Float.NaN;
 
 public class LinearEquation {
+    private boolean vertical = false;
+    private double a;
+    private double b;
+
     public double getA() {
         return a;
     }
@@ -17,38 +21,39 @@ public class LinearEquation {
         return vertical;
     }
 
-    private boolean vertical=false;
-
-    private double a;
-    private double b;
 
     public LinearEquation(double a, double b) {
         this.a = a;
         this.b = b;
-        if(Double.isNaN(b)){
-            this.vertical=true;
+        if (Double.isNaN(b)) {
+            this.vertical = true;
         }
         //System.out.println("Equation "+a +"X+"+b +"=y , Vertical :"+vertical);
     }
-    public double getValue(double x){
-        if(!isVertical()) {
+
+    public double getValue(double x) {
+        if (!isVertical()) {
             return a * x + b;
-        }else {
-                return NaN;
+        } else {
+            return NaN;
         }
 
     }
-    public double getArgument(double y){
-        if(a!=0) {
-            return (y-b)/a;
-        }else {
+    public Point2D getPoint(double x) {
+        return new Point2D(x,getValue(x));
+    }
+
+    public double getArgument(double y) {
+        if (a != 0) {
+            return (y - b) / a;
+        } else {
             return NaN;
         }
 
     }
 
     public LinearEquation(Point2D c, Point2D d) {
-        if(!c.equals(d)) {
+        if (!c.equals(d)) {
             if (c.getX() != d.getX()) {
                 this.a = (c.getY() - d.getY()) / (c.getX() - d.getX());
                 this.b = c.getY() - a * c.getX();
@@ -61,41 +66,72 @@ public class LinearEquation {
         }
     }
 
-    public LinearEquation perpendicularTroughPoint(Point2D e){
-        if(a!=0&&!isVertical()) {
+    public LinearEquation perpendicularTroughPoint(Point2D e) {
+        if (a != 0 && !isVertical()) {
             return new LinearEquation((-1) / a, e.getY() + e.getX() / a);
-        }else if(a==0&&!isVertical()){
-            return new LinearEquation(e.getX(),Double.NaN);
-        }
-        else {
-            return new LinearEquation(0,e.getY());
+        } else if (a == 0 && !isVertical()) {
+            return new LinearEquation(e.getX(), Double.NaN);
+        } else {
+            return new LinearEquation(0, e.getY());
         }
     }
-    public Point2D intersection(LinearEquation equation){
-        if (a!=equation.getA()&&!equation.isVertical()&&!this.isVertical()) {
+
+    public Point2D intersection(LinearEquation equation) {
+        if (a != equation.getA() && !equation.isVertical() && !this.isVertical()) {
             double x = (equation.getB() - b) / (a - equation.getA());
             double y = a * x + b;
             return new Point2D(x, y);
-        }
-        else if(equation.isVertical()){
-            return new Point2D(equation.getA(),this.getValue(equation.getA()));
-        }else if(this.isVertical()){
-            return new Point2D(a,equation.getValue(a));
+        } else if (equation.isVertical()) {
+            return new Point2D(equation.getA(), this.getValue(equation.getA()));
+        } else if (this.isVertical()) {
+            return new Point2D(a, equation.getValue(a));
         }
         return null;
 
     }
-    public LinearEquation offsetLine(double distance){
-        if(isVertical()){
-            return new LinearEquation(a+distance,Double.NaN);
-        }
-        if(a==0){
 
-            return new LinearEquation(0,b+distance);
+    public LinearEquation offsetLine(double distance) {
+        if (isVertical()) {
+            return new LinearEquation(a + distance, Double.NaN);
         }
 
-        return new LinearEquation(a,b+(distance*Math.sqrt(a*a+1)));
+        return new LinearEquation(a, b + (distance * Math.sqrt(a * a + 1)));
     }
+
+    public LinearEquation offsetLine(double distance, Point2D directionPoint) {
+        distance = Math.abs(distance);
+        if (this.distance(directionPoint) != 0) {
+            if (isVertical() && directionPoint.getX() > a) {
+                return new LinearEquation(a + distance, Double.NaN);
+            }
+            if (isVertical() && directionPoint.getX() < a) {
+                return new LinearEquation(a - distance, Double.NaN);
+            }
+
+            if (directionPoint.getY() < this.getValue(directionPoint.getX())) {
+
+                return new LinearEquation(a, b - (distance * Math.sqrt(a * a + 1)));
+            }
+            return new LinearEquation(a, b + (distance * Math.sqrt(a * a + 1)));
+        }
+        return offsetLine(distance);
+    }
+
+    public LinearEquation offsetLine(double distance, LinearEquation directionParallelLine) {
+        if (this.getA() == directionParallelLine.getA()) {
+            if(isVertical()) {
+                return offsetLine(distance,new Point2D(directionParallelLine.getA(),0));
+            }
+            return offsetLine(distance,directionParallelLine.getPoint(0));
+        }
+
+    return offsetLine(distance);
+}
+
+   /* public LinearEquation middleLine(LinearEquation line){
+
+        return null;
+    }*/
 
     public Point2D mirrorPoint(Point2D point){
         LinearEquation perpendicular =this.perpendicularTroughPoint(point);
@@ -130,5 +166,18 @@ public class LinearEquation {
         }
         return Math.atan(a);
     }
+    public double distance(Point2D point){
+
+        return Math.abs(this.perpendicularTroughPoint(point).intersection(this).distance(point));
+    }
+
+    public boolean areOnDifferentSides(Point2D point1,Point2D point2){
+        if(point1.equals(point2)){
+            return true;
+        }
+        return BindsCheck.isBetweenPoints(intersection(new LinearEquation(point1,point2)),point1,point2);
+    }
+
+
 
 }

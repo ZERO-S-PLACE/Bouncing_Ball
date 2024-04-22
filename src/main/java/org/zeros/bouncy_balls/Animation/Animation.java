@@ -1,106 +1,195 @@
 package org.zeros.bouncy_balls.Animation;
 
 import javafx.animation.AnimationTimer;
-import javafx.animation.TranslateTransition;
-import javafx.collections.ObservableList;
 import javafx.geometry.Point2D;
-import javafx.util.Duration;
-import org.zeros.bouncy_balls.Calculations.Transition;
-import org.zeros.bouncy_balls.Model.Properties;
+import org.zeros.bouncy_balls.Calculations.BindsCheck;
 import org.zeros.bouncy_balls.Calculations.Bounce;
 import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObject;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObjectType;
+import org.zeros.bouncy_balls.Objects.Obstacles.Obstacle;
+
+import java.util.ArrayList;
 
 public class Animation {
-    private ObservableList<MovingObject> movingObjectsList;
-    private boolean paused=false;
+    private final ArrayList<MovingObject> movingObjects = new ArrayList<>();
+    private final ArrayList<Obstacle> obstacles = new ArrayList<>();
+    private int mObj1;
+    private int bouncesCount;
+    private final AnimationTimer timer = new AnimationTimer() {
+        @Override
+        public void handle(long now) {
+            animateThis();
+        }
 
-    public Animation(ObservableList<MovingObject> movingObjectsList) {
-
-        this.movingObjectsList = movingObjectsList;
-    }
-
+    };
 
     public void animate() {
-        AnimationTimer timer = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                animateThis();
-                }
-            };
         timer.start();
-
     }
 
+    public void pause() {
+        timer.stop();
+    }
+
+    public void addMovingObject(MovingObject movingObject) {
+        movingObjects.add(movingObject);
+    }
+
+    public void addObstacle(Obstacle obstacle) {
+        obstacles.add(obstacle);
+    }
+
+    public void removeMovingObject(MovingObject movingObject) {
+        movingObjects.remove(movingObject);
+    }
+
+    public void removeObstacle(Obstacle obstacle) {
+        obstacles.remove(obstacle);
+    }
+
+
     private void animateThis() {
+        bouncesCount = 1;
+        //while (boucesCount>0) {
 
-        for (int i = 0; i < movingObjectsList.size(); i++) {
-            MovingObject movingObject1 = movingObjectsList.get(i);
-            boolean bounced = false;
-            double furthestX = 0;
-            double furthestY = 0;
-            Point2D newCenter1 = calculateNewCenter(movingObject1);
+        resetBounces();
+        searchForBounces();
+        //}
 
-            if (movingObject1.getType() == MovingObjectType.BALL) {
+        setCalculatedFinalCenters();
+    }
 
-                if (movingObject1.getType() == MovingObjectType.BALL) {
-                    furthestX = ((Ball) movingObject1).getRadius();
-                    furthestY = furthestX;
-                }
-                if (!Transition.isInside(newCenter1, furthestX, furthestY)) {
-                    Bounce.ballFromWall((Ball) movingObject1, newCenter1);
-                    bounced = true;
-                }
+    private void searchForBounces() {
+        mObj1 = 0;
+
+        for (; mObj1 < movingObjects.size(); mObj1++) {
+            movingObjects.get(mObj1).setBounced(bouncesAgainstBorder());
+            if (movingObjects.get(mObj1).isBounced()) {
+                bouncesCount++;
             }
-
-            for (int j = i + 1; j < movingObjectsList.size(); j++) {
-
-                MovingObject movingObject2 = movingObjectsList.get(j);
-                Point2D newCenter2 = calculateNewCenter(movingObject2);
-                if (movingObject1.getType().equals(MovingObjectType.BALL) &&
-                        movingObject2.getType().equals(MovingObjectType.BALL)) {
-                    double distance = newCenter2.distance(newCenter1);
-                    double minDistance = ((Ball) movingObject1).getRadius() + ((Ball) movingObject2).getRadius();
-                    if (distance <= minDistance) {
-                        Bounce.twoBalls(((Ball)movingObject1), ((Ball)movingObject2));
-                        bounced = true;;
-                    }
-                }
+            boolean temp = bouncedAgainstObstacle();
+            if (temp) {
+                bouncesCount++;
             }
-            if (!bounced) {
-                movingObject1.centerPointProperty().set(newCenter1);
-                ((Ball)movingObject1).updateCircleCenter();
+            temp = bouncedByAnother();
+            if (temp) {
+                bouncesCount++;
             }
-
 
         }
     }
 
+    private void resetBounces() {
+        bouncesCount = 0;
 
-
-
-
-
-
-
-
-
-    public static Point2D calculateNewCenter(MovingObject movingObject) {
-        Point2D newCenter= movingObject.centerPointProperty().get();
-        Point2D fVelocity = movingObject.velocityProperty().get();
-        fVelocity=fVelocity.multiply(1/Properties.getFRAME_RATE());
-        newCenter=newCenter.add(fVelocity);
-        return newCenter;
+        for (MovingObject movingObject : movingObjects) {
+            movingObject.setBounced(false);
+        }
     }
 
-    public static void reverseMove(MovingObject movingObject) {
-        Point2D newCenter= movingObject.centerPointProperty().get();
-        Point2D fVelocity = movingObject.velocityProperty().get();
-        fVelocity=fVelocity.multiply(1/Properties.getFRAME_RATE());
-        newCenter=newCenter.subtract(fVelocity);
-        movingObject.centerPointProperty().set(newCenter);
+    private void setCalculatedFinalCenters() {
+        for (MovingObject movingObject : movingObjects) {
+            movingObject.nextFrame();
+        }
+    }
+
+    private boolean bouncesAgainstBorder() {
+        boolean temp = false;
+
+        if (!BindsCheck.isInsideBorders(movingObjects.get(mObj1).nextCenter(), movingObjects.get(mObj1).getFurthestSpan())) {
+            if (movingObjects.get(mObj1).getType().equals(MovingObjectType.BALL)) {
+                temp = Bounce.ballFromWall((Ball) movingObjects.get(mObj1), movingObjects.get(mObj1).nextCenter());
+            }
+        }
+        if (!movingObjects.get(mObj1).isBounced()) {
+            movingObjects.get(mObj1).setBounced(temp);
+        }
+        return temp;
+    }
+
+    private boolean bouncedAgainstObstacle() {
+        boolean temp = false;
+        for (Obstacle obstacle : obstacles) {
+            if (movingObjects.get(mObj1).getType().equals(MovingObjectType.BALL)) {
+            if (BindsCheck.intersectsWithObstacle(((Ball)movingObjects.get(mObj1)),obstacle)) {
+                    temp = Bounce.ballFromObstacle(((Ball) movingObjects.get(mObj1)), obstacle);
+                }
+            }
+
+        }
+        if (!movingObjects.get(mObj1).isBounced()) {
+            movingObjects.get(mObj1).setBounced(temp);
+        }
+        return temp;
+    }
+
+
+    private boolean bouncedByAnother() {
+        boolean temp = false;
+        double closestDistance = Double.MAX_VALUE;
+        int closestObj = -1;
+
+        for (int j = mObj1 + 1; j < movingObjects.size(); j++) {
+            double distance = movingObjects.get(mObj1).nextCenter().distance(movingObjects.get(j).nextCenter());
+            double minDistanceAllow = movingObjects.get(mObj1).getFurthestSpan() + movingObjects.get(j).getFurthestSpan();
+            Point2D intersection = movingObjects.get(mObj1).trajectory().intersection(movingObjects.get(j).trajectory());
+            boolean trajectoriesIntersect = false;
+            if (intersection != null) {
+                trajectoriesIntersect = BindsCheck.isBetweenPoints(intersection, movingObjects.get(mObj1).center(), movingObjects.get(mObj1).nextCenter()) &&
+                        BindsCheck.isBetweenPoints(intersection, movingObjects.get(j).center(), movingObjects.get(j).nextCenter());
+
+
+                if ((distance <= minDistanceAllow || trajectoriesIntersect)&&minDistanceAllow<movingObjects.get(mObj1).center().distance(movingObjects.get(j).center())) {
+                    closestDistance = movingObjects.get(mObj1).center().distance(intersection);
+                    closestObj = j;
+                    temp = Bounce.twoBalls(((Ball) movingObjects.get(mObj1)), ((Ball) movingObjects.get(closestObj)));
+                    bouncesCount++;
+                    break;
+
+
+
+                }
+            }
+
+        }
+        /*if (closestObj != -1) {
+            if (movingObjects.get(mObj1).getType().equals(MovingObjectType.BALL) && movingObjects.get(closestObj).getType().equals(MovingObjectType.BALL)) {
+                System.out.println("were screwed, distance" +movingObjects.get(mObj1).center().distance(movingObjects.get(closestObj).center())+"radius "+(movingObjects.get(mObj1).getFurthestSpan()+movingObjects.get(closestObj).getFurthestSpan()));
+                temp = Bounce.twoBalls(((Ball) movingObjects.get(mObj1)), ((Ball) movingObjects.get(closestObj)));
+
+            }
+        }*/
+
+        return temp;
+    }
+
+    public boolean hasFreePlace(Ball ball) {
+        boolean freePlace = true;
+        if (!BindsCheck.isInsideBorders(ball)) {
+            freePlace = false;
+
+        } else {
+            for (MovingObject object : movingObjects) {
+
+                if (object.getType().equals(MovingObjectType.BALL)) {
+                    if (object.center().distance(ball.center()) < ((Ball) object).getRadius() + ball.getRadius()) {
+                        freePlace = false;
+                        break;
+                    }
+                }
+
+            }
+            for (Obstacle obstacle2 : obstacles) {
+                if (BindsCheck.intersectsWithObstacle(ball, obstacle2)) {
+                    freePlace = false;
+                    break;
+                }
+            }
+        }
+        return freePlace;
     }
 
 
 }
+
