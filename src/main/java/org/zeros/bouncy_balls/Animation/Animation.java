@@ -111,10 +111,12 @@ public class Animation {
     private boolean bouncedAgainstObstacle() {
         boolean temp = false;
         for (Obstacle obstacle : obstacles) {
-            if (movingObjects.get(mObj1).getType().equals(MovingObjectType.BALL)) {
-            if (BindsCheck.intersectsWithObstacle(((Ball)movingObjects.get(mObj1)),obstacle)) {
-                    temp = Bounce.ballFromObstacle(((Ball) movingObjects.get(mObj1)), obstacle);
-                }
+            if(BindsCheck.isInsideRoughBinds(movingObjects.get(mObj1),obstacle)) {
+                //if (movingObjects.get(mObj1).getType().equals(MovingObjectType.BALL)) {
+                    if (BindsCheck.intersectsWithObstacle(((Ball) movingObjects.get(mObj1)), obstacle)) {
+                        temp = Bounce.ballFromObstacle(((Ball) movingObjects.get(mObj1)), obstacle);
+                    }
+                //}
             }
 
         }
@@ -127,7 +129,7 @@ public class Animation {
 
     private boolean bouncedByAnother() {
         boolean temp = false;
-        double closestDistance = Double.MAX_VALUE;
+        //double closestDistance = Double.MAX_VALUE;
         int closestObj = -1;
 
         for (int j = mObj1 + 1; j < movingObjects.size(); j++) {
@@ -140,8 +142,8 @@ public class Animation {
                         BindsCheck.isBetweenPoints(intersection, movingObjects.get(j).center(), movingObjects.get(j).nextCenter());
 
 
-                if ((distance <= minDistanceAllow || trajectoriesIntersect)&&minDistanceAllow<movingObjects.get(mObj1).center().distance(movingObjects.get(j).center())) {
-                    closestDistance = movingObjects.get(mObj1).center().distance(intersection);
+                if ((distance <= minDistanceAllow || trajectoriesIntersect)){//&&minDistanceAllow<movingObjects.get(mObj1).center().distance(movingObjects.get(j).center())) {
+                    //closestDistance = movingObjects.get(mObj1).center().distance(intersection);
                     closestObj = j;
                     temp = Bounce.twoBalls(((Ball) movingObjects.get(mObj1)), ((Ball) movingObjects.get(closestObj)));
                     bouncesCount++;
@@ -153,13 +155,6 @@ public class Animation {
             }
 
         }
-        /*if (closestObj != -1) {
-            if (movingObjects.get(mObj1).getType().equals(MovingObjectType.BALL) && movingObjects.get(closestObj).getType().equals(MovingObjectType.BALL)) {
-                System.out.println("were screwed, distance" +movingObjects.get(mObj1).center().distance(movingObjects.get(closestObj).center())+"radius "+(movingObjects.get(mObj1).getFurthestSpan()+movingObjects.get(closestObj).getFurthestSpan()));
-                temp = Bounce.twoBalls(((Ball) movingObjects.get(mObj1)), ((Ball) movingObjects.get(closestObj)));
-
-            }
-        }*/
 
         return temp;
     }
@@ -168,7 +163,6 @@ public class Animation {
         boolean freePlace = true;
         if (!BindsCheck.isInsideBorders(ball)) {
             freePlace = false;
-
         } else {
             for (MovingObject object : movingObjects) {
 

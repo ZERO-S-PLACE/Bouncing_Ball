@@ -172,10 +172,15 @@ public class LinearEquation {
     }
 
     public boolean areOnDifferentSides(Point2D point1,Point2D point2){
+
         if(point1.equals(point2)){
             return true;
         }
-        return BindsCheck.isBetweenPoints(intersection(new LinearEquation(point1,point2)),point1,point2);
+        Point2D intersection=this.intersection(new LinearEquation(point1,point2));
+        if (intersection!=null) {
+            return BindsCheck.isBetweenPoints(intersection, point1, point2);
+        }
+        return false;
     }
 
 
