@@ -19,7 +19,39 @@ public class VectorMath {
             return points;
         }
         return null;
+    }
+    public static int binomialCoefficient(int n, int k){
+        n=Math.abs(n);
+        k=Math.abs(k);
+        if(n>=k) {
+            return factorial(n)/(factorial(k)*factorial(n-k));
+        }else{
+            return factorial(k)/(factorial(n)*factorial(k-n));
+        }
 
+    }
+    public static int factorial(int x){
+            x=Math.abs(x);
+            int temp = 1;
+            for (int i = 2; i <= x; i++) {
+                temp = temp * i;
+            }
+            return temp;
+
+
+    }
+    public static double[] reverseArray(double[] array) {
+        int start = 0;
+        int end = array.length - 1;
+
+        while (start < end) {
+            double temp = array[start];
+            array[start] = array[end];
+            array[end] = temp;
+            start++;
+            end--;
+        }
+        return array;
     }
 
 

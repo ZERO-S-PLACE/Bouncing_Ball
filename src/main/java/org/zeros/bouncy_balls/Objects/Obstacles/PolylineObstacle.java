@@ -16,10 +16,8 @@ public class PolylineObstacle extends Obstacle {
     public void startDrawingFromPoint(Point2D point){
         editable=true;
         path=new Path();
-        cornersList =new ArrayList<>();
-        controlPointsList =new ArrayList<>();
-        cornerConnectingLinesList =new ArrayList<>();
-        simplifiedCurvesLinesList =new ArrayList<>();
+        cornerPoints =new ArrayList<>();
+        segmentPoints =new ArrayList<>();
         controlPointsTotalCount =new ArrayList<>();
         curvedSegmentsTotalCount =new ArrayList<>();
         path.setFill(Color.BEIGE);
@@ -43,10 +41,11 @@ public class PolylineObstacle extends Obstacle {
         }
     }
     public void closeAndSave(){
-        if(!cornersList.getFirst().equals(cornersList.getLast())){
-            addStraightLineTo(cornersList.getFirst());
+        if(!cornerPoints.getFirst().equals(cornerPoints.getLast())){
+            addStraightLineTo(cornerPoints.getFirst());
         }
         editable=false;
+        calculateBoundaryLines();
         calculateRoughBinds();
     }
 

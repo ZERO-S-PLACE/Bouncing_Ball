@@ -1,4 +1,4 @@
-package org.zeros.bouncy_balls.Calculations;
+package org.zeros.bouncy_balls.Calculations.Equations;
 
 import javafx.geometry.Point2D;
 

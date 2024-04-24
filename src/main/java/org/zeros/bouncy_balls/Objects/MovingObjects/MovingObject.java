@@ -2,7 +2,7 @@ package org.zeros.bouncy_balls.Objects.MovingObjects;
 
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Shape;
-import org.zeros.bouncy_balls.Calculations.LinearEquation;
+import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
 import org.zeros.bouncy_balls.Model.Properties;
 
 public abstract class MovingObject {

@@ -1,6 +1,7 @@
 package org.zeros.bouncy_balls.Calculations;
 
 import javafx.geometry.Point2D;
+import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
 import org.zeros.bouncy_balls.Model.Properties;
 import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObject;
@@ -42,38 +43,24 @@ public class BindsCheck {
     }
 
     public static boolean intersectsWithObstacle(Ball ball, Obstacle obstacle) {
-        return (intersectWithPolygon(ball, obstacle.getCorners())|| intersectWithPolygon(ball, getControlPointsPath(obstacle)));
-    }
-
-    public static ArrayList<Point2D> getControlPointsPath(Obstacle obstacle) {
-        ArrayList<Point2D> pathPoints = new ArrayList<>();
-        pathPoints.add(obstacle.getCorners().getFirst());
-        for (int i = 0; i < obstacle.getCorners().size()-1; i++) {
-
-
-            for (int j = obstacle.controlPointsTotalCount(i) - obstacle.controlPointsInSegment(i);
-                 j < obstacle.controlPointsTotalCount(i); j++) {
-                pathPoints.add(obstacle.getControlPoints().get(j));
-            }
-            pathPoints.add(obstacle.getCorners().get(i+1));
-        }
-        return pathPoints;
+        return (intersectWithCornersPolygon(ball, obstacle.getCornerLines(),obstacle.getCorners())||
+                intersectWithCornersPolygon(ball, obstacle.getAllLines(),obstacle.getAllPoints()));
     }
 
 
-    private static boolean intersectWithPolygon(Ball ball, ArrayList<Point2D>cornersList) {
-        Point2D first= cornersList.getFirst();
+    private static boolean intersectWithCornersPolygon(Ball ball,ArrayList<LinearEquation> lines,ArrayList<Point2D> points) {
+        Point2D first= points.getFirst();
         LinearEquation infinity=new LinearEquation(Double.MAX_VALUE,Double.NaN);
         LinearEquation ray=new LinearEquation(ball.nextCenter(),new Point2D(0,0));
         Point2D second;
         LinearEquation edge;
         double intersections =0.0;
-        for (int i = 1; i< cornersList.size(); i++){
-            second= cornersList.get(i);
-            edge=new LinearEquation(first,second);
-            if((edge.distance(ball.nextCenter())<=ball.getRadius()&&
-            BindsCheck.isBetweenPoints(edge.intersection(edge.perpendicularTroughPoint(ball.nextCenter())),first,second))||
-            first.distance(ball.nextCenter())<ball.getRadius()){
+        for (int i = 0; i< points.size()-1; i++){
+            second= points.get(i+1);
+            edge=lines.get(i);
+            if(edge.distance(ball.nextCenter())<=ball.getRadius()&&(
+            BindsCheck.isBetweenPoints(edge.intersection(edge.perpendicularTroughPoint(ball.nextCenter())),first,second)||
+            first.distance(ball.nextCenter())<=ball.getRadius())){
                     return true;
             }
 

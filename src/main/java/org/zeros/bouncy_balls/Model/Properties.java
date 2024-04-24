@@ -6,6 +6,15 @@ public class Properties {
     private static int GAME_WIDTH =700;
 
     private static double FRAME_RATE =120;
+    private static double ACCURACY =0.00001;
+
+    public static double getACCURACY() {
+        return ACCURACY;
+    }
+
+    public static void setACCURACY(double ACCURACY) {
+        Properties.ACCURACY = ACCURACY;
+    }
 
     public static double getFRAME_RATE() {
         return FRAME_RATE;
@@ -26,6 +35,7 @@ public class Properties {
     public static void setGAME_WIDTH(int GAME_WIDTH) {
         Properties.GAME_WIDTH = GAME_WIDTH;
     }
+
 
 
 }

@@ -10,13 +10,13 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import org.zeros.bouncy_balls.Animation.Animation;
+import org.zeros.bouncy_balls.Model.Properties;
 import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObject;
 import org.zeros.bouncy_balls.Objects.Obstacles.Obstacle;
-import org.zeros.bouncy_balls.Model.Properties;
 import org.zeros.bouncy_balls.Objects.Obstacles.OvalObstacle;
-import org.zeros.bouncy_balls.Objects.Obstacles.PolylineObstacle;
 import org.zeros.bouncy_balls.Objects.Obstacles.RectangleObstacle;
 
 import java.net.URL;
@@ -26,7 +26,6 @@ import java.util.ResourceBundle;
 public class GamePanelController implements Initializable {
 
     public AnchorPane gameBackground;
-
     private ObservableList <MovingObject> movingObjectsList= FXCollections.observableArrayList();
     private ObservableList <Obstacle> obstaclesList=FXCollections.observableArrayList();
 
@@ -63,9 +62,16 @@ public class GamePanelController implements Initializable {
         animation.addObstacle(obstacle4);
         gameBackground.getChildren().add(obstacle4.getPath());*/
 
-        Obstacle obstacle4=new OvalObstacle(new Point2D(400,400),150,150,0  );
+        Obstacle obstacle4=new OvalObstacle(new Point2D(400,400),150,150,Math.PI/12  );
         animation.addObstacle(obstacle4);
         gameBackground.getChildren().add(obstacle4.getPath());
+
+        for (Point2D point2: obstacle4.getAllPoints()){
+            gameBackground.getChildren().add(new Rectangle(point2.getX(),point2.getY(),2,2));
+
+        }
+
+
 
         /*PolylineObstacle obstacle5=new PolylineObstacle();
         obstacle5.startDrawingFromPoint(new Point2D(200,100));

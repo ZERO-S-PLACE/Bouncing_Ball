@@ -1,6 +1,7 @@
-package org.zeros.bouncy_balls.Calculations;
+package org.zeros.bouncy_balls.Calculations.Equations;
 
 import javafx.geometry.Point2D;
+import org.zeros.bouncy_balls.Calculations.BindsCheck;
 
 import static java.lang.Float.NaN;
 
@@ -184,5 +185,8 @@ public class LinearEquation {
     }
 
 
-
+    @Override
+    public String toString() {
+        return "line:[y= "+a+" * x + "+b+" ]";
+    }
 }

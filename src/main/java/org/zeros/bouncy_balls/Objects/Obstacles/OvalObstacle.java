@@ -1,9 +1,7 @@
 package org.zeros.bouncy_balls.Objects.Obstacles;
 
 import javafx.geometry.Point2D;
-import javafx.scene.shape.MoveTo;
-import org.zeros.bouncy_balls.Calculations.LinearEquation;
-import org.zeros.bouncy_balls.Calculations.VectorMath;
+import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
 
 public class OvalObstacle extends Obstacle {
     private Point2D center;
@@ -12,17 +10,13 @@ public class OvalObstacle extends Obstacle {
         super();
         this.center=center;
         calculateOval(center, radiusX, radiusY,rotation);
-        rotateOval(rotation);
+        rotateObstacle(rotation,center);
+        calculateBoundaryLines();
         calculateRoughBinds();
     }
 
-    private void rotateOval(double rotation) {
-        if(rotation%Math.PI!=0){
-            path.rotateProperty().set(rotation*360/2/Math.PI);
-            controlPointsList=VectorMath.rotatePoints(controlPointsList,center,rotation);
-            cornersList=VectorMath.rotatePoints(cornersList,center,rotation);
-        }
-    }
+
+
 
     private void calculateOval(Point2D center, double radiusX, double radiusY, double rotation) {
         double quadOffset=0.552284749831;//for creating circles and ellipses from 4 segments
@@ -64,9 +58,6 @@ public class OvalObstacle extends Obstacle {
         control2=upperTan.intersection(cPointsX_Left);
 
         addCubicCurveTo(control1,control2,upperPoint);
-
-
-
 
     }
 

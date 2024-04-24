@@ -1,14 +1,14 @@
 package org.zeros.bouncy_balls.Objects.Obstacles;
 
 import javafx.geometry.Point2D;
-import javafx.scene.shape.MoveTo;
-import org.zeros.bouncy_balls.Calculations.LinearEquation;
+import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
 
 public class RectangleObstacle extends Obstacle {
 
 
     public RectangleObstacle(Point2D corner1, Point2D corner3, double rotation) {
         calculateRectanglePointPointRotation(corner1, corner3, rotation);
+        calculateBoundaryLines();
         calculateRoughBinds();
     }
 
@@ -29,8 +29,7 @@ public class RectangleObstacle extends Obstacle {
             corner4 = new Point2D(corner1.getX(), corner3.getY());
         }
 
-        path.getElements().add(new MoveTo(corner1.getX(), corner1.getY()));
-        cornersList.add(corner1);
+        addStartPoint(corner1);
         addStraightLineTo(corner2);
         addStraightLineTo(corner3);
         addStraightLineTo(corner4);
