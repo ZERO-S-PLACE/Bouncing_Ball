@@ -1,9 +1,9 @@
 package org.zeros.bouncy_balls.Model;
 
 public class Properties {
-    private static int GAME_HEIGHT =700;
+    private static int GAME_HEIGHT =790;
 
-    private static int GAME_WIDTH =700;
+    private static int GAME_WIDTH =1490;
 
     private static double FRAME_RATE =120;
     private static double ACCURACY =0.00001;

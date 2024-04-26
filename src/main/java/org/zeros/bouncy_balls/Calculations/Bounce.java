@@ -1,14 +1,14 @@
 package org.zeros.bouncy_balls.Calculations;
 
 import javafx.geometry.Point2D;
-import org.apache.commons.math3.analysis.polynomials.PolynomialFunction;
-import org.apache.commons.math3.analysis.solvers.BrentSolver;
 import org.zeros.bouncy_balls.Calculations.Equations.BezierCurve;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
 import org.zeros.bouncy_balls.Calculations.Equations.QuadraticEquation;
 import org.zeros.bouncy_balls.Model.Properties;
 import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;
 import org.zeros.bouncy_balls.Objects.Obstacles.Obstacle;
+
+import java.util.ArrayList;
 
 public class Bounce {
     private static final LinearEquation OX = new LinearEquation(0, 0);
@@ -80,7 +80,6 @@ public class Bounce {
             ball1.setFrameElapsed(ball2.frameElapsed() + (1 - ball2.frameElapsed()) / ball2.center().distance(ball2.nextCenter()) * ball2.center().distance(centerAtBounce1));
         }
         ball2.setFrameElapsed(ball1.frameElapsed());
-
         ball1.updateCenter(centerAtBounce1);
         ball2.updateCenter(centerAtBounce2);
         ball1.updateVelocity(v12);
@@ -137,26 +136,27 @@ public class Bounce {
                 new Point2D(-Double.MAX_VALUE, -Double.MAX_VALUE),null);
 
         for (int i = 0; i < obstacle.getCornerLines().size(); i++) {
-
             if(obstacle.controlPointsInSegment(i)==0) {
                 result=checkStraightLine(ball,obstacle,result,i);
             }
-            else if(obstacle.controlPointsInSegment(i)==1) {
-                result=checkBezierCurve(ball,obstacle,result,i);
-            }
-            else if(obstacle.controlPointsInSegment(i)==2) {
+            else  {
                 result=checkBezierCurve(ball,obstacle,result,i);
             }
         }
 
         if (result.bounceLine() == null) {
             return false;
-        } else {
-            Point2D newVelocity = mirrorVelocityFromLine(ball.velocity(), result.bounceLine());
-            setCenterAfterBounce(result.bounceLine(), ball, newVelocity);
-            ball.updateVelocity(newVelocity);
-            return true;
+        } else if((result.bouncePointAtLine.distance(result.bouncePointAtBall)<=ball.center().distance(ball.nextCenter()))){
+
+                Point2D newVelocity = mirrorVelocityFromLine(ball.velocity(), result.bounceLine());
+                if(setCenterAfterBounce(result.bounceLine(), ball, newVelocity)) {
+                    ball.updateVelocity(newVelocity);
+                    return true;
+                }
+
         }
+
+        return false;
 
     }
 
@@ -202,13 +202,12 @@ public class Bounce {
     }
     private static ResultBouncingSet checkBezierCurve(Ball ball, Obstacle obstacle, ResultBouncingSet result, int segment) {
 
-        Point2D first = obstacle.getCorners().get(segment);
+        Point2D first = obstacle.getSegmentPoints(segment).getFirst();
         Point2D second;
-        ResultBouncingSet tResult=result;
-        for (int j = 0;j<obstacle.getSegmentPoints(segment).size()-1; j++) {
-           second =obstacle.getSegmentPoints(segment).get(j+1);
+        for (int j = 1; j < obstacle.getSegmentPoints(segment).size(); j++) {
+            second = obstacle.getSegmentPoints(segment).get(j);
 
-            LinearEquation line =obstacle.getSegmentLines(segment).get(j);
+            LinearEquation line = obstacle.getSegmentLines(segment).get(j - 1);
 
             LinearEquation standardTangent = line.parallelTroughPoint(ball.center())
                     .offsetLine(ball.getRadius(), ball.nextCenter());
@@ -216,81 +215,84 @@ public class Bounce {
             Point2D tBouncePointAtLine = line.intersection(ball.trajectory().parallelTroughPoint(tBouncePointAtBall));
 
             if (tBouncePointAtLine != null) {
-                if (BindsCheck.isBetweenPoints(tBouncePointAtLine, first, second)
-                        && tBouncePointAtBall.distance(tBouncePointAtLine)
-                        < tResult.bouncePointAtBall.distance(tResult.bouncePointAtLine)) {
-                    tResult= checkExactBezierIntersection(ball,  obstacle, tResult,  segment);
-                } else if (ball.trajectory().distance(first) < ball.getRadius()&&j==0) {
-                    tResult= checkBounceFromCorner(ball, tResult, first);
+                if (BindsCheck.isBetweenPoints(tBouncePointAtLine, first, second)) {
+                    return checkExactBezierIntersection(ball,obstacle.getSegmentPoints(segment),result);
+                } else if (ball.trajectory().distance(first) <= ball.getRadius()&&j==1) {
+                    return checkBounceFromCorner(ball, result, first);
+                }else if (ball.trajectory().distance(first) <= ball.getRadius()&&j!=1) {
+                    return checkExactBezierIntersection(ball,obstacle.getSegmentPoints(segment),result);
                 }
             }
+            first = second;
 
-            first=second;
         }
-        return tResult;
+        return result;
     }
 
-    private static ResultBouncingSet checkExactBezierIntersection(Ball ball, Obstacle obstacle, ResultBouncingSet result, int segment) {
-/*equation describing when distance between center of the ball moving in
-    velocity (Vx,Vy)  with starting point(X,Y),from certain point (Xb,Yb)on bezier curve is equal to d
-    in dependence of time has form :
+    private static ResultBouncingSet checkExactBezierIntersection(Ball ball, ArrayList<Point2D> curvePoints,ResultBouncingSet result) {
 
-    t^2*(Vx^2+Vy^2)+t*2*((Vx*(X-Xb)+Vy*(Y-Yb))+(X-Xb)^2+(Y-Yb)^2-d^2)=0
+        BezierCurve bezierCurve=new BezierCurve(curvePoints);
+        Point2D tBouncePointAtLine =findBouncePointOnCurve(bezierCurve,ball);
+        if(tBouncePointAtLine!=null) {
+            double offset = Math.sqrt(Math.pow(ball.getRadius(), 2) - Math.pow(ball.trajectory().distance(tBouncePointAtLine), 2));
+            Point2D centerAtBounce = ball.trajectory()
+                    .perpendicularTroughPoint(tBouncePointAtLine).offsetLine(offset, ball.center()).intersection(ball.trajectory());
 
-    bounce occurs when this equation has only one solution so delta=0
-    so:
-    (2*((Vx*(X-Xb)+Vy*(Y-Yb)))^2-4*(Vx^2+Vy^2)*(X-Xb)^2+(Y-Yb)^2-d^2)=0
-    which could be simplified to:
-    Yb* (Vx/Vy)-Xb +(sqrt(Vx^2+Vy^2)*d+Vy*X-Vx*y)=0
-    Yb*m-Xb +i=0
-    m=(Vx/Vy)
-    c=(sqrt(Vx^2+Vy^2)*d+Vy*X-Vx*y)
-where Yb and Xb are bezier polynomials
-    */
-        BezierCurve bezierCurve=new BezierCurve(obstacle.getSegmentPoints(segment));
-        bezierCurve.getPointAt(0.1);
-        bezierCurve.getPointAt(0.3);
-        bezierCurve.getPointAt(0.5);
-        bezierCurve.getPointAt(0.7);
-        bezierCurve.getPointAt(0.9);
-
-        double[] equationCoefficients =bezierCurve.yPolynomialCoefficients();
-        double[] xB=bezierCurve.xPolynomialCoefficients();
-        double m=ball.frameVelocity().getX()/ball.frameVelocity().getY();
-        double c=Math.sqrt(Math.pow(ball.frameVelocity().getX(),2)+Math.pow(ball.frameVelocity().getY(),2))*ball.getRadius()+
-                ball.frameVelocity().getY()*ball.center().getX()-ball.frameVelocity().getX()*ball.center().getY();
-        for (int i=0;i<equationCoefficients.length;i++){
-            equationCoefficients[i]*=m-xB[i];
-        }
-        equationCoefficients[0]+=c;
-        PolynomialFunction function = new PolynomialFunction(equationCoefficients);
-
-        BrentSolver solver = new BrentSolver(Properties.getACCURACY());
-        double solution;
-        try {
-            solution = solver.solve(20, function, 0);
-        }catch (Exception e){
-            return result;
-        }
-        Point2D tBouncePointAtLine =bezierCurve.getPointAt(solution);
-        double offset=Math.sqrt(Math.pow(ball.getRadius(),2)-Math.pow(ball.trajectory().distance(tBouncePointAtLine),2));
-        Point2D centerAtBounce=ball.trajectory()
-                .perpendicularTroughPoint(tBouncePointAtLine).offsetLine(offset,ball.center()).intersection(ball.trajectory());
-        if(centerAtBounce.distance(ball.center())<=ball.center().distance(ball.nextCenter())){
-            LinearEquation bounceLine= new LinearEquation(centerAtBounce,tBouncePointAtLine).perpendicularTroughPoint(tBouncePointAtLine);
-           LinearEquation tangent=bounceLine.parallelTroughPoint(ball.center()).offsetLine(ball.getRadius(),tBouncePointAtLine);
-            Point2D tBouncePointAtBall=tangent.intersection(tangent.perpendicularTroughPoint(ball.center()));
-            if( tBouncePointAtBall.distance(tBouncePointAtLine)
-                    < result.bouncePointAtBall.distance(result.bouncePointAtLine)) {
-               return new ResultBouncingSet(tBouncePointAtLine,tBouncePointAtBall,bounceLine);
+            if (BindsCheck.isBetweenPoints(centerAtBounce,ball.center(),ball.nextCenter())) {
+                LinearEquation bounceLine = new LinearEquation(centerAtBounce, tBouncePointAtLine).perpendicularTroughPoint(tBouncePointAtLine);
+                LinearEquation tangent = bounceLine.parallelTroughPoint(ball.center()).offsetLine(ball.getRadius(), ball.nextCenter());
+                Point2D tBouncePointAtBall = tangent.intersection(tangent.perpendicularTroughPoint(ball.center()));
+                if (tBouncePointAtBall.distance(tBouncePointAtLine) < result.bouncePointAtBall.distance(result.bouncePointAtLine)) {
+                    return new ResultBouncingSet(tBouncePointAtLine, tBouncePointAtBall, bounceLine);
+                }
             }
         }
+
 
         return result;
     }
 
+    private static Point2D findBouncePointOnCurve(BezierCurve bezierCurve, Ball ball) {
+        int divisions=12;
+        LinearEquation diameter= ball.trajectory().perpendicularTroughPoint(ball.center());
+        double distance=Double.MAX_VALUE;
+        double offset= ((double) ball.getRadius()) /divisions;
 
-    private static void setCenterAfterBounce(LinearEquation bounceLine, Ball ball, Point2D newVelocity) {
+        Point2D pointOnLine=bezierCurve.getIntersectionWithLine(ball.center(),ball.frameVelocity());
+        if(pointOnLine!=null){
+            distance=ball.center().distance(pointOnLine)-ball.getRadius();
+        }
+
+        for (int i=1;i<=divisions;i++){
+            Point2D tPointInBall1=ball.trajectory().offsetLine(offset*i-0.1).intersection(diameter);
+            Point2D tPointInBall2=ball.trajectory().offsetLine(-offset*i+0.1).intersection(diameter);
+            Point2D tPointOnLine1=bezierCurve.getIntersectionWithLine(tPointInBall1,ball.velocity());
+            Point2D tPointOnLine2=bezierCurve.getIntersectionWithLine(tPointInBall2,ball.velocity());
+            double chordLength=Math.sqrt(Math.pow(ball.getRadius(),2)-Math.pow(i*offset-0.1,2));
+            double tDistance;
+            if(tPointOnLine1!=null){
+                tDistance=tPointOnLine1.distance(tPointInBall1)-chordLength;
+                if(tDistance<distance){
+                    distance=tDistance;
+                    pointOnLine=tPointOnLine1;
+                   //Model.getInstance().getGamePanelController().gameBackground.getChildren().add(new Line(pointOnLine.getX(),pointOnLine.getY(),tPointInBall1.getX(),tPointInBall1.getY()));
+
+                }
+            }
+            if(tPointOnLine2!=null){
+                tDistance=tPointOnLine2.distance(tPointInBall2)-chordLength;
+                if(tDistance<distance){
+                    distance=tDistance;
+                    pointOnLine=tPointOnLine2;
+                   // Model.getInstance().getGamePanelController().gameBackground.getChildren().add(new Line(pointOnLine.getX(),pointOnLine.getY(),tPointInBall2.getX(),tPointInBall2.getY()));
+                }
+            }
+        }
+        return pointOnLine;
+    }
+
+
+    private static boolean setCenterAfterBounce(LinearEquation bounceLine, Ball ball, Point2D newVelocity) {
         double velocityChange = ball.velocity().magnitude() / newVelocity.magnitude();
         LinearEquation tangent = bounceLine.parallelTroughPoint(ball.center()).offsetLine(ball.getRadius(), ball.nextCenter());
         Point2D bouncePointOnBall = tangent.intersection(tangent.perpendicularTroughPoint(ball.center()));
@@ -316,10 +318,11 @@ where Yb and Xb are bezier polynomials
 
         ball.setBounced(true);
         ball.setFrameElapsed(ball.frameElapsed() + (1 - ball.frameElapsed()) * bounceMomentCenter.distance(ball.center()) / ball.center().distance(ball.nextCenter()));
-
         ball.updateCenter(bounceMomentCenter);
+
         ball.updateNextCenter(finalCenter);
 
+        return true;
     }
 
     private static Point2D mirrorVelocityFromLine(Point2D velocity, LinearEquation bounceLine) {

@@ -48,7 +48,7 @@ public class BindsCheck {
     }
 
 
-    private static boolean intersectWithCornersPolygon(Ball ball,ArrayList<LinearEquation> lines,ArrayList<Point2D> points) {
+    public static boolean intersectWithCornersPolygon(Ball ball,ArrayList<LinearEquation> lines,ArrayList<Point2D> points) {
         Point2D first= points.getFirst();
         LinearEquation infinity=new LinearEquation(Double.MAX_VALUE,Double.NaN);
         LinearEquation ray=new LinearEquation(ball.nextCenter(),new Point2D(0,0));
