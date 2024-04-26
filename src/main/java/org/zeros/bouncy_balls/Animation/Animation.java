@@ -17,8 +17,8 @@ public class Animation {
     private final ArrayList<Obstacle> obstacles = new ArrayList<>();
     private int mObj1;
     private int bouncesCount;
-    private double allTimeElapsed=0;
-    private TreeSet<Double> timesElapsed;
+
+    private TreeSet<Double> timesElapsed=new TreeSet<>();
     private final AnimationTimer timer = new AnimationTimer() {
         @Override
         public void handle(long now) {
@@ -53,34 +53,35 @@ public class Animation {
 
 
     private void animateThis() {
-        bouncesCount = 1;
-        //while (boucesCount>0) {
-
-        resetBounces();
         searchForBounces();
-        //}
-
         setCalculatedFinalCenters();
     }
 
     private void searchForBounces() {
-
         bouncesCount=1;
-        singleBouncesCheck();
+        singleBouncesCheck(0);
         while (!timesElapsed.isEmpty()){
-            while (bouncesCount>0){
+            double timeElapsed=timesElapsed.getFirst();
 
+                singleBouncesCheck(timeElapsed);
 
+            if(timesElapsed.getFirst()>=timeElapsed) {
+                while (timesElapsed.getFirst() - timeElapsed < 0.05) {
 
+                    timesElapsed.removeFirst();
+                    if(timesElapsed.isEmpty()){
+                        break;
+                    }
+                }
             }
 
-
         }
+        singleBouncesCheck(1);
 
 
     }
 
-    private void singleBouncesCheck(int frameElapsed) {
+    private void singleBouncesCheck(double frameElapsed) {
         mObj1 = 0;
         for (; mObj1 < movingObjects.size(); mObj1++) {
             if (movingObjects.get(mObj1).frameElapsed() <= frameElapsed) {
@@ -98,13 +99,6 @@ public class Animation {
         }
     }
 
-    private void resetBounces() {
-        bouncesCount = 0;
-
-        for (MovingObject movingObject : movingObjects) {
-            movingObject.setBounced(false);
-        }
-    }
 
     private void setCalculatedFinalCenters() {
         for (MovingObject movingObject : movingObjects) {
@@ -151,7 +145,7 @@ public class Animation {
     }
 
 
-    private boolean bouncedByAnother(int frameElapsed) {
+    private boolean bouncedByAnother(double frameElapsed) {
         boolean temp = false;
         int closestObj;
 
