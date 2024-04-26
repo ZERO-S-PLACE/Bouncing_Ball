@@ -156,26 +156,24 @@ public class Animation {
         int closestObj;
 
         for (int j = mObj1 + 1; j < movingObjects.size(); j++) {
-            double distance = movingObjects.get(mObj1).nextCenter().distance(movingObjects.get(j).nextCenter());
-            double minDistanceAllow = movingObjects.get(mObj1).getFurthestSpan() + movingObjects.get(j).getFurthestSpan();
-            Point2D intersection = movingObjects.get(mObj1).trajectory().intersection(movingObjects.get(j).trajectory());
-            boolean trajectoriesIntersect;
-            if (intersection != null) {
-                trajectoriesIntersect = BindsCheck.isBetweenPoints(intersection, movingObjects.get(mObj1).center(), movingObjects.get(mObj1).nextCenter()) &&
-                        BindsCheck.isBetweenPoints(intersection, movingObjects.get(j).center(), movingObjects.get(j).nextCenter());
+            if (movingObjects.get(j).frameElapsed() <= frameElapsed) {
+                double distance = movingObjects.get(mObj1).nextCenter().distance(movingObjects.get(j).nextCenter());
+                double minDistanceAllow = movingObjects.get(mObj1).getFurthestSpan() + movingObjects.get(j).getFurthestSpan();
+                Point2D intersection = movingObjects.get(mObj1).trajectory().intersection(movingObjects.get(j).trajectory());
+                boolean trajectoriesIntersect;
+                if (intersection != null) {
+                    trajectoriesIntersect = BindsCheck.isBetweenPoints(intersection, movingObjects.get(mObj1).center(), movingObjects.get(mObj1).nextCenter()) &&
+                            BindsCheck.isBetweenPoints(intersection, movingObjects.get(j).center(), movingObjects.get(j).nextCenter());
 
 
-                if ((distance <= minDistanceAllow || trajectoriesIntersect)){
-                    closestObj = j;
-                    temp = Bounce.twoBalls(((Ball) movingObjects.get(mObj1)), ((Ball) movingObjects.get(closestObj)));
-                    bouncesCount++;
-                    break;
-
-
-
+                    if ((distance <= minDistanceAllow || trajectoriesIntersect)) {
+                        closestObj = j;
+                        temp = Bounce.twoBalls(((Ball) movingObjects.get(mObj1)), ((Ball) movingObjects.get(closestObj)));
+                        bouncesCount++;
+                    }
                 }
-            }
 
+            }
         }
 
         return temp;
