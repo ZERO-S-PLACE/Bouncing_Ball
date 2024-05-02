@@ -99,7 +99,7 @@ public class GamePanelController implements Initializable {
         for (int i0=0; i0 < 5; i0++ ){
             for (int j0= 0; j0 <1; j0++ ){
 
-                redBall[i0][j0] = new Ball(new Point2D(0,300),10,new Point2D(800+20*i0,6+8*j0),4);
+                redBall[i0][j0] = new Ball(new Point2D(0,300),10,new Point2D(800+20*i0,6+10*j0),4);
                 redBall[i0][j0].getShape().fillProperty().set(Color.RED);
                 animation.addMovingObject(redBall[i0][j0]);
                 gameBackground.getChildren().add(redBall[i0][j0].getShape());
