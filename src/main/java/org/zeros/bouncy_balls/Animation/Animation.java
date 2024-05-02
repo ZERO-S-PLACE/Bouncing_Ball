@@ -13,12 +13,20 @@ import java.util.ArrayList;
 import java.util.TreeSet;
 
 public class Animation {
+    public static Animation getInstance(){
+        if(animation==null){
+            animation=new Animation();
+        }
+        return animation;
+    }
+    private Animation(){}
+    private static Animation animation;
     private final ArrayList<MovingObject> movingObjects = new ArrayList<>();
     private final ArrayList<Obstacle> obstacles = new ArrayList<>();
     private int mObj1;
-    private int bouncesCount;
+    private int maxEval=50;
 
-    private TreeSet<Double> timesElapsed=new TreeSet<>();
+    private final TreeSet<Double> timesElapsed=new TreeSet<>();
     private final AnimationTimer timer = new AnimationTimer() {
         @Override
         public void handle(long now) {
@@ -58,25 +66,24 @@ public class Animation {
     }
 
     private void searchForBounces() {
-        bouncesCount=1;
         singleBouncesCheck(0);
-        while (!timesElapsed.isEmpty()){
+        int i=0;
+        while (!timesElapsed.isEmpty()&&i<maxEval){
             double timeElapsed=timesElapsed.getFirst();
 
                 singleBouncesCheck(timeElapsed);
 
-            if(timesElapsed.getFirst()>=timeElapsed) {
-                while (timesElapsed.getFirst() - timeElapsed < 0.05) {
 
+                while (Math.abs(timesElapsed.getFirst() - timeElapsed) < 0.03+0.98/maxEval*i) {
                     timesElapsed.removeFirst();
                     if(timesElapsed.isEmpty()){
                         break;
                     }
                 }
-            }
 
+            i++;
         }
-        singleBouncesCheck(1);
+
 
 
     }
@@ -86,13 +93,12 @@ public class Animation {
         for (; mObj1 < movingObjects.size(); mObj1++) {
             if (movingObjects.get(mObj1).frameElapsed() <= frameElapsed) {
                 if (bouncesAgainstBorder()) {
-                    bouncesCount++;
                     timesElapsed.add(movingObjects.get(mObj1).frameElapsed());
-                } else if (bouncedByAnother(frameElapsed)) {
-                    bouncesCount++;
+                }
+                if (bouncedAgainstObstacle()) {
                     timesElapsed.add(movingObjects.get(mObj1).frameElapsed());
-                } else if (bouncedAgainstObstacle()) {
-                    bouncesCount++;
+                }
+                 else if (bouncedByAnother(frameElapsed)) {
                     timesElapsed.add(movingObjects.get(mObj1).frameElapsed());
                 }
             }
@@ -125,7 +131,7 @@ public class Animation {
                     if (BindsCheck.intersectsWithObstacle(((Ball) movingObjects.get(mObj1)), obstacle)) {
                         temp = Bounce.ballFromObstacle(((Ball) movingObjects.get(mObj1)), obstacle);
                     }
-                    /*if (BindsCheck.intersectsWithObstacle(((Ball) movingObjects.get(mObj1)), obstacle)) {
+                   /* if (BindsCheck.intersectsWithObstacle(((Ball) movingObjects.get(mObj1)), obstacle)) {
                         pause();
                         movingObjects.get(mObj1).getShape().fillProperty().set(Color.BLUE);
                         try {
@@ -134,7 +140,9 @@ public class Animation {
                             throw new RuntimeException(e);
                         }
                         animate();
-                    }*/
+                    }
+                    */
+
 
                 }
            }
@@ -147,9 +155,10 @@ public class Animation {
 
     private boolean bouncedByAnother(double frameElapsed) {
         boolean temp = false;
-        int closestObj;
+        int closestObj=-1;
+        double minDistanceMeasured=Double.MAX_VALUE;
 
-        for (int j = mObj1 + 1; j < movingObjects.size(); j++) {
+        for (int j = 0; j < movingObjects.size(); j++) {
             if (movingObjects.get(j).frameElapsed() <= frameElapsed) {
                 double distance = movingObjects.get(mObj1).nextCenter().distance(movingObjects.get(j).nextCenter());
                 double minDistanceAllow = movingObjects.get(mObj1).getFurthestSpan() + movingObjects.get(j).getFurthestSpan();
@@ -163,7 +172,7 @@ public class Animation {
                     if ((distance <= minDistanceAllow || trajectoriesIntersect)) {
                         closestObj = j;
                         temp = Bounce.twoBalls(((Ball) movingObjects.get(mObj1)), ((Ball) movingObjects.get(closestObj)));
-                        bouncesCount++;
+
                     }
                 }
 
@@ -174,28 +183,26 @@ public class Animation {
     }
 
     public boolean hasFreePlace(Ball ball) {
-        boolean freePlace = true;
+
         if (!BindsCheck.isInsideBorders(ball)) {
-            freePlace = false;
+            return false;
         } else {
             for (MovingObject object : movingObjects) {
 
                 if (object.getType().equals(MovingObjectType.BALL)) {
-                    if (object.center().distance(ball.center()) < ((Ball) object).getRadius() + ball.getRadius()) {
-                        freePlace = false;
-                        break;
+                    if (object.center().distance(ball.center()) <= ((Ball) object).getRadius() + ball.getRadius()) {
+                       return false;
                     }
                 }
 
             }
             for (Obstacle obstacle2 : obstacles) {
-                if (BindsCheck.intersectsWithObstacle(ball, obstacle2)) {
-                    freePlace = false;
-                    break;
+                if (BindsCheck.intersectsWithObstacle(ball,obstacle2)) {
+                    return false;
                 }
             }
         }
-        return freePlace;
+        return true;
     }
 
 

@@ -20,18 +20,24 @@ public class VectorMath {
         }
         return null;
     }
-    public static int binomialCoefficient(int n, int k){
-        n=Math.abs(n);
-        k=Math.abs(k);
+    public static double binomialCoefficient(int n, int k){
+        if (n < 0||k<0) {
+            throw new IllegalArgumentException("Factorial is not defined for negative numbers.");
+        }
         if(n>=k) {
-            return factorial(n)/(factorial(k)*factorial(n-k));
+
+            return VectorMath.factorial(n)/VectorMath.factorial(k)/VectorMath.factorial(n-k);
         }else{
-            return factorial(k)/(factorial(n)*factorial(k-n));
+
+            return VectorMath.factorial(k)/VectorMath.factorial(n)/VectorMath.factorial(k-n);
         }
 
     }
-    public static int factorial(int x){
-            x=Math.abs(x);
+    public static double factorial(int x){
+
+        if (x < 0) {
+            throw new IllegalArgumentException("Factorial is not defined for negative numbers.");
+        }
             int temp = 1;
             for (int i = 2; i <= x; i++) {
                 temp = temp * i;

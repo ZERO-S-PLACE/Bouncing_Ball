@@ -33,7 +33,7 @@ public class BezierCurve {
 
     private void calculateCoefficients() {
         for (int i = 0; i <= degree; i++) {
-            int mp = VectorMath.binomialCoefficient(degree, i);
+            double mp = VectorMath.binomialCoefficient(degree, i);
             for (int j = i; j <= degree; j++) {
 
                 xPolynomialCoefficients[j] = xPolynomialCoefficients[j] +
@@ -54,6 +54,13 @@ public class BezierCurve {
                 x = x + xPolynomialCoefficients[i] * Math.pow(t0, i);
                 y = y + yPolynomialCoefficients[i] * Math.pow(t0, i);
             }
+
+            /*Circle circle = new Circle(2, Color.YELLOWGREEN);
+            circle.setCenterX(x);
+           circle.setCenterY(y);
+            Model.getInstance().getGamePanelController().gameBackground.getChildren().add(circle);*/
+
+
             return new Point2D(x,y);
         }
         return null;
@@ -63,9 +70,9 @@ public class BezierCurve {
     public Point2D getIntersectionWithLine(Point2D center,Point2D direction) {
        /* Calculating intersection of curve with line
         Xb-Yb*(Vx/Vy)-Xo+Yo*(Vx/Vy)=0
-        Yb*m-Xb +i=0
+        Yb*m-Xb +c=0
         m=(Vx/Vy)
-        c=-Xo+Yo*Vx/Vy
+        c=-Xo+Yo*m
         where Yb and Xb are bezier polynomials*/
 
     double[] coefficients = this.get_xPolynomialCoefficients();
@@ -84,15 +91,16 @@ public class BezierCurve {
 
 
         PolynomialFunction function = new PolynomialFunction(coefficients);
-        BrentSolver solver = new BrentSolver(0.01);
+        BrentSolver solver = new BrentSolver(0.001);
         ArrayList<Double> solutions = new ArrayList<>();
-        int loop = 1;
+        int loop = 0;
         while (loop < 5) {
             try {
-                double temp = solver.solve(15, function, 0, 1, 0.2 * loop+0.1);
+                double temp = solver.solve(10, function, 0.2 * loop, 0.2+0.2*loop);
                 if(solutions.isEmpty()){
                     solutions.add(temp);
-                }else if(Math.abs(solutions.getLast()*100-temp*100)>2){
+                }else if(Math.abs(solutions.getLast()-temp)>0.05)
+                    {
                     solutions.add(temp);
                 }
             } catch (Exception ignored) {
@@ -107,9 +115,7 @@ public class BezierCurve {
 
         Point2D closestPoint = null;
         double minDistance = Double.MAX_VALUE;
-        if(solutions.size()>1){
-            System.out.println(solutions);
-        }
+
         for (Double solution : solutions) {
             Point2D temp = this.getPointAt(solution);
 
