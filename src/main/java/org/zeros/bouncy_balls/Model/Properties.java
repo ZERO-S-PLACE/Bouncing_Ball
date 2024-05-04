@@ -2,10 +2,20 @@ package org.zeros.bouncy_balls.Model;
 
 public class Properties {
     private static int GAME_HEIGHT =790;
+    private static double DEFAULT_FRICTION =0.02;
 
     private static int GAME_WIDTH =1490;
 
     private static double FRAME_RATE =120;
+
+    public static double getDefaultFriction() {
+        return DEFAULT_FRICTION;
+    }
+
+    public static void setDefaultFriction(double defaultFriction) {
+        DEFAULT_FRICTION = defaultFriction;
+    }
+
     private static double ACCURACY =0.00001;
 
     public static double getACCURACY() {

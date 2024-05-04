@@ -49,6 +49,7 @@ public abstract class MovingObject {
     public void nextFrame(){
         updateCenter(nextCenter());
         updateNextCenter();
+        updateVelocity(velocity.multiply(1-Properties.getDefaultFriction()/Properties.getFRAME_RATE()));
         frameElapsed=0.0;
         bounced=false;
     }
