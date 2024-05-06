@@ -2,39 +2,24 @@ package org.zeros.bouncy_balls.Objects.MovingObjects;
 
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Circle;
+import org.zeros.bouncy_balls.Animation.Animation;
 
-public class Ball extends MovingObject{
+public class Ball extends MovingObject {
 
-    private final int radius;
-
-
-
-    public Ball(Point2D velocity, double mass, Point2D center,int radius) {
-        super(velocity,  mass,  center);
-        type=MovingObjectType.BALL;
-
-        if(radius==0){
-            this.radius=radius=1;
-        }
-        else {
-            this.radius=Math.abs(radius);
-        }
-        this.furthestSpan=radius;
-        this.shape=new Circle(radius);
-        ((Circle)shape).setCenterX(centerPoint.getX());
-        ((Circle)shape).setCenterY(centerPoint.getY());
-
-
+    public Ball(Point2D velocity, double mass, Point2D center, int radius,double friction, Animation animation) {
+        super(MovingObjectType.BALL, new Circle(Math.max(radius, 1)), Math.max(radius, 1), velocity, mass, center,friction, animation);
+        ((Circle) shape).setCenterX(centerPoint.getX());
+        ((Circle) shape).setCenterY(centerPoint.getY());
     }
 
     @Override
     public void updateCenter(Point2D centerPoint) {
         super.updateCenter(centerPoint);
-        ((Circle)shape).setCenterX(centerPoint.getX());
-        ((Circle)shape).setCenterY(centerPoint.getY());
+        ((Circle) shape).setCenterX(centerPoint.getX());
+        ((Circle) shape).setCenterY(centerPoint.getY());
     }
 
-    public int getRadius() {
-        return radius;
+    public double getRadius() {
+        return ((Circle) shape).getRadius();
     }
 }

@@ -1,7 +1,5 @@
 package org.zeros.bouncy_balls.Controllers;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
@@ -12,9 +10,7 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import org.zeros.bouncy_balls.Animation.Animation;
-import org.zeros.bouncy_balls.Model.Properties;
 import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;
-import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObject;
 import org.zeros.bouncy_balls.Objects.Obstacles.Obstacle;
 import org.zeros.bouncy_balls.Objects.Obstacles.OvalObstacle;
 import org.zeros.bouncy_balls.Objects.Obstacles.PolylineObstacle;
@@ -27,22 +23,11 @@ import java.util.ResourceBundle;
 public class GamePanelController implements Initializable {
 
     public AnchorPane gameBackground;
-    private Animation animation;
-    private ObservableList <MovingObject> movingObjectsList= FXCollections.observableArrayList();
-    private ObservableList <Obstacle> obstaclesList=FXCollections.observableArrayList();
-
-    public ObservableList<MovingObject> getMovingObjectsList() {
-        return movingObjectsList;
-    }
-
-    public ObservableList<Obstacle> getObstaclesList() {
-        return obstaclesList;
-    }
+    private  Animation animation=new Animation(800,1400);
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setBackground();
-        Animation animation = Animation.getInstance();
         Random random = new Random();
         Ball[] ball = new Ball[1000];
         Ball[][] redBall = new Ball[50][50];
@@ -99,7 +84,7 @@ public class GamePanelController implements Initializable {
         for (int i0=0; i0 < 5; i0++ ){
             for (int j0= 0; j0 <1; j0++ ){
 
-                redBall[i0][j0] = new Ball(new Point2D(0,300),10,new Point2D(800+20*i0,6+10*j0),4);
+                redBall[i0][j0] = new Ball(new Point2D(0,300),10,new Point2D(800+20*i0,6+10*j0),4,0,animation);
                 redBall[i0][j0].getShape().fillProperty().set(Color.RED);
                 animation.addMovingObject(redBall[i0][j0]);
                 gameBackground.getChildren().add(redBall[i0][j0].getShape());
@@ -112,7 +97,7 @@ public class GamePanelController implements Initializable {
 
                 int radius = random.nextInt(34)+5;
                 ball[i] = new Ball(new Point2D(3 * random.nextInt(70), 3 * random.nextInt(100)), radius+1,
-                        new Point2D(random.nextInt(800), random.nextInt(1400)),radius+1);
+                        new Point2D(random.nextInt(800), random.nextInt(1400)),radius+1,0,animation);
                 if (animation.hasFreePlace(ball[i])) {
 
                    animation.addMovingObject(ball[i]);
@@ -147,10 +132,10 @@ public class GamePanelController implements Initializable {
 
 
     private void setBackground() {
-        gameBackground.setMinHeight(Properties.getGAME_HEIGHT());
-        gameBackground.setMaxHeight(Properties.getGAME_HEIGHT());
-        gameBackground.setMinWidth(Properties.getGAME_WIDTH());
-        gameBackground.setMaxWidth(Properties.getGAME_WIDTH());
+        gameBackground.setMinHeight(animation.PROPERTIES.HEIGHT);
+        gameBackground.setMaxHeight(animation.PROPERTIES.HEIGHT);
+        gameBackground.setMinWidth(animation.PROPERTIES.WIDTH);
+        gameBackground.setMaxWidth(animation.PROPERTIES.WIDTH);
         gameBackground.backgroundProperty().setValue(new Background(
                 new BackgroundFill(Color.rgb(249,211,165),new CornerRadii(5),new Insets(0))));
     }

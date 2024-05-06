@@ -2,56 +2,55 @@ package org.zeros.bouncy_balls.Objects.MovingObjects;
 
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Shape;
+import org.zeros.bouncy_balls.Animation.Animation;
+import org.zeros.bouncy_balls.Animation.AnimationProperties;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
-import org.zeros.bouncy_balls.Model.Properties;
 
 public abstract class MovingObject {
 
-    protected MovingObjectType type;
+    protected final MovingObjectType type;
+    protected final Animation animation;
+    protected final Shape shape;
+    protected final double furthestSpan;
+    protected double friction;
+    protected double mass;
     protected LinearEquation trajectory;
-    protected Shape shape;
     protected Point2D velocity;
     protected Point2D acceleration;
-    protected double mass;
-    protected double furthestSpan;
     protected Point2D centerPoint;
     protected Point2D nextCenterPoint;
-    protected boolean bounced;
     protected double frameElapsed;
-    public double getFurthestSpan() {
-        return furthestSpan;
-    }
 
-
-
-
-
-
-    public MovingObject(Point2D velocity, double mass, Point2D center) {
-        this.velocity =velocity;
-        this.acceleration = new Point2D(0,0);
+    protected MovingObject(MovingObjectType type, Shape shape, double furthestSpan, Point2D velocity, double mass, Point2D center, double friction,Animation animation) {
+        this.type = type;
+        this.shape = shape;
+        this.animation = animation;
+        this.furthestSpan = furthestSpan;
+        this.velocity = velocity;
+        this.acceleration = new Point2D(0, 0);
         this.mass = mass;
         this.centerPoint = center;
-        this.nextCenterPoint=centerPoint.add(frameVelocity());
-        this.trajectory=new LinearEquation(centerPoint,centerPoint.add(velocity));
-        this.frameElapsed=0.0;
-        if(mass==0){
-            this.mass=1;
+        this.nextCenterPoint = centerPoint.add(frameVelocity());
+        this.trajectory = new LinearEquation(centerPoint, centerPoint.add(velocity));
+        this.frameElapsed = 0.0;
+        if (mass == 0) {
+            this.mass = 1;
+        } else {
+            this.mass = Math.abs(mass);
         }
-        else {
-            this.mass=Math.abs(mass);
-        }
+
     }
-    public void updateCenter(Point2D centerPoint) {
-        this.centerPoint = centerPoint;
-        this.trajectory = new LinearEquation(centerPoint,centerPoint.add(velocity));
-    }
-    public void nextFrame(){
+
+
+
+    public void nextFrame() {
         updateCenter(nextCenter());
         updateNextCenter();
-        updateVelocity(velocity.multiply(1-Properties.getDefaultFriction()/Properties.getFRAME_RATE()));
-        frameElapsed=0.0;
-        bounced=false;
+        if(friction>0) {
+            velocity=(velocity.multiply((1 - friction) / friction));
+        }
+        frameElapsed = 0.0;
+
     }
 
 
@@ -64,7 +63,7 @@ public abstract class MovingObject {
     }
 
     public Point2D frameVelocity() {
-        return velocity.multiply(1/ Properties.getFRAME_RATE());
+        return velocity.multiply(1 / animation.PROPERTIES.FRAME_RATE);
     }
 
     public double getMass() {
@@ -75,16 +74,15 @@ public abstract class MovingObject {
         return shape;
     }
 
-    public void setTrajectory(LinearEquation trajectory) {
-        this.trajectory = trajectory;
-    }
-
     public Point2D velocity() {
         return velocity;
     }
 
     public void updateVelocity(Point2D velocity) {
+
         this.velocity = velocity;
+        this.trajectory = new LinearEquation(centerPoint, centerPoint.add(velocity));
+
     }
 
     public Point2D acceleration() {
@@ -99,12 +97,21 @@ public abstract class MovingObject {
         return centerPoint;
     }
 
-
-
     public MovingObjectType getType() {
         return type;
     }
-    public LinearEquation trajectory() {        return trajectory;    }
+
+    public LinearEquation trajectory() {
+        return trajectory;
+    }
+    public double getFurthestSpan() {
+        return furthestSpan;
+    }
+
+    public void updateCenter(Point2D centerPoint) {
+        this.centerPoint = centerPoint;
+
+    }
 
     public Point2D nextCenter() {
         return nextCenterPoint;
@@ -113,16 +120,10 @@ public abstract class MovingObject {
     public void updateNextCenter(Point2D nextCenterPoint) {
         this.nextCenterPoint = nextCenterPoint;
     }
+
     public void updateNextCenter() {
         this.nextCenterPoint = centerPoint.add(frameVelocity());
     }
 
-    public boolean isBounced() {
-        return bounced;
-    }
-
-    public void setBounced(boolean bounced) {
-        this.bounced = bounced;
-    }
 
 }

@@ -2,7 +2,7 @@ package org.zeros.bouncy_balls.Calculations;
 
 import javafx.geometry.Point2D;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
-import org.zeros.bouncy_balls.Model.Properties;
+import org.zeros.bouncy_balls.Animation.AnimationProperties;
 import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObject;
 import org.zeros.bouncy_balls.Objects.Obstacles.Obstacle;
@@ -10,19 +10,7 @@ import org.zeros.bouncy_balls.Objects.Obstacles.Obstacle;
 import java.util.ArrayList;
 
 public class BindsCheck {
-    public static boolean isInsideBorders(Point2D point){
-        return point.getX() >= 0 && point.getX() <= Properties.getGAME_WIDTH() &&
-                point.getY() >= 0 && point.getY() <= Properties.getGAME_HEIGHT();
-    }
-    public static boolean isInsideBorders(Ball ball){
-        double radius =ball.getRadius();
-        return ball.center().getX() >= radius && ball.center().getX() <= Properties.getGAME_WIDTH()-radius &&
-                ball.center().getY() >= radius && ball.center().getY() <= Properties.getGAME_HEIGHT()-radius;
-    }
-    public static boolean isInsideBorders(Point2D center, double spanMax){
-        return center.getX() >= spanMax && center.getX() <= Properties.getGAME_WIDTH()-spanMax &&
-                center.getY() >= spanMax && center.getY() <= Properties.getGAME_HEIGHT()-spanMax;
-    }
+
 
     public static boolean isInsideRoughBinds(MovingObject movingObject, Obstacle obstacle) {
 

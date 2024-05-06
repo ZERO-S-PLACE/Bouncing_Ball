@@ -4,45 +4,12 @@ import javafx.geometry.Point2D;
 import org.zeros.bouncy_balls.Calculations.Equations.BezierCurve;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
 import org.zeros.bouncy_balls.Calculations.Equations.QuadraticEquation;
-import org.zeros.bouncy_balls.Model.Properties;
 import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;
 import org.zeros.bouncy_balls.Objects.Obstacles.Obstacle;
 
 import java.util.ArrayList;
 
 public class Bounce {
-    private static final LinearEquation OX = new LinearEquation(0, 0);
-    private static final LinearEquation OY = new LinearEquation(0, Double.NaN);
-    private static final LinearEquation OY2 = new LinearEquation(Properties.getGAME_WIDTH(), Double.NaN);
-    private static final LinearEquation OX2 = new LinearEquation(0, Properties.getGAME_HEIGHT());
-
-    public static boolean ballFromWall(Ball ball, Point2D outCenter) {
-
-        Point2D newVelocity;
-        if (outCenter.getX() <= ball.getRadius() && ball.velocity().getX() < 0) {
-            newVelocity = new Point2D(-ball.velocity().getX(), ball.velocity().getY());
-            setCenterAfterBounce(OY, ball, newVelocity);
-            ball.updateVelocity(newVelocity);
-        } else if (outCenter.getX() >= Properties.getGAME_WIDTH() - ball.getRadius() && ball.velocity().getX() > 0) {
-            newVelocity = new Point2D(-ball.velocity().getX(), ball.velocity().getY());
-            setCenterAfterBounce(OY2, ball, newVelocity);
-            ball.updateVelocity(newVelocity);
-        } else if (outCenter.getY() >= Properties.getGAME_HEIGHT() - ball.getRadius() && ball.velocity().getY() > 0) {
-            newVelocity = new Point2D(ball.velocity().getX(), -ball.velocity().getY());
-            setCenterAfterBounce(OX2, ball, newVelocity);
-            ball.updateVelocity(newVelocity);
-        } else if (outCenter.getY() <= ball.getRadius() && ball.velocity().getY() < 0) {
-            newVelocity = new Point2D(ball.velocity().getX(), -ball.velocity().getY());
-            setCenterAfterBounce(OX, ball, newVelocity);
-            ball.updateVelocity(newVelocity);
-        } else {
-            return false;
-        }
-        return true;
-
-
-    }
-
     public static boolean twoBalls(Ball ball1, Ball ball2) {
 
         matchCurrentTime(ball1, ball2);
@@ -163,6 +130,8 @@ public class Bounce {
 
     }
 
+
+
     private record ResultBouncingSet(Point2D bouncePointAtLine, Point2D bouncePointAtBall, LinearEquation bounceLine) { }
 
 
@@ -244,10 +213,10 @@ public class Bounce {
     }
 
     private static Point2D findBouncePointOnCurve(BezierCurve bezierCurve, Ball ball) {
-        int divisions=ball.getRadius()/9+3;
+        int divisions=(int)ball.getRadius()/9+3;
         LinearEquation diameter= ball.trajectory().perpendicularTroughPoint(ball.center());
         double distance=Double.MAX_VALUE;
-        double offset= ((double) ball.getRadius()) /divisions;
+        double offset=  ball.getRadius() /divisions;
 
         Point2D pointOnLine=bezierCurve.getIntersectionWithLine(ball.center(),ball.frameVelocity());
         if(pointOnLine!=null){
@@ -284,7 +253,7 @@ public class Bounce {
     }
 
 
-    private static boolean setCenterAfterBounce(LinearEquation bounceLine, Ball ball, Point2D newVelocity) {
+    public static boolean setCenterAfterBounce(LinearEquation bounceLine, Ball ball, Point2D newVelocity) {
         double velocityChange = ball.velocity().magnitude() / newVelocity.magnitude();
         LinearEquation tangent = bounceLine.parallelTroughPoint(ball.center()).offsetLine(ball.getRadius(), ball.nextCenter());
         Point2D bouncePointOnBall = tangent.intersection(tangent.perpendicularTroughPoint(ball.center()));
@@ -307,8 +276,6 @@ public class Bounce {
         Point2D bouncePointAfter = newTangent.intersection(newBouncePointTrajectory);
         Point2D finalCenter = newTangent.offsetLine(ball.getRadius(), bouncePointAfter.add(newVelocity)).intersection(bounceLine.perpendicularTroughPoint(bouncePointAfter));
 
-
-        ball.setBounced(true);
         ball.setFrameElapsed(ball.frameElapsed() + (1 - ball.frameElapsed()) * bounceMomentCenter.distance(ball.center()) / ball.center().distance(ball.nextCenter()));
         ball.updateCenter(bounceMomentCenter);
 
