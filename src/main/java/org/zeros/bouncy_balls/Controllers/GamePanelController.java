@@ -81,10 +81,10 @@ public class GamePanelController implements Initializable {
 
 
 
-        for (int i0=0; i0 < 5; i0++ ){
+        for (int i0=0; i0 < 30; i0++ ){
             for (int j0= 0; j0 <1; j0++ ){
 
-                redBall[i0][j0] = new Ball(new Point2D(0,300),10,new Point2D(800+20*i0,6+10*j0),4,0,animation);
+                redBall[i0][j0] = new Ball(new Point2D(0,300),10,new Point2D(800+20*i0,6+10*j0),4,0.01,animation);
                 redBall[i0][j0].getShape().fillProperty().set(Color.RED);
                 animation.addMovingObject(redBall[i0][j0]);
                 gameBackground.getChildren().add(redBall[i0][j0].getShape());
@@ -93,11 +93,11 @@ public class GamePanelController implements Initializable {
         }
 
 
-            for (int i = 0; i < 35; ) {
+            for (int i = 0; i < 15; ) {
 
                 int radius = random.nextInt(34)+5;
                 ball[i] = new Ball(new Point2D(3 * random.nextInt(70), 3 * random.nextInt(100)), radius+1,
-                        new Point2D(random.nextInt(800), random.nextInt(1400)),radius+1,0,animation);
+                        new Point2D(random.nextInt(800), random.nextInt(1400)),radius+1,0.01,animation);
                 if (animation.hasFreePlace(ball[i])) {
 
                    animation.addMovingObject(ball[i]);

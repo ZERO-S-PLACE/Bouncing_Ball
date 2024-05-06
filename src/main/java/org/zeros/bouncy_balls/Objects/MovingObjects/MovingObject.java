@@ -3,7 +3,6 @@ package org.zeros.bouncy_balls.Objects.MovingObjects;
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Shape;
 import org.zeros.bouncy_balls.Animation.Animation;
-import org.zeros.bouncy_balls.Animation.AnimationProperties;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
 
 public abstract class MovingObject {
@@ -21,14 +20,15 @@ public abstract class MovingObject {
     protected Point2D nextCenterPoint;
     protected double frameElapsed;
 
-    protected MovingObject(MovingObjectType type, Shape shape, double furthestSpan, Point2D velocity, double mass, Point2D center, double friction,Animation animation) {
+    protected MovingObject(MovingObjectType type, Shape shape, double furthestSpan, Point2D velocity, double mass, Point2D center, double friction, Animation animation) {
         this.type = type;
         this.shape = shape;
         this.animation = animation;
         this.furthestSpan = furthestSpan;
         this.velocity = velocity;
-        this.acceleration = new Point2D(0, 0);
+        this.acceleration = new Point2D(0, animation.PROPERTIES.GRAVITY);
         this.mass = mass;
+        this.friction = friction;
         this.centerPoint = center;
         this.nextCenterPoint = centerPoint.add(frameVelocity());
         this.trajectory = new LinearEquation(centerPoint, centerPoint.add(velocity));
@@ -42,13 +42,10 @@ public abstract class MovingObject {
     }
 
 
-
     public void nextFrame() {
         updateCenter(nextCenter());
         updateNextCenter();
-        if(friction>0) {
-            velocity=(velocity.multiply((1 - friction) / friction));
-        }
+        updateVelocity();
         frameElapsed = 0.0;
 
     }
@@ -58,9 +55,6 @@ public abstract class MovingObject {
         return frameElapsed;
     }
 
-    public void setFrameElapsed(double frameElapsed) {
-        this.frameElapsed = frameElapsed;
-    }
 
     public Point2D frameVelocity() {
         return velocity.multiply(1 / animation.PROPERTIES.FRAME_RATE);
@@ -78,9 +72,25 @@ public abstract class MovingObject {
         return velocity;
     }
 
-    public void updateVelocity(Point2D velocity) {
+    public void updateVelocity(Point2D velocity, double frameElapsed) {
 
         this.velocity = velocity;
+        this.velocity = velocity.add(acceleration.multiply(frameElapsed - frameElapsed()));
+        if (friction > 0 && friction < 1) {
+            velocity = velocity.multiply(frameElapsed - frameElapsed());
+        }
+
+        this.trajectory = new LinearEquation(centerPoint, centerPoint.add(velocity));
+    }
+
+    public void updateVelocity() {
+
+        this.velocity = velocity.add(acceleration.multiply(1 - frameElapsed()));
+        if (friction > 0 && friction < 1) {
+            velocity = velocity.multiply((1 - friction) * (1 - frameElapsed()));
+        }
+
+
         this.trajectory = new LinearEquation(centerPoint, centerPoint.add(velocity));
 
     }
@@ -104,6 +114,7 @@ public abstract class MovingObject {
     public LinearEquation trajectory() {
         return trajectory;
     }
+
     public double getFurthestSpan() {
         return furthestSpan;
     }

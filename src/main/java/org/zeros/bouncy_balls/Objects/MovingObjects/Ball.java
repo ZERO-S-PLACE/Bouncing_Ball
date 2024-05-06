@@ -6,8 +6,8 @@ import org.zeros.bouncy_balls.Animation.Animation;
 
 public class Ball extends MovingObject {
 
-    public Ball(Point2D velocity, double mass, Point2D center, int radius,double friction, Animation animation) {
-        super(MovingObjectType.BALL, new Circle(Math.max(radius, 1)), Math.max(radius, 1), velocity, mass, center,friction, animation);
+    public Ball(Point2D velocity, double mass, Point2D center, int radius, double friction, Animation animation) {
+        super(MovingObjectType.BALL, new Circle(Math.max(radius, 1)), Math.max(radius, 1), velocity, mass, center, friction, animation);
         ((Circle) shape).setCenterX(centerPoint.getX());
         ((Circle) shape).setCenterY(centerPoint.getY());
     }

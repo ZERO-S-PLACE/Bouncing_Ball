@@ -36,10 +36,8 @@ public class BezierCurve {
             double mp = VectorMath.binomialCoefficient(degree, i);
             for (int j = i; j <= degree; j++) {
 
-                xPolynomialCoefficients[j] = xPolynomialCoefficients[j] +
-                        mp * VectorMath.binomialCoefficient(degree - i, j - i) * points.get(i).getX() * Math.pow(-1, j - i);
-                yPolynomialCoefficients[j] = yPolynomialCoefficients[j] +
-                        mp * VectorMath.binomialCoefficient(degree - i, j - i) * points.get(i).getY() * Math.pow(-1, j - i);
+                xPolynomialCoefficients[j] = xPolynomialCoefficients[j] + mp * VectorMath.binomialCoefficient(degree - i, j - i) * points.get(i).getX() * Math.pow(-1, j - i);
+                yPolynomialCoefficients[j] = yPolynomialCoefficients[j] + mp * VectorMath.binomialCoefficient(degree - i, j - i) * points.get(i).getY() * Math.pow(-1, j - i);
 
             }
         }
@@ -61,13 +59,13 @@ public class BezierCurve {
             Model.getInstance().getGamePanelController().gameBackground.getChildren().add(circle);*/
 
 
-            return new Point2D(x,y);
+            return new Point2D(x, y);
         }
         return null;
 
     }
 
-    public Point2D getIntersectionWithLine(Point2D center,Point2D direction) {
+    public Point2D getIntersectionWithLine(Point2D center, Point2D direction) {
        /* Calculating intersection of curve with line
         Xb-Yb*(Vx/Vy)-Xo+Yo*(Vx/Vy)=0
         Yb*m-Xb +c=0
@@ -75,19 +73,19 @@ public class BezierCurve {
         c=-Xo+Yo*m
         where Yb and Xb are bezier polynomials*/
 
-    double[] coefficients = this.get_xPolynomialCoefficients();
-        if(direction.getY()!=0) {
-        double[] yB = this.get_yPolynomialCoefficients();
-        double m = direction.getX() / direction.getY();
-        double c = -center.getX() + m * center.getY();
-        for (int i = 0; i < coefficients.length; i++) {
-            coefficients[i] = coefficients[i] - yB[i] * m;
-        }
-        coefficients[0] = coefficients[0] + c;
+        double[] coefficients = this.get_xPolynomialCoefficients();
+        if (direction.getY() != 0) {
+            double[] yB = this.get_yPolynomialCoefficients();
+            double m = direction.getX() / direction.getY();
+            double c = -center.getX() + m * center.getY();
+            for (int i = 0; i < coefficients.length; i++) {
+                coefficients[i] = coefficients[i] - yB[i] * m;
+            }
+            coefficients[0] = coefficients[0] + c;
         } else {
-        coefficients = this.get_yPolynomialCoefficients();
-        coefficients[0]=coefficients[0]-center.getY();
-    }
+            coefficients = this.get_yPolynomialCoefficients();
+            coefficients[0] = coefficients[0] - center.getY();
+        }
 
 
         PolynomialFunction function = new PolynomialFunction(coefficients);
@@ -96,11 +94,10 @@ public class BezierCurve {
         int loop = 0;
         while (loop < 5) {
             try {
-                double temp = solver.solve(10, function, 0.2 * loop, 0.2+0.2*loop);
-                if(solutions.isEmpty()){
+                double temp = solver.solve(100, function, 0.2 * loop, 0.2 + 0.2 * loop);
+                if (solutions.isEmpty()) {
                     solutions.add(temp);
-                }else if(Math.abs(solutions.getLast()-temp)>0.05)
-                    {
+                } else if (Math.abs(solutions.getLast() - temp) > 0.05) {
                     solutions.add(temp);
                 }
             } catch (Exception ignored) {
@@ -129,35 +126,11 @@ public class BezierCurve {
         }
 
         return closestPoint;
-}
-public boolean areOnDifferentSides(Point2D point1,Point2D point2){
-    return BindsCheck.isBetweenPoints(this.getIntersectionWithLine(point1, point2.subtract(point1)), point1, point2);
-}
+    }
 
-
-
+    public boolean areOnDifferentSides(Point2D point1, Point2D point2) {
+        return BindsCheck.isBetweenPoints(this.getIntersectionWithLine(point1, point2.subtract(point1)), point1, point2);
+    }
 
 
 }
-/*public Point2D getPointAt(double t0){
-        if(t0<=1&&t0>=0) {
-            int n = points.size() - 1;
-            Point2D[] coefficients = new Point2D[n + 1];
-
-            for (int i = 0; i <= n; i++) {
-                for (int j = 0; j <= n - i; j++) {
-                    if (i == 0) {
-                        coefficients[j] = points.get(j);
-                    } else {
-                        coefficients[j] = coefficients[j].multiply(1 - t0).add(coefficients[j + 1].multiply(t0));
-                    }
-                }
-            }
-            Circle circle =new Circle(coefficients[0].getX(), coefficients[0].getY(), 3);
-            circle.setFill(Color.BLUE);
-            Model.getInstance().getGamePanelController().gameBackground.getChildren().add(circle);
-            return coefficients[0];
-        }
-        return null;
-
-        }*/
