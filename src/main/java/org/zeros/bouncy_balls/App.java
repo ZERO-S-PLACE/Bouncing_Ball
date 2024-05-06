@@ -7,12 +7,12 @@ import org.zeros.bouncy_balls.Model.Model;
 import java.io.IOException;
 
 public class App extends Application {
-    @Override
-    public void start(Stage stage) throws IOException {
-        Model.getInstance().getViewFactory().showMainWindow();
-    }
-
     public static void main(String[] args) {
         launch();
+    }
+
+    @Override
+    public void start(Stage stage) {
+        Model.getInstance().getViewFactory().showMainWindow();
     }
 }

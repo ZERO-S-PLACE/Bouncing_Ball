@@ -15,7 +15,7 @@ public class RectangleObstacle extends Obstacle {
     private void calculateRectanglePointPointRotation(Point2D corner1, Point2D corner3, double rotation) {
         Point2D corner4;
         Point2D corner2;
-        if ( rotation % (Math.PI/2) != 0) {
+        if (rotation % (Math.PI / 2) != 0) {
             LinearEquation side1 = new LinearEquation(Math.tan(rotation), 0);
             side1 = side1.parallelTroughPoint(corner1);
             LinearEquation side2 = side1.parallelTroughPoint(corner3);
