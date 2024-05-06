@@ -73,30 +73,24 @@ public abstract class MovingObject {
     }
 
     public void updateVelocity(Point2D velocity, double frameElapsed) {
-
-        this.velocity = velocity;
         this.velocity = velocity.add(acceleration.multiply(frameElapsed - frameElapsed()));
-        if (friction > 0 && friction < 1) {
-            velocity = velocity.multiply(frameElapsed - frameElapsed());
-        }
-
+        velocity = velocity.multiply(frameElapsed - frameElapsed());
         this.trajectory = new LinearEquation(centerPoint, centerPoint.add(velocity));
     }
 
     public void updateVelocity() {
 
         this.velocity = velocity.add(acceleration.multiply(1 - frameElapsed()));
-        if (friction > 0 && friction < 1) {
-            velocity = velocity.multiply((1 - friction) * (1 - frameElapsed()));
-        }
-
-
+        velocity = velocity.multiply((1 - friction) * (1 - frameElapsed()));
         this.trajectory = new LinearEquation(centerPoint, centerPoint.add(velocity));
-
     }
 
     public Point2D acceleration() {
         return acceleration;
+    }
+
+    public Point2D frameAcceleration() {
+        return acceleration.multiply(1 / animation.PROPERTIES.FRAME_RATE);
     }
 
     public void updateAcceleration(Point2D acceleration) {

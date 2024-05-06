@@ -129,11 +129,6 @@ public class LinearEquation {
         return offsetLine(distance);
     }
 
-   /* public LinearEquation middleLine(LinearEquation line){
-
-        return null;
-    }*/
-
     public Point2D mirrorPoint(Point2D point) {
         LinearEquation perpendicular = this.perpendicularTroughPoint(point);
         Point2D intersection = this.intersection(perpendicular);

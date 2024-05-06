@@ -23,7 +23,7 @@ import java.util.ResourceBundle;
 public class GamePanelController implements Initializable {
 
     public AnchorPane gameBackground;
-    private  Animation animation=new Animation(800,1400);
+    private final Animation animation = new Animation(800, 1400, 3);
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -35,8 +35,7 @@ public class GamePanelController implements Initializable {
         animation.addObstacle(obstacle);
         gameBackground.getChildren().add(obstacle.getPath());*/
 
-       Obstacle obstacle1=new RectangleObstacle(new Point2D(1200,700),new Point2D(1000,600),0.000
-        );
+        Obstacle obstacle1 = new RectangleObstacle(new Point2D(1200, 700), new Point2D(1000, 600), 0.000);
         animation.addObstacle(obstacle1);
         gameBackground.getChildren().add(obstacle1.getPath());
 
@@ -47,21 +46,20 @@ public class GamePanelController implements Initializable {
         animation.addObstacle(obstacle4);
         gameBackground.getChildren().add(obstacle4.getPath());*/
 
-        Obstacle obstacle41=new OvalObstacle(new Point2D(1050,450),200,200,0  );
+        Obstacle obstacle41 = new OvalObstacle(new Point2D(1050, 450), 200, 200, 0);
         animation.addObstacle(obstacle41);
         gameBackground.getChildren().add(obstacle41.getPath());
 
-        for (Point2D point2: obstacle41.getAllPoints()){
-            gameBackground.getChildren().add(new Rectangle(point2.getX(),point2.getY(),2,2));
+        for (Point2D point2 : obstacle41.getAllPoints()) {
+            gameBackground.getChildren().add(new Rectangle(point2.getX(), point2.getY(), 2, 2));
 
         }
 
 
-
-        PolylineObstacle obstacle5=new PolylineObstacle();
-        obstacle5.startDrawingFromPoint(new Point2D(200,100));
-        obstacle5.drawStraightSegmentTo(new Point2D(600,100));
-        obstacle5.drawStraightSegmentTo(new Point2D(600,600));
+        PolylineObstacle obstacle5 = new PolylineObstacle();
+        obstacle5.startDrawingFromPoint(new Point2D(200, 100));
+        obstacle5.drawStraightSegmentTo(new Point2D(600, 100));
+        obstacle5.drawStraightSegmentTo(new Point2D(600, 600));
 //        obstacle5.drawStraightSegmentTo(new Point2D(100,600));
 //        obstacle5.drawStraightSegmentTo(new Point2D(100,500));
 //        obstacle5.drawStraightSegmentTo(new Point2D(500,500));
@@ -69,22 +67,18 @@ public class GamePanelController implements Initializable {
 //        obstacle5.drawStraightSegmentTo(new Point2D(300,300));
 //        obstacle5.drawStraightSegmentTo(new Point2D(200,150));
 
-        obstacle5.drawQuadCurveTo(new Point2D(100,500),new Point2D(500,500));
-        obstacle5.drawCubicCurveTo(new Point2D(500,600),new Point2D(300,400),new Point2D(200,150));
+        obstacle5.drawQuadCurveTo(new Point2D(100, 500), new Point2D(500, 500));
+        obstacle5.drawCubicCurveTo(new Point2D(500, 600), new Point2D(300, 400), new Point2D(200, 150));
 
         obstacle5.closeAndSave();
         animation.addObstacle(obstacle5);
         gameBackground.getChildren().add(obstacle5.getPath());
 
 
+        for (int i0 = 0; i0 < 30; i0++) {
+            for (int j0 = 0; j0 < 1; j0++) {
 
-
-
-
-        for (int i0=0; i0 < 30; i0++ ){
-            for (int j0= 0; j0 <1; j0++ ){
-
-                redBall[i0][j0] = new Ball(new Point2D(0,300),10,new Point2D(800+20*i0,6+10*j0),4,0.01,animation);
+                redBall[i0][j0] = new Ball(new Point2D(0, 300), 10, new Point2D(800 + 15 * i0, 6 + 10 * j0), 3, 0.01, animation);
                 redBall[i0][j0].getShape().fillProperty().set(Color.RED);
                 animation.addMovingObject(redBall[i0][j0]);
                 gameBackground.getChildren().add(redBall[i0][j0].getShape());
@@ -93,22 +87,20 @@ public class GamePanelController implements Initializable {
         }
 
 
-            for (int i = 0; i < 15; ) {
+        for (int i = 0; i < 15; ) {
 
-                int radius = random.nextInt(34)+5;
-                ball[i] = new Ball(new Point2D(3 * random.nextInt(70), 3 * random.nextInt(100)), radius+1,
-                        new Point2D(random.nextInt(800), random.nextInt(1400)),radius+1,0.01,animation);
-                if (animation.hasFreePlace(ball[i])) {
+            int radius = random.nextInt(34) + 5;
+            ball[i] = new Ball(new Point2D(3 * random.nextInt(70), 3 * random.nextInt(100)), radius + 1, new Point2D(random.nextInt(800), random.nextInt(1400)), radius + 1, 0.01, animation);
+            if (animation.hasFreePlace(ball[i])) {
 
-                   animation.addMovingObject(ball[i]);
-                    gameBackground.getChildren().add(ball[i].getShape());
-                    i++;
-                }
+                animation.addMovingObject(ball[i]);
+                gameBackground.getChildren().add(ball[i].getShape());
+                i++;
             }
+        }
 
 
-
-            new Thread(animation::animate).start();
+        new Thread(animation::animate).start();
        /* PolylineObstacle obstacle6=new PolylineObstacle();
         obstacle6.startDrawingFromPoint(new Point2D(100,100));
         obstacle6.drawCubicCurveTo(new Point2D(100,300),new Point2D(300,500),new Point2D(500,500));
@@ -126,9 +118,7 @@ public class GamePanelController implements Initializable {
 */
 
 
-
     }
-
 
 
     private void setBackground() {
@@ -136,7 +126,6 @@ public class GamePanelController implements Initializable {
         gameBackground.setMaxHeight(animation.PROPERTIES.HEIGHT);
         gameBackground.setMinWidth(animation.PROPERTIES.WIDTH);
         gameBackground.setMaxWidth(animation.PROPERTIES.WIDTH);
-        gameBackground.backgroundProperty().setValue(new Background(
-                new BackgroundFill(Color.rgb(249,211,165),new CornerRadii(5),new Insets(0))));
+        gameBackground.backgroundProperty().setValue(new Background(new BackgroundFill(Color.rgb(249, 211, 165), new CornerRadii(5), new Insets(0))));
     }
 }

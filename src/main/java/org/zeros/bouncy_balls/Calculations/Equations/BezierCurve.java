@@ -53,12 +53,6 @@ public class BezierCurve {
                 y = y + yPolynomialCoefficients[i] * Math.pow(t0, i);
             }
 
-            /*Circle circle = new Circle(2, Color.YELLOWGREEN);
-            circle.setCenterX(x);
-           circle.setCenterY(y);
-            Model.getInstance().getGamePanelController().gameBackground.getChildren().add(circle);*/
-
-
             return new Point2D(x, y);
         }
         return null;
@@ -89,7 +83,7 @@ public class BezierCurve {
 
 
         PolynomialFunction function = new PolynomialFunction(coefficients);
-        BrentSolver solver = new BrentSolver(0.001);
+        BrentSolver solver = new BrentSolver(0.0001);
         ArrayList<Double> solutions = new ArrayList<>();
         int loop = 0;
         while (loop < 5) {
@@ -131,6 +125,5 @@ public class BezierCurve {
     public boolean areOnDifferentSides(Point2D point1, Point2D point2) {
         return BindsCheck.isBetweenPoints(this.getIntersectionWithLine(point1, point2.subtract(point1)), point1, point2);
     }
-
 
 }

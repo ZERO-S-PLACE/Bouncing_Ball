@@ -108,14 +108,17 @@ public class Animation {
         mObj1 = 0;
         for (; mObj1 < movingObjects.size(); mObj1++) {
             if (movingObjects.get(mObj1).frameElapsed() <= frameElapsed) {
-                if (crossesBorder()) {
+                if (bouncedByAnother(frameElapsed)) {
                     timesElapsed.add(movingObjects.get(mObj1).frameElapsed());
                 }
-                if (bouncedAgainstObstacle()) {
-                    timesElapsed.add(movingObjects.get(mObj1).frameElapsed());
-                } else if (bouncedByAnother(frameElapsed)) {
+                else if (bouncedAgainstObstacle()) {
                     timesElapsed.add(movingObjects.get(mObj1).frameElapsed());
                 }
+                else if (crossesBorder()) {
+                    timesElapsed.add(movingObjects.get(mObj1).frameElapsed());
+                }
+
+
             }
         }
     }
@@ -167,7 +170,7 @@ public class Animation {
         double minDistanceMeasured = Double.MAX_VALUE;
 
         for (int j = 0; j < movingObjects.size(); j++) {
-            if (movingObjects.get(j).frameElapsed() <= frameElapsed) {
+            if (movingObjects.get(j).frameElapsed() <= frameElapsed&&j!=mObj1) {
                 double distance = movingObjects.get(mObj1).nextCenter().distance(movingObjects.get(j).nextCenter());
                 double minDistanceAllow = movingObjects.get(mObj1).getFurthestSpan() + movingObjects.get(j).getFurthestSpan();
                 Point2D intersection = movingObjects.get(mObj1).trajectory().intersection(movingObjects.get(j).trajectory());
