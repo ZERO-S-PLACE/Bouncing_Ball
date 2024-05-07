@@ -6,9 +6,9 @@ import org.zeros.bouncy_balls.Animation.Animation;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
 
 public abstract class MovingObject {
-
     protected final MovingObjectType type;
-    protected final Animation animation;
+
+    protected  Animation animation;
     protected final Shape shape;
     protected final double furthestSpan;
     protected double friction;
@@ -19,14 +19,13 @@ public abstract class MovingObject {
     protected Point2D centerPoint;
     protected Point2D nextCenterPoint;
     protected double frameElapsed;
-
     protected MovingObject(MovingObjectType type, Shape shape, double furthestSpan, Point2D velocity, double mass, Point2D center, double friction, Animation animation) {
         this.type = type;
         this.shape = shape;
         this.animation = animation;
         this.furthestSpan = furthestSpan;
         this.velocity = velocity;
-        this.acceleration = new Point2D(0, animation.PROPERTIES.GRAVITY);
+        if(animation!=null) this.acceleration = new Point2D(0, animation.PROPERTIES.GRAVITY);
         this.mass = mass;
         this.friction = friction;
         this.centerPoint = center;
@@ -40,8 +39,6 @@ public abstract class MovingObject {
         }
 
     }
-
-
     public void nextFrame() {
         updateCenter(nextCenter());
         updateNextCenter();
@@ -49,29 +46,6 @@ public abstract class MovingObject {
         frameElapsed = 0.0;
 
     }
-
-
-    public double frameElapsed() {
-        return frameElapsed;
-    }
-
-
-    public Point2D frameVelocity() {
-        return velocity.multiply(1 / animation.PROPERTIES.FRAME_RATE);
-    }
-
-    public double getMass() {
-        return mass;
-    }
-
-    public Shape getShape() {
-        return shape;
-    }
-
-    public Point2D velocity() {
-        return velocity;
-    }
-
     public void updateVelocity(Point2D velocity, double frameElapsed) {
         this.velocity = velocity.add(acceleration.multiply(frameElapsed - frameElapsed()));
         velocity = velocity.multiply(frameElapsed - frameElapsed());
@@ -105,18 +79,13 @@ public abstract class MovingObject {
         return type;
     }
 
-    public LinearEquation trajectory() {
-        return trajectory;
-    }
+    public LinearEquation trajectory() {return trajectory;}
 
     public double getFurthestSpan() {
         return furthestSpan;
     }
 
-    public void updateCenter(Point2D centerPoint) {
-        this.centerPoint = centerPoint;
-
-    }
+    public void updateCenter(Point2D centerPoint) {this.centerPoint = centerPoint;}
 
     public Point2D nextCenter() {
         return nextCenterPoint;
@@ -129,6 +98,28 @@ public abstract class MovingObject {
     public void updateNextCenter() {
         this.nextCenterPoint = centerPoint.add(frameVelocity());
     }
+    public Animation getAnimation() {return animation;}
+    public void setAnimation(Animation animation) {
+        this.animation = animation;
+        this.acceleration = new Point2D(0, animation.PROPERTIES.GRAVITY);
+    }
+    public double frameElapsed() {
+        return frameElapsed;
+    }
+    public Point2D frameVelocity() {
+        return velocity.multiply(1 / animation.PROPERTIES.FRAME_RATE);
+    }
 
+    public double getMass() {
+        return mass;
+    }
+
+    public Shape getShape() {
+        return shape;
+    }
+
+    public Point2D velocity() {
+        return velocity;
+    }
 
 }

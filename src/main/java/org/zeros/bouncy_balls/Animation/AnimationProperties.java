@@ -1,6 +1,8 @@
 package org.zeros.bouncy_balls.Animation;
 
-public class AnimationProperties {
+import java.io.Serializable;
+
+public class AnimationProperties implements Serializable {
     public final int HEIGHT;
     public final int WIDTH;
     public final double GRAVITY;

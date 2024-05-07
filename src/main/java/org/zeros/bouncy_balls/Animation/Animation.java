@@ -4,6 +4,7 @@ import javafx.animation.AnimationTimer;
 import javafx.geometry.Point2D;
 import org.zeros.bouncy_balls.Calculations.BindsCheck;
 import org.zeros.bouncy_balls.Calculations.Bounce;
+import org.zeros.bouncy_balls.Level.Level;
 import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObject;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObjectType;
@@ -15,8 +16,8 @@ import java.util.TreeSet;
 public class Animation {
 
     public final AnimationProperties PROPERTIES;
-    private final ArrayList<MovingObject> movingObjects = new ArrayList<>();
-    private final ArrayList<Obstacle> obstacles = new ArrayList<>();
+    private  final ArrayList<MovingObject> movingObjects;
+    private  final ArrayList<Obstacle> obstacles;
     private final Borders borders;
     private final TreeSet<Double> timesElapsed = new TreeSet<>();
     private int mObj1;
@@ -32,23 +33,37 @@ public class Animation {
     public Animation(int HEIGHT, int WIDTH, double GRAVITY, double FRAME_RATE, BordersType BOUNDARIES, int MAX_EVALUATIONS) {
         PROPERTIES = new AnimationProperties(HEIGHT, WIDTH, GRAVITY, FRAME_RATE, BOUNDARIES, MAX_EVALUATIONS);
         borders = new Borders(this);
+        movingObjects = new ArrayList<>();
+        obstacles = new ArrayList<>();
 
     }
 
     public Animation(int HEIGHT, int WIDTH, BordersType BOUNDARIES) {
         PROPERTIES = new AnimationProperties(HEIGHT, WIDTH, BOUNDARIES);
         borders = new Borders(this);
+        movingObjects = new ArrayList<>();
+        obstacles = new ArrayList<>();
 
     }
 
     public Animation(int HEIGHT, int WIDTH, double GRAVITY) {
         PROPERTIES = new AnimationProperties(HEIGHT, WIDTH, GRAVITY);
         borders = new Borders(this);
+        movingObjects = new ArrayList<>();
+        obstacles = new ArrayList<>();
     }
 
     public Animation(int HEIGHT, int WIDTH) {
         PROPERTIES = new AnimationProperties(HEIGHT, WIDTH);
         borders = new Borders(this);
+        movingObjects = new ArrayList<>();
+        obstacles = new ArrayList<>();
+    }
+    public Animation(Level level) {
+        PROPERTIES = level.PROPERTIES;
+        borders = new Borders(this);
+        movingObjects = level.movingObjects;
+        obstacles = level.obstacles;
     }
 
     public void animate() {
@@ -109,17 +124,17 @@ public class Animation {
         for (; mObj1 < movingObjects.size(); mObj1++) {
             if (movingObjects.get(mObj1).frameElapsed() <= frameElapsed) {
 
-                if (bouncedByAnother(frameElapsed)) {
+                 if (crossesBorder()) {
+                    timesElapsed.add(movingObjects.get(mObj1).frameElapsed());
+
+                }
+
+                 else if (bouncedAgainstObstacle()) {
                     timesElapsed.add(movingObjects.get(mObj1).frameElapsed());
                 }
 
-                else if (bouncedAgainstObstacle()) {
+                 else if (bouncedByAnother(frameElapsed)) {
                     timesElapsed.add(movingObjects.get(mObj1).frameElapsed());
-                }
-
-                else if (crossesBorder()) {
-                    timesElapsed.add(movingObjects.get(mObj1).frameElapsed());
-
                 }
 
 
@@ -181,8 +196,6 @@ public class Animation {
                 boolean trajectoriesIntersect;
                 if (intersection != null) {
                     trajectoriesIntersect = BindsCheck.isBetweenPoints(intersection, movingObjects.get(mObj1).center(), movingObjects.get(mObj1).nextCenter()) && BindsCheck.isBetweenPoints(intersection, movingObjects.get(j).center(), movingObjects.get(j).nextCenter());
-
-
                     if ((distance <= minDistanceAllow || trajectoriesIntersect)) {
                         closestObj = j;
                         temp = Bounce.twoBalls(((Ball) movingObjects.get(mObj1)), ((Ball) movingObjects.get(closestObj)));

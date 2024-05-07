@@ -52,8 +52,8 @@ public class Bounce {
         ball2.updateCenter(centerAtBounce2);
         ball1.updateVelocity(v12, frameElapsed);
         ball2.updateVelocity(v22, frameElapsed);
-        ball1.updateNextCenter(ball1.center().add(ball1.frameVelocity().multiply(1 - ball1.frameElapsed())));
-        ball2.updateNextCenter(ball2.center().add(ball2.frameVelocity().multiply(1 - ball2.frameElapsed())));
+        ball1.updateNextCenter(ball1.center().add(ball1.frameVelocity().multiply(1 - frameElapsed)));
+        ball2.updateNextCenter(ball2.center().add(ball2.frameVelocity().multiply(1 - frameElapsed)));
         return true;
     }
 

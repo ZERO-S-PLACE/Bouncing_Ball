@@ -6,6 +6,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.zeros.bouncy_balls.Controllers.GamePanelController;
+import org.zeros.bouncy_balls.Controllers.LevelCreatorController;
 import org.zeros.bouncy_balls.Views.ViewFactory;
 
 import java.io.IOException;
@@ -13,7 +14,8 @@ import java.io.IOException;
 public class Model {
     private final ViewFactory viewFactory;
 
-    GamePanelController gamePanelController;
+    private GamePanelController gamePanelController;
+    private LevelCreatorController levelCreatorController;
     private static Model model;
 
     private Model() {
@@ -37,6 +39,12 @@ public class Model {
             this.gamePanelController = new GamePanelController();
         }
         return gamePanelController;
+    }
+    public LevelCreatorController getLevelCreatorController() {
+        if(this.levelCreatorController==null){
+            this.levelCreatorController = new LevelCreatorController();
+        }
+        return levelCreatorController;
     }
 
 

@@ -37,19 +37,19 @@ public class Borders {
     public boolean ballFromWall(Ball ball) {
 
         Point2D newVelocity;
-        if (ball.nextCenter().getX() <= ball.getRadius() && ball.velocity().getX() < 0) {
+        if (ball.nextCenter().getX() <= ball.getRadius() && ball.velocity().getX() <= 0) {
             newVelocity = new Point2D(-ball.velocity().getX(), ball.velocity().getY());
             Bounce.setCenterAfterBounce(OY, ball, newVelocity);
 
-        } else if (ball.nextCenter().getX() >= PROPERTIES.WIDTH - ball.getRadius() && ball.velocity().getX() > 0) {
+        } else if (ball.nextCenter().getX() >= PROPERTIES.WIDTH - ball.getRadius() && ball.velocity().getX() >= 0) {
             newVelocity = new Point2D(-ball.velocity().getX(), ball.velocity().getY());
             Bounce.setCenterAfterBounce(OY2, ball, newVelocity);
 
-        } else if (ball.nextCenter().getY() >= PROPERTIES.HEIGHT - ball.getRadius() && ball.velocity().getY() > 0) {
+        } else if (ball.nextCenter().getY() >= PROPERTIES.HEIGHT - ball.getRadius() && ball.velocity().getY() >= 0) {
             newVelocity = new Point2D(ball.velocity().getX(), -ball.velocity().getY());
             Bounce.setCenterAfterBounce(OX2, ball, newVelocity);
 
-        } else if (ball.nextCenter().getY() <= ball.getRadius() && ball.velocity().getY() < 0) {
+        } else if (ball.nextCenter().getY() <= ball.getRadius() && ball.velocity().getY() <= 0) {
             newVelocity = new Point2D(ball.velocity().getX(), -ball.velocity().getY());
             Bounce.setCenterAfterBounce(OX, ball, newVelocity);
 
@@ -62,19 +62,19 @@ public class Borders {
     }
 
     public boolean moveToOtherSide(MovingObject obj) {
-        if (obj.nextCenter().getX() <= -obj.getFurthestSpan() && obj.velocity().getX() < 0) {
+        if (obj.nextCenter().getX() <= -obj.getFurthestSpan() && obj.velocity().getX() <= 0) {
             obj.updateCenter(new Point2D(PROPERTIES.WIDTH + obj.getFurthestSpan(), obj.nextCenter().getY()));
             obj.updateNextCenter(obj.center());
             obj.updateVelocity(obj.velocity(), 1);
-        } else if (obj.nextCenter().getX() >= PROPERTIES.WIDTH + obj.getFurthestSpan() && obj.velocity().getX() > 0) {
+        } else if (obj.nextCenter().getX() >= PROPERTIES.WIDTH + obj.getFurthestSpan() && obj.velocity().getX() >= 0) {
             obj.updateCenter(new Point2D(-obj.getFurthestSpan(), obj.nextCenter().getY()));
             obj.updateNextCenter(obj.center());
             obj.updateVelocity(obj.velocity(), 1);
-        } else if (obj.nextCenter().getY() >= PROPERTIES.HEIGHT + obj.getFurthestSpan() && obj.velocity().getY() > 0) {
+        } else if (obj.nextCenter().getY() >= PROPERTIES.HEIGHT + obj.getFurthestSpan() && obj.velocity().getY() >= 0) {
             obj.updateCenter(new Point2D(obj.nextCenter().getX(), -obj.getFurthestSpan()));
             obj.updateNextCenter(obj.center());
             obj.updateVelocity(obj.velocity(), 1);
-        } else if (obj.nextCenter().getY() <= -obj.getFurthestSpan() && obj.velocity().getY() < 0) {
+        } else if (obj.nextCenter().getY() <= -obj.getFurthestSpan() && obj.velocity().getY() <= 0) {
             obj.updateCenter(new Point2D(obj.nextCenter().getX(), PROPERTIES.HEIGHT + obj.getFurthestSpan()));
             obj.updateNextCenter(obj.center());
             obj.updateVelocity(obj.velocity(), 1);
