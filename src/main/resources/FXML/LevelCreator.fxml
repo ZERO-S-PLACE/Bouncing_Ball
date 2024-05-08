@@ -7,7 +7,12 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="750.0" maxWidth="1400.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <BorderPane scaleShape="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <center>
+          <AnchorPane fx:id="preview" BorderPane.alignment="CENTER" />
+      </center>
+   </BorderPane>
     <BorderPane prefHeight="70.0" prefWidth="1400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
         <center>
             <VBox alignment="CENTER_LEFT" maxHeight="70.0" maxWidth="400.0" minHeight="25.0" minWidth="100.0" prefHeight="52.0" prefWidth="400.0" BorderPane.alignment="CENTER">
@@ -24,9 +29,4 @@
             </VBox>
         </center>
     </BorderPane>
-   <BorderPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-      <center>
-          <AnchorPane fx:id="preview" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
-      </center>
-   </BorderPane>
 </AnchorPane>

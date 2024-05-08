@@ -21,5 +21,6 @@ module org.zeros.bouncy_balls {
     exports org.zeros.bouncy_balls.Objects.MovingObjects;
     exports org.zeros.bouncy_balls.Objects.Obstacles;
     exports org.zeros.bouncy_balls.Level;
+    exports org.zeros.bouncy_balls.Objects.Areas;
 
 }

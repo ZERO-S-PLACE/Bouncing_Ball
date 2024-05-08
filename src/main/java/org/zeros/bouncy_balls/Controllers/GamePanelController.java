@@ -23,21 +23,21 @@ import java.util.ResourceBundle;
 public class GamePanelController implements Initializable {
 
     public AnchorPane gameBackground;
-    private final Animation animation = new Animation(800, 1400, 0);
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        setBackground();
-        new Thread(animation::animate).start();
+        //setBackground();
+        //new Thread(animation::animate).start();
 
     }
-
+/*
 
     private void setBackground() {
-        gameBackground.setMinHeight(animation.PROPERTIES.HEIGHT);
-        gameBackground.setMaxHeight(animation.PROPERTIES.HEIGHT);
-        gameBackground.setMinWidth(animation.PROPERTIES.WIDTH);
-        gameBackground.setMaxWidth(animation.PROPERTIES.WIDTH);
+        gameBackground.setMinHeight(animation.PROPERTIES.getHEIGHT());
+        gameBackground.setMaxHeight(animation.PROPERTIES.getHEIGHT());
+        gameBackground.setMinWidth(animation.PROPERTIES.getWIDTH());
+        gameBackground.setMaxWidth(animation.PROPERTIES.getWIDTH());
         gameBackground.backgroundProperty().setValue(new Background(new BackgroundFill(Color.rgb(249, 211, 165), new CornerRadii(5), new Insets(0))));
-    }
+    }*/
 }

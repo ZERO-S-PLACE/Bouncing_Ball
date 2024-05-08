@@ -30,35 +30,6 @@ public class Animation {
 
     };
 
-    public Animation(int HEIGHT, int WIDTH, double GRAVITY, double FRAME_RATE, BordersType BOUNDARIES, int MAX_EVALUATIONS) {
-        PROPERTIES = new AnimationProperties(HEIGHT, WIDTH, GRAVITY, FRAME_RATE, BOUNDARIES, MAX_EVALUATIONS);
-        borders = new Borders(this);
-        movingObjects = new ArrayList<>();
-        obstacles = new ArrayList<>();
-
-    }
-
-    public Animation(int HEIGHT, int WIDTH, BordersType BOUNDARIES) {
-        PROPERTIES = new AnimationProperties(HEIGHT, WIDTH, BOUNDARIES);
-        borders = new Borders(this);
-        movingObjects = new ArrayList<>();
-        obstacles = new ArrayList<>();
-
-    }
-
-    public Animation(int HEIGHT, int WIDTH, double GRAVITY) {
-        PROPERTIES = new AnimationProperties(HEIGHT, WIDTH, GRAVITY);
-        borders = new Borders(this);
-        movingObjects = new ArrayList<>();
-        obstacles = new ArrayList<>();
-    }
-
-    public Animation(int HEIGHT, int WIDTH) {
-        PROPERTIES = new AnimationProperties(HEIGHT, WIDTH);
-        borders = new Borders(this);
-        movingObjects = new ArrayList<>();
-        obstacles = new ArrayList<>();
-    }
     public Animation(Level level) {
         PROPERTIES = level.PROPERTIES;
         borders = new Borders(this);
@@ -99,13 +70,13 @@ public class Animation {
     private void searchForBounces() {
         singleBouncesCheck(0);
         int i = 0;
-        while (!timesElapsed.isEmpty() && i < PROPERTIES.MAX_EVALUATIONS) {
+        while (!timesElapsed.isEmpty() && i < PROPERTIES.getMAX_EVALUATIONS()) {
             double timeElapsed = timesElapsed.getFirst();
 
             singleBouncesCheck(timeElapsed);
 
 
-            while (Math.abs(timesElapsed.getFirst() - timeElapsed) < 0.03 + 0.98 / PROPERTIES.MAX_EVALUATIONS * i) {
+            while (Math.abs(timesElapsed.getFirst() - timeElapsed) < 0.03 + 0.98 / PROPERTIES.getMAX_EVALUATIONS() * i) {
                 timesElapsed.removeFirst();
                 if (timesElapsed.isEmpty()) {
                     break;
@@ -152,7 +123,7 @@ public class Animation {
     private boolean crossesBorder() {
         boolean temp = false;
         if (!borders.isInside(movingObjects.get(mObj1).nextCenter(), movingObjects.get(mObj1).getFurthestSpan())) {
-            switch (PROPERTIES.BOUNDARIES) {
+            switch (PROPERTIES.getBOUNDARIES()) {
                 case BordersType.BOUNCING -> {
                     if (movingObjects.get(mObj1).getType().equals(MovingObjectType.BALL)) {
                         temp = borders.ballFromWall((Ball) movingObjects.get(mObj1));

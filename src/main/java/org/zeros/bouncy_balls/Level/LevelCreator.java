@@ -4,18 +4,20 @@ import javafx.application.Platform;
 import javafx.geometry.Point2D;
 import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import org.zeros.bouncy_balls.Animation.Animation;
 import org.zeros.bouncy_balls.Animation.AnimationProperties;
+import org.zeros.bouncy_balls.Animation.AnimationType;
 import org.zeros.bouncy_balls.Animation.BordersType;
 import org.zeros.bouncy_balls.Controllers.LevelCreatorController;
 import org.zeros.bouncy_balls.Model.Model;
 import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;
+import org.zeros.bouncy_balls.Objects.Obstacles.RectangleObstacle;
 
 public class LevelCreator {
 
     private Level level;
     private Animation animation;
-
     public void create() {
         Model.getInstance().getLevelCreatorController().preview.getChildren().removeAll();
         AnimationProperties properties=getAnimationProperties();
@@ -37,40 +39,92 @@ public class LevelCreator {
 
     }
     private AnimationProperties getAnimationProperties() {
+
         int HEIGHT= (int) getDimension("Animation height:(px) ");
         int WIDTH= (int) getDimension("Animation width (px): ");
-        double GRAVITY=getGravity();
-        double FRAME_RATE= getDimension("Frame rate: ");
-        BordersType BOUNDARIES=getBordersType();
-        int MAX_EVALUATIONS= (int) getDimension("Max evaluations per frame: ");
+
+        AnimationProperties properties= new AnimationProperties(HEIGHT,WIDTH);
+
+        if(agreeTo("Custom properties Y/N")) {
+            properties.setTime(getDimension("Time of animation: "));
+            properties.setGRAVITY(getGravity());
+            properties.setBOUNDARIES(getBordersType());
+            if (agreeTo("Is this simulation(Y) or game(N)? ")) {
+                properties.setTYPE(AnimationType.SIMULATION);
+            }
+            if (agreeTo("Custom speed Y/N")) {
+                properties.setFRAME_RATE(getDimension("Frame rate: "));
+                properties.setMAX_EVALUATIONS((int) getDimension("Max evaluations per frame: "));
+            }
+        }
         setPreviewBoundaries(HEIGHT,WIDTH);
-        return new AnimationProperties(HEIGHT,WIDTH,GRAVITY,FRAME_RATE,BOUNDARIES,MAX_EVALUATIONS);
+        return new AnimationProperties(HEIGHT,WIDTH);
     }
 
 
     private void addMovingObjects() {
         while (true){
             if (agreeTo(" Add new moving object ? N/Y")){
-                switch ((int) getNumber(" Objects types: 0-ball ..more to come")){
-                    case 0->addMovingBall();
-                }
+                addMovingBall();
             }else return;
         }
     }
 
     private void addMovingBall() {
-        Point2D centerPoint=getPoint("Center:");
         int radius=(int) getNumber("Radius");
-        Point2D velocity=getPoint("Velocity:");
-        double friction=getNumber("Friction:");
-        double mass=getNumber("Mass:");
-        if(agreeTo("Save?")){
-            level.movingObjects.add(new Ball(velocity,mass,centerPoint,radius,friction,animation));
-            Platform.runLater(()->Model.getInstance().getLevelCreatorController().preview.getChildren().add(
-                    level.movingObjects.getLast().getShape()));
+        Ball ball=new Ball(radius,animation);
+        ball.updateCenter(getPoint("Center:"));
+        level.movingObjects.add(ball);
+        Circle velocityShadow=new Circle(radius);
+        velocityShadow.setOpacity(0.1);
+        velocityShadow.setFill(Color.BLACK);
+        updateVelocityShadow(velocityShadow);
+        Platform.runLater(()->Model.getInstance().getLevelCreatorController().preview.getChildren().add(
+                velocityShadow));
+
+        Platform.runLater(()->Model.getInstance().getLevelCreatorController().preview.getChildren().add(
+               ball.getShape()));
+
+        modifyBall(ball,velocityShadow);
+        if (!animation.hasFreePlace(ball)) {
+            removeLastMovingObject();
+            if(agreeTo("Not enough space,try again?")) addMovingBall();
+            else return;
+        }
+            if (!agreeTo("Save?")) {
+                removeLastMovingObject();
+            }
 
         }
+
+    private void removeLastMovingObject() {
+        level.movingObjects.removeLast();
+        Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().removeLast());
+        Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().removeLast());
     }
+
+    private void updateVelocityShadow(Circle velocityShadow) {
+        Ball ball=((Ball) level.movingObjects.getLast());
+        velocityShadow.setRadius(ball.getRadius());
+        velocityShadow.setCenterX(ball.center().add(ball.velocity()).getX());
+        velocityShadow.setCenterY(ball.center().add(ball.velocity()).getY());
+    }
+
+    private void modifyBall(Ball ball,Circle velocityShadow) {
+        while (true) {
+            switch ((int)getNumber("Change property:0-no 1- velocity,2-friction,3-mass,4-radius, 5-center")) {
+                case 0 -> {return;}
+                case 1-> ball.setVelocity(getPoint("NextCenter: ").subtract(ball.center()));
+                case 2-> ball.setFriction(getNumber("Friction: "));
+                case 3-> ball.setMass(getNumber("Mass: "));
+                case 4-> ball.setRadius(getNumber("Radius: "));
+                case 5-> ball.updateCenter(getPoint("Center:"));
+            }
+            updateVelocityShadow(velocityShadow);
+        }
+    }
+
+
     private void addObstacles() {
         while (true){
             if (agreeTo(" Add new obstacle ? N/Y")){
@@ -84,6 +138,23 @@ public class LevelCreator {
     }
 
     private void addRectangle() {
+        RectangleObstacle rectangle =new RectangleObstacle(getPoint("Corner 1:"),
+                getPoint("Corner 3:"),getDimension("Rotation")/360*2*Math.PI);
+
+        level.obstacles.add(rectangle);
+        Platform.runLater(()->Model.getInstance().getLevelCreatorController().preview.getChildren().add(
+                rectangle.getPath()));
+
+        if (!agreeTo("Save?")) {
+            removeLastMovingObject();
+        }
+    }
+
+
+    private void removeLastObstacle() {
+        level.obstacles.removeLast();
+        Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().removeLast());
+
     }
 
     private void addOval() {
