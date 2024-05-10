@@ -7,6 +7,8 @@ public class RectangleObstacle extends Obstacle {
 
 
     public RectangleObstacle(Point2D corner1, Point2D corner3, double rotation) {
+        super();
+        this.rotation=rotation;
         calculateRectanglePointPointRotation(corner1, corner3, rotation);
         calculateBoundaryLines();
         calculateRoughBinds();

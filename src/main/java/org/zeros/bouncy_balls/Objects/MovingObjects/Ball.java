@@ -11,6 +11,7 @@ public class Ball extends MovingObject {
         this.type=MovingObjectType.BALL;
         this.shape=new Circle(Math.max(radius, 1));
         this.furthestSpan=Math.max(radius, 1);
+        this.mass=furthestSpan;
         ((Circle) shape).setCenterX(centerPoint.getX());
         ((Circle) shape).setCenterY(centerPoint.getY());
     }

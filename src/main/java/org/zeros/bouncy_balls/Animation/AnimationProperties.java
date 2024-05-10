@@ -30,6 +30,7 @@ public class AnimationProperties implements Serializable {
         this.BOUNDARIES = BordersType.BOUNCING;
         this.MAX_EVALUATIONS = 150;
         this.time=240;
+        this.FRICTION=0;
     }
 
     public AnimationType getTYPE() {

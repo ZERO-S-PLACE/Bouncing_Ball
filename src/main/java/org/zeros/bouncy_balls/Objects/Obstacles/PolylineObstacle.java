@@ -9,20 +9,21 @@ import java.util.ArrayList;
 public class PolylineObstacle extends Obstacle {
     boolean editable = false;
 
-    public PolylineObstacle() {
-        super();
-    }
+    public PolylineObstacle(Point2D start) {
 
-    public void startDrawingFromPoint(Point2D point) {
+        super();
+        startDrawingFromPoint(start);
+    }
+    private void startDrawingFromPoint(Point2D point) {
         editable = true;
         path = new Path();
         cornerPoints = new ArrayList<>();
         segmentPoints = new ArrayList<>();
         controlPointsTotalCount = new ArrayList<>();
         curvedSegmentsTotalCount = new ArrayList<>();
-        path.setFill(Color.BEIGE);
-        path.setStroke(Color.BEIGE);
-        path.setStrokeWidth(0);
+        path.setFill(Color.WHITE);
+        path.setStroke(Color.WHITE);
+        path.setStrokeWidth(1);
         addStartPoint(point);
     }
 
@@ -51,6 +52,14 @@ public class PolylineObstacle extends Obstacle {
         editable = false;
         calculateBoundaryLines();
         calculateRoughBinds();
+    }
+    public void removeLastSegment(){
+        if (editable&&cornerPoints.size()>1) {
+            path.getElements().removeLast();
+            segmentPoints.removeLast();
+            cornerPoints.removeLast();
+        }
+
     }
 
 }

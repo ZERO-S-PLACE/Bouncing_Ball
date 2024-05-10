@@ -3,14 +3,17 @@ package org.zeros.bouncy_balls.Objects.MovingObjects;
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Shape;
 import org.zeros.bouncy_balls.Animation.Animation;
+import org.zeros.bouncy_balls.Animation.AnimationProperties;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
+import org.zeros.bouncy_balls.Model.Model;
 
-public abstract class MovingObject {
+import java.io.Serializable;
 
+public abstract class MovingObject implements Serializable {
 
     protected  MovingObjectType type;
-
-    protected  Animation animation;
+    protected AnimationProperties animationProperties;
+    protected String animationName;
     protected  Shape shape;
     protected  double furthestSpan;
     protected double friction;
@@ -23,12 +26,11 @@ public abstract class MovingObject {
     protected double frameElapsed;
 
     protected MovingObject(Animation animation) {
-        this.animation = animation;
+        setAnimation(animation);
         this.velocity=new Point2D(0,0);
-        this.mass=furthestSpan;
-        this.friction=animation.PROPERTIES.getFRICTION();
+        this.friction=animationProperties.getFRICTION();
         this.centerPoint=new Point2D(0,0);
-        this.acceleration=new Point2D(0,animation.PROPERTIES.getGRAVITY());
+        this.frameElapsed=1;
     }
     public void nextFrame() {
         updateCenter(nextCenter());
@@ -39,19 +41,22 @@ public abstract class MovingObject {
     }
     public void updateVelocity(Point2D velocity, double frameElapsed) {
         this.velocity = velocity.add(acceleration.multiply(frameElapsed - frameElapsed()));
-        velocity = velocity.multiply(frameElapsed - frameElapsed());
+        velocity = velocity.multiply((1 - friction)*(frameElapsed - frameElapsed()));
         this.trajectory = new LinearEquation(centerPoint, centerPoint.add(velocity));
     }
 
     public void updateVelocity() {
-
         this.velocity = velocity.add(acceleration.multiply(1 - frameElapsed()));
-        velocity = velocity.multiply((1 - friction) * (1 - frameElapsed()));
+        velocity = velocity.multiply((1 - friction));
         this.trajectory = new LinearEquation(centerPoint, centerPoint.add(velocity));
     }
+    public void setInitialVelocity(Point2D velocity){
+        this.velocity=velocity;
+    }
     public void setAnimation(Animation animation) {
-        this.animation = animation;
-        this.acceleration = new Point2D(0, animation.PROPERTIES.getGRAVITY());
+        this.animationProperties = animation.level.PROPERTIES();
+        this.animationName=animation.getName();
+        this.acceleration=new Point2D(0,animationProperties.getGRAVITY());
     }
 
     public double getFriction() {return friction;}
@@ -60,8 +65,8 @@ public abstract class MovingObject {
     public void setVelocity(Point2D velocity) {this.velocity = velocity;}
     public Point2D velocity() {return velocity;}
     public Point2D acceleration() {return acceleration;}
-    public Point2D frameVelocity() {return velocity.multiply(1 / animation.PROPERTIES.getFRAME_RATE());}
-    public Point2D frameAcceleration() {return acceleration.multiply(1 / animation.PROPERTIES.getFRAME_RATE());}
+    public Point2D frameVelocity() {return velocity.multiply(1 / animationProperties.getFRAME_RATE());}
+    public Point2D frameAcceleration() {return acceleration.multiply(1 / animationProperties.getFRAME_RATE());}
     public void updateAcceleration(Point2D acceleration) {this.acceleration = acceleration;}
     public Point2D center() {return centerPoint;}
     public MovingObjectType getType() {return type;}
@@ -71,10 +76,11 @@ public abstract class MovingObject {
     public Point2D nextCenter() {return nextCenterPoint;}
     public void updateNextCenter(Point2D nextCenterPoint) {this.nextCenterPoint = nextCenterPoint;}
     public void updateNextCenter() {this.nextCenterPoint = centerPoint.add(frameVelocity());}
-    public Animation getAnimation() {return animation;}
+    public Animation getAnimation() {return Model.getInstance().getRunningAnimation(animationName);}
     public double frameElapsed() {return frameElapsed;}
     public double getMass() {return mass;}
     public Shape getShape() {return shape;}
+
 }
 
 
