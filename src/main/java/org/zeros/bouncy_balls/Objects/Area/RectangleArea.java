@@ -1,12 +1,14 @@
-package org.zeros.bouncy_balls.Objects.Obstacles;
+package org.zeros.bouncy_balls.Objects.Area;
 
 import javafx.geometry.Point2D;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
 
-public class RectangleObstacle extends Obstacle {
+public class RectangleArea extends Area {
 
 
-    public RectangleObstacle(Point2D corner1, Point2D corner3, double rotation) {
+    public RectangleArea(Point2D corner1, Point2D corner3, double rotation) {
+        super();
+        this.rotation=rotation;
         calculateRectanglePointPointRotation(corner1, corner3, rotation);
         calculateBoundaryLines();
         calculateRoughBinds();

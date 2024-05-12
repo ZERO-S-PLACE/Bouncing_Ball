@@ -1,4 +1,4 @@
-package org.zeros.bouncy_balls.Objects.Obstacles;
+package org.zeros.bouncy_balls.Objects.Area;
 
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
@@ -9,7 +9,7 @@ import org.zeros.bouncy_balls.Calculations.VectorMath;
 
 import java.util.ArrayList;
 
-public class Obstacle {
+public class Area {
 
     protected Path path = new Path();
     protected Point2D roughMin;
@@ -20,10 +20,13 @@ public class Obstacle {
     protected ArrayList<ArrayList<LinearEquation>> segmentLines = new ArrayList<>();
     protected ArrayList<Integer> controlPointsTotalCount = new ArrayList<>();
     protected ArrayList<Integer> curvedSegmentsTotalCount = new ArrayList<>();
+    protected double rotation=0;
 
-    protected Obstacle() {
-        path.setFill(Color.BEIGE);
-        path.setStroke(Color.BEIGE);
+
+
+    protected Area() {
+        path.setFill(Color.WHITE);
+        path.setStroke(Color.WHITE);
         path.setStrokeWidth(0);
     }
 
@@ -53,10 +56,6 @@ public class Obstacle {
 
     public ArrayList<Point2D> getCorners() {
         return cornerPoints;
-    }
-
-    public int controlPointsTotalCount(int segment) {
-        return controlPointsTotalCount.get(segment);
     }
 
     public ArrayList<Point2D> getAllPoints() {
@@ -144,9 +143,14 @@ public class Obstacle {
 
         }
     }
+    public void rotateObstacle(Point2D center, double rotation) {
+        rotateObstaclePoints(rotation, center);
+        calculateBoundaryLines();
+        calculateRoughBinds();
+    }
 
 
-    protected void rotateObstacle(double rotation, Point2D center) {
+    protected void rotateObstaclePoints(double rotation, Point2D center) {
         if (rotation != 0) {
 
             Rotate rotate = new Rotate();
@@ -177,6 +181,10 @@ public class Obstacle {
             cornerLines.add(new LinearEquation(cornerPoints.get(i), cornerPoints.get(i + 1)));
         }
     }
+    public double getRotation() {
+        return rotation;
+    }
+
 
 }
 

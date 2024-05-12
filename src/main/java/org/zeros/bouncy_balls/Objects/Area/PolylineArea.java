@@ -1,4 +1,4 @@
-package org.zeros.bouncy_balls.Objects.Obstacles;
+package org.zeros.bouncy_balls.Objects.Area;
 
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
@@ -6,23 +6,24 @@ import javafx.scene.shape.Path;
 
 import java.util.ArrayList;
 
-public class PolylineObstacle extends Obstacle {
+public class PolylineArea extends Area {
     boolean editable = false;
 
-    public PolylineObstacle() {
-        super();
-    }
+    public PolylineArea(Point2D start) {
 
-    public void startDrawingFromPoint(Point2D point) {
+        super();
+        startDrawingFromPoint(start);
+    }
+    private void startDrawingFromPoint(Point2D point) {
         editable = true;
         path = new Path();
         cornerPoints = new ArrayList<>();
         segmentPoints = new ArrayList<>();
         controlPointsTotalCount = new ArrayList<>();
         curvedSegmentsTotalCount = new ArrayList<>();
-        path.setFill(Color.BEIGE);
-        path.setStroke(Color.BEIGE);
-        path.setStrokeWidth(0);
+        path.setFill(Color.WHITE);
+        path.setStroke(Color.WHITE);
+        path.setStrokeWidth(1);
         addStartPoint(point);
     }
 
@@ -51,6 +52,14 @@ public class PolylineObstacle extends Obstacle {
         editable = false;
         calculateBoundaryLines();
         calculateRoughBinds();
+    }
+    public void removeLastSegment(){
+        if (editable&&cornerPoints.size()>1) {
+            path.getElements().removeLast();
+            segmentPoints.removeLast();
+            cornerPoints.removeLast();
+        }
+
     }
 
 }

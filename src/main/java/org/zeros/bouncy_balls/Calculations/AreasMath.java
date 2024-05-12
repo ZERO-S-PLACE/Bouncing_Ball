@@ -1,4 +1,5 @@
 package org.zeros.bouncy_balls.Calculations;
 
-public class Trajectory {
+public class AreasMath {
+
 }

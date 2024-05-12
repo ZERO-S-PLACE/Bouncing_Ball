@@ -21,6 +21,11 @@ public class ViewFactory {
         createStage(loader);
 
     }
+    public void showLevelCreator() {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/LevelCreator.fxml"));
+        loader.setController(Model.getInstance().getLevelCreatorController());
+        createStage(loader);
+    }
 
     public AnchorPane getGameView() {
 
@@ -48,13 +53,9 @@ public class ViewFactory {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-
         Stage stage = new Stage();
-
         stage.getIcons().add(new Image(String.valueOf(ViewFactory.class.getResource("/Icons/ProgramIcon.png"))));
         stage.setScene(scene);
-
         stage.setMaximized(true);
         stage.setTitle("Zeros Paint");
         stage.show();
