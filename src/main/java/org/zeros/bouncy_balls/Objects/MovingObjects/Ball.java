@@ -1,17 +1,18 @@
 package org.zeros.bouncy_balls.Objects.MovingObjects;
 
 import javafx.geometry.Point2D;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import org.zeros.bouncy_balls.Animation.Animation;
 
 public class Ball extends MovingObject {
-
-    public Ball(int radius, Animation animation) {
+    public Ball(double radius, Animation animation) {
         super(animation);
         this.type=MovingObjectType.BALL;
         this.shape=new Circle(Math.max(radius, 1));
         this.furthestSpan=Math.max(radius, 1);
         this.mass=furthestSpan;
+        shape.fillProperty().set(Color.RED);
         ((Circle) shape).setCenterX(centerPoint.getX());
         ((Circle) shape).setCenterY(centerPoint.getY());
     }

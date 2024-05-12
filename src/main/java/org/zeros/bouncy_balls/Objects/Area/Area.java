@@ -1,4 +1,4 @@
-package org.zeros.bouncy_balls.Objects.Obstacles;
+package org.zeros.bouncy_balls.Objects.Area;
 
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
@@ -7,10 +7,9 @@ import javafx.scene.transform.Rotate;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
 import org.zeros.bouncy_balls.Calculations.VectorMath;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Obstacle implements Serializable {
+public class Area {
 
     protected Path path = new Path();
     protected Point2D roughMin;
@@ -25,7 +24,7 @@ public class Obstacle implements Serializable {
 
 
 
-    protected Obstacle() {
+    protected Area() {
         path.setFill(Color.WHITE);
         path.setStroke(Color.WHITE);
         path.setStrokeWidth(0);

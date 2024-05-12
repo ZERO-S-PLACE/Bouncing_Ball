@@ -1,4 +1,4 @@
-package org.zeros.bouncy_balls.Objects.Obstacles;
+package org.zeros.bouncy_balls.Objects.Area;
 
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
@@ -6,10 +6,10 @@ import javafx.scene.shape.Path;
 
 import java.util.ArrayList;
 
-public class PolylineObstacle extends Obstacle {
+public class PolylineArea extends Area {
     boolean editable = false;
 
-    public PolylineObstacle(Point2D start) {
+    public PolylineArea(Point2D start) {
 
         super();
         startDrawingFromPoint(start);

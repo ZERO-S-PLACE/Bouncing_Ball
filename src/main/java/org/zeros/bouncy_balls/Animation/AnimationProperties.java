@@ -13,13 +13,7 @@ public class AnimationProperties implements Serializable {
     private   double FRICTION;
     private double time;
 
-    public double getTime() {
-        return time;
-    }
 
-    public void setTime(double time) {
-        this.time = time;
-    }
 
     public AnimationProperties(int HEIGHT, int WIDTH) {
         this.TYPE=AnimationType.GAME;
@@ -95,6 +89,13 @@ public class AnimationProperties implements Serializable {
 
     public void setFRICTION(double FRICTION) {
         this.FRICTION = FRICTION;
+    }
+    public double getTime() {
+        return time;
+    }
+
+    public void setTime(double time) {
+        this.time = time;
     }
 
 

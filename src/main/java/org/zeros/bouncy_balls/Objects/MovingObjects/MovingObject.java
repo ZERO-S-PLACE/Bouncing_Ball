@@ -9,7 +9,7 @@ import org.zeros.bouncy_balls.Model.Model;
 
 import java.io.Serializable;
 
-public abstract class MovingObject implements Serializable {
+public abstract class MovingObject {
 
     protected  MovingObjectType type;
     protected AnimationProperties animationProperties;
@@ -24,6 +24,7 @@ public abstract class MovingObject implements Serializable {
     protected Point2D centerPoint;
     protected Point2D nextCenterPoint;
     protected double frameElapsed;
+    protected double charge=0;
 
     protected MovingObject(Animation animation) {
         setAnimation(animation);
@@ -80,6 +81,13 @@ public abstract class MovingObject implements Serializable {
     public double frameElapsed() {return frameElapsed;}
     public double getMass() {return mass;}
     public Shape getShape() {return shape;}
+    public double getCharge() {
+        return charge;
+    }
+
+    public void setCharge(double charge) {
+        this.charge = charge;
+    }
 
 }
 

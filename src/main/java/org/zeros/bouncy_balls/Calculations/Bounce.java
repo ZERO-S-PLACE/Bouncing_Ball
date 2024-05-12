@@ -5,7 +5,7 @@ import org.zeros.bouncy_balls.Calculations.Equations.BezierCurve;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
 import org.zeros.bouncy_balls.Calculations.Equations.QuadraticEquation;
 import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;
-import org.zeros.bouncy_balls.Objects.Obstacles.Obstacle;
+import org.zeros.bouncy_balls.Objects.Area.Area;
 
 import java.util.ArrayList;
 
@@ -98,7 +98,7 @@ public class Bounce {
     }
 
 
-    public static boolean ballFromObstacle(Ball ball, Obstacle obstacle) {
+    public static boolean ballFromObstacle(Ball ball, Area obstacle) {
 
         ResultBouncingSet result = new ResultBouncingSet(new Point2D(Double.MAX_VALUE, Double.MAX_VALUE), new Point2D(-Double.MAX_VALUE, -Double.MAX_VALUE), null);
 
@@ -121,7 +121,7 @@ public class Bounce {
         return false;
     }
 
-    private static ResultBouncingSet checkStraightLine(Ball ball, Obstacle obstacle, ResultBouncingSet result, int segment) {
+    private static ResultBouncingSet checkStraightLine(Ball ball, Area obstacle, ResultBouncingSet result, int segment) {
 
         Point2D first = obstacle.getSegmentPoints(segment).getFirst();
         Point2D second = obstacle.getSegmentPoints(segment).getLast();
@@ -153,7 +153,7 @@ public class Bounce {
         return result;
     }
 
-    private static ResultBouncingSet checkBezierCurve(Ball ball, Obstacle obstacle, ResultBouncingSet result, int segment) {
+    private static ResultBouncingSet checkBezierCurve(Ball ball, Area obstacle, ResultBouncingSet result, int segment) {
 
         if (BindsCheck.intersectWithCurveBoundary(ball, obstacle.getSegmentLines(segment), obstacle.getSegmentPoints(segment))) {
             if (obstacle.getSegmentLines(segment).getFirst().distance(ball.nextCenter()) <= ball.getRadius()) {

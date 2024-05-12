@@ -9,12 +9,10 @@ import org.zeros.bouncy_balls.Model.Model;
 import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObject;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObjectType;
-import org.zeros.bouncy_balls.Objects.Obstacles.Obstacle;
-
+import org.zeros.bouncy_balls.Objects.Area.Area;
 import java.util.TreeSet;
 
 public class Animation {
-
     public final Level level;
     private final Borders borders;
     private final TreeSet<Double> timesElapsed = new TreeSet<>();
@@ -33,6 +31,9 @@ public class Animation {
         this.level=level;
         borders = new Borders(this);
         setName(level.getNAME());
+        for (MovingObject object:level.movingObjects()){
+            object.setAnimation(this);
+        }
     }
 
     public String getName() {
@@ -67,7 +68,7 @@ public class Animation {
         level.movingObjects().add(movingObject);
     }
 
-    public void addObstacle(Obstacle obstacle) {
+    public void addObstacle(Area obstacle) {
         level.obstacles().add(obstacle);
     }
 
@@ -75,7 +76,7 @@ public class Animation {
         level.movingObjects().remove(movingObject);
     }
 
-    public void removeObstacle(Obstacle obstacle) {
+    public void removeObstacle(Area obstacle) {
         level.obstacles().remove(obstacle);
     }
 
@@ -161,7 +162,7 @@ public class Animation {
 
     private boolean bouncedAgainstObstacle() {
         boolean temp = false;
-        for (Obstacle obstacle : level.obstacles()) {
+        for (Area obstacle : level.obstacles()) {
             if (BindsCheck.isInsideRoughBinds(level.movingObjects().get(mObj1), obstacle)) {
                 if (level.movingObjects().get(mObj1).getType().equals(MovingObjectType.BALL)) {
                     if (BindsCheck.intersectsWithObstacle(((Ball) level.movingObjects().get(mObj1)), obstacle)) {
@@ -220,7 +221,7 @@ public class Animation {
                 }
 
             }
-            for (Obstacle obstacle2 : level.obstacles()) {
+            for (Area obstacle2 : level.obstacles()) {
                 if (BindsCheck.intersectsWithObstacle(ball, obstacle2)) {
                     return false;
                 }
@@ -231,6 +232,10 @@ public class Animation {
 
     public AnimationProperties getPROPERTIES() {
         return level.PROPERTIES();
+    }
+
+    public Level getLevel() {
+        return level;
     }
 
     public Borders getBorders() {

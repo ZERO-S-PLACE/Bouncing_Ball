@@ -1,12 +1,12 @@
-package org.zeros.bouncy_balls.Objects.Obstacles;
+package org.zeros.bouncy_balls.Objects.Area;
 
 import javafx.geometry.Point2D;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
 
-public class OvalObstacle extends Obstacle {
-    private double radiusX;
-    private double radiusY;
-    private Point2D center;
+public class OvalArea extends Area {
+    private final double radiusX;
+    private final double radiusY;
+    private  Point2D center;
 
     public double getRadiusX() {
         return radiusX;
@@ -20,7 +20,7 @@ public class OvalObstacle extends Obstacle {
         return center;
     }
 
-    public OvalObstacle(Point2D center, double radiusX, double radiusY, double rotation) {
+    public OvalArea(Point2D center, double radiusX, double radiusY, double rotation) {
         super();
         this.rotation=rotation;
         this.center=center;

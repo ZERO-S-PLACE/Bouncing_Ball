@@ -14,10 +14,11 @@ import org.zeros.bouncy_balls.Controllers.LevelCreatorController;
 import org.zeros.bouncy_balls.Model.Model;
 import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObject;
-import org.zeros.bouncy_balls.Objects.Obstacles.Obstacle;
-import org.zeros.bouncy_balls.Objects.Obstacles.OvalObstacle;
-import org.zeros.bouncy_balls.Objects.Obstacles.PolylineObstacle;
-import org.zeros.bouncy_balls.Objects.Obstacles.RectangleObstacle;
+import org.zeros.bouncy_balls.Objects.Area.Area;
+import org.zeros.bouncy_balls.Objects.Area.OvalArea;
+import org.zeros.bouncy_balls.Objects.Area.PolylineArea;
+import org.zeros.bouncy_balls.Objects.Area.RectangleArea;
+import org.zeros.bouncy_balls.Serialization.SerializableObjects.LevelSerializable;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -41,7 +42,7 @@ public class LevelCreator {
         if(agreeTo("Check animation?")){
             animation=new Animation(level);
             Platform.runLater(()->Model.getInstance().getLevelCreatorController().preview.getChildren().removeAll(Model.getInstance().getLevelCreatorController().preview.getChildren()));
-            for (Obstacle obstacle:animation.level.obstacles()){
+            for (Area obstacle:animation.level.obstacles()){
                 Platform.runLater(()->Model.getInstance().getLevelCreatorController().preview.getChildren().add(obstacle.getPath()));
             }
             for (MovingObject obj:animation.level.movingObjects()){
@@ -179,18 +180,18 @@ public class LevelCreator {
             } else return;
         }
     }
-    private void addObstacle(Obstacle obstacle) {
+    private void addObstacle(Area obstacle) {
         level.obstacles().add(obstacle);
         Platform.runLater(()->Model.getInstance().getLevelCreatorController().preview.getChildren().add(
                 obstacle.getPath()));
     }
-    private void removeObstacle(Obstacle obstacle) {
+    private void removeObstacle(Area obstacle) {
         level.obstacles().removeLast();
         Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().remove(obstacle.getPath()));
     }
 
     private void addRectangle() {
-        RectangleObstacle rectangle =new RectangleObstacle(getPoint("Corner 1:"), getPoint("Corner 3:"),0);
+        RectangleArea rectangle =new RectangleArea(getPoint("Corner 1:"), getPoint("Corner 3:"),0);
         rectangle=modifyRectangle(rectangle);
         addObstacle(rectangle);
         if (!agreeTo("Save?")) {
@@ -200,18 +201,18 @@ public class LevelCreator {
 
 
 
-    private RectangleObstacle modifyRectangle(RectangleObstacle rectangle) {
+    private RectangleArea modifyRectangle(RectangleArea rectangle) {
             while (true) {
-                RectangleObstacle temp=rectangle;
+                RectangleArea temp=rectangle;
                 addObstacle(temp);
                 switch ((int)getNumber("Change property:0-no 1- corner 1,2-rotation,3-corner 3")) {
                     case 0 -> {removeObstacle(temp);
                         return rectangle;}
-                    case 1-> rectangle =new RectangleObstacle(getPoint("Corner 1:"),
+                    case 1-> rectangle =new RectangleArea(getPoint("Corner 1:"),
                             rectangle.getCorners().get(2),rectangle.getRotation());
-                    case 2->rectangle=new RectangleObstacle(rectangle.getCorners().getFirst(),
+                    case 2->rectangle=new RectangleArea(rectangle.getCorners().getFirst(),
                             rectangle.getCorners().get(2),getNumber("Rotation")/360*2*Math.PI);
-                    case 3->rectangle= new RectangleObstacle(rectangle.getCorners().get(0),getPoint("Corner 3:"),rectangle.getRotation());
+                    case 3->rectangle= new RectangleArea(rectangle.getCorners().get(0),getPoint("Corner 3:"),rectangle.getRotation());
                 }
                 removeObstacle(temp);
             }
@@ -222,7 +223,7 @@ public class LevelCreator {
 
     private void addOval() {
         Point2D center=getPoint("Center:");
-        OvalObstacle oval =new OvalObstacle(center,
+        OvalArea oval =new OvalArea(center,
                 getDimension("Radius X:",center),getDimension("Radius Y:",center),0);
         oval=modifyOval(oval);
         addObstacle(oval);
@@ -231,20 +232,20 @@ public class LevelCreator {
         }
     }
 
-    private OvalObstacle modifyOval(OvalObstacle oval) {
+    private OvalArea modifyOval(OvalArea oval) {
         while (true) {
-            OvalObstacle temp =oval;
+            OvalArea temp =oval;
             addObstacle(temp);
             switch ((int)getNumber("Change property:0-no 1- center ,2-rotation,3-radius X 4-radius Y")) {
                 case 0 -> {removeObstacle(temp);
                             return oval;}
-                case 1-> oval =new OvalObstacle(getPoint("Center:"),
+                case 1-> oval =new OvalArea(getPoint("Center:"),
                        oval.getRadiusX(),oval.getRadiusY(),oval.getRotation());
-                case 2->oval=new OvalObstacle(oval.getCenter(),
+                case 2->oval=new OvalArea(oval.getCenter(),
                         oval.getRadiusX(),oval.getRadiusY(),getNumber("Rotation")/360*2*Math.PI);
-                case 3-> oval =new OvalObstacle(oval.getCenter(),
+                case 3-> oval =new OvalArea(oval.getCenter(),
                         getDimension("Radius X:",oval.getCenter()),oval.getRadiusY(),oval.getRotation());
-                case 4-> oval =new OvalObstacle(oval.getCenter(),oval.getRadiusX(),
+                case 4-> oval =new OvalArea(oval.getCenter(),oval.getRadiusX(),
                         getDimension("Radius Y:",oval.getCenter()),oval.getRotation());
             }
             removeObstacle(temp);
@@ -254,7 +255,7 @@ public class LevelCreator {
 
     private void addPolyLine() {
         Point2D start=getPoint("Start:");
-        PolylineObstacle plObst =new PolylineObstacle(start);
+        PolylineArea plObst =new PolylineArea(start);
         addObstacle(plObst);
         modifyPolyLine(plObst);
         if (!agreeTo("Save?")) {
@@ -266,7 +267,7 @@ public class LevelCreator {
 
     }
 
-    private void modifyPolyLine(PolylineObstacle plObst) {
+    private void modifyPolyLine(PolylineArea plObst) {
         while (true) {
             switch ((int)getNumber("Next segment:0-no 1- line ,2- quad curve,3-cubic curve 4-removeLast")) {
                 case 0 -> {
@@ -393,6 +394,7 @@ public class LevelCreator {
         name=name.replace(" ","_");
         name=name.replace(".","_");
         level.setNAME(name);
+        LevelSerializable save=new LevelSerializable(level);
         name=name+".ser";
         if(level.PROPERTIES().getTYPE().equals(AnimationType.GAME))
         {
@@ -402,7 +404,7 @@ public class LevelCreator {
         }
         try (FileOutputStream fileOut = new FileOutputStream(name);
              ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
-            out.writeObject(level);
+            out.writeObject(save);
         } catch (IOException e) {
             e.printStackTrace();
             if(agreeTo("Saving failed, try again?")){

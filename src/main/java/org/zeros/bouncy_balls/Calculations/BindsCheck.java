@@ -4,14 +4,14 @@ import javafx.geometry.Point2D;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
 import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObject;
-import org.zeros.bouncy_balls.Objects.Obstacles.Obstacle;
+import org.zeros.bouncy_balls.Objects.Area.Area;
 
 import java.util.ArrayList;
 
 public class BindsCheck {
 
 
-    public static boolean isInsideRoughBinds(MovingObject movingObject, Obstacle obstacle) {
+    public static boolean isInsideRoughBinds(MovingObject movingObject, Area obstacle) {
 
         return movingObject.nextCenter().getX() + 2 * movingObject.getFurthestSpan() >= obstacle.getRoughMin().getX() && movingObject.nextCenter().getX() - 2 * movingObject.getFurthestSpan() <= obstacle.getRoughMax().getX() && movingObject.nextCenter().getY() + 2 * movingObject.getFurthestSpan() >= obstacle.getRoughMin().getY() && movingObject.nextCenter().getY() - 2 * movingObject.getFurthestSpan() <= obstacle.getRoughMax().getY();
     }
@@ -23,7 +23,7 @@ public class BindsCheck {
 
     }
 
-    public static boolean intersectsWithObstacle(Ball ball, Obstacle obstacle) {
+    public static boolean intersectsWithObstacle(Ball ball, Area obstacle) {
         return (intersectWithCornersPolygon(ball, obstacle.getCornerLines(), obstacle.getCorners()) || intersectWithCornersPolygon(ball, obstacle.getAllLines(), obstacle.getAllPoints()));
     }
 
