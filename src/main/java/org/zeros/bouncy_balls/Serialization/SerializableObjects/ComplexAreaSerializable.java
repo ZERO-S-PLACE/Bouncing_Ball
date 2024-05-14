@@ -7,8 +7,17 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class ComplexAreaSerializable implements Serializable {
-    private final ArrayList<AreaSerializable> includedAreas=new ArrayList<>();
-    private final ArrayList<AreaSerializable> excludedAreas=new ArrayList<>();
+    private final ArrayList<AreaSerializable> includedAreas = new ArrayList<>();
+    private final ArrayList<AreaSerializable> excludedAreas = new ArrayList<>();
+
+    public ComplexAreaSerializable(ComplexArea complexArea) {
+        for (Area area : complexArea.includedAreas()) {
+            includedAreas.add(new AreaSerializable(area));
+        }
+        for (Area area : complexArea.excludedAreas()) {
+            excludedAreas.add(new AreaSerializable(area));
+        }
+    }
 
     public ArrayList<AreaSerializable> getIncludedAreas() {
         return includedAreas;
@@ -18,20 +27,12 @@ public class ComplexAreaSerializable implements Serializable {
         return excludedAreas;
     }
 
-    public ComplexAreaSerializable(ComplexArea complexArea){
-        for (Area area:complexArea.includedAreas()){
-            includedAreas.add(new AreaSerializable(area));
-        }
-        for (Area area:complexArea.excludedAreas()){
-            excludedAreas.add(new AreaSerializable(area));
-        }
-    }
-    public ComplexArea deserialize(){
-        ComplexArea area=new ComplexArea();
-        for (AreaSerializable areaS: includedAreas){
+    public ComplexArea deserialize() {
+        ComplexArea area = new ComplexArea();
+        for (AreaSerializable areaS : includedAreas) {
             area.includedAreas().add(areaS.deserialize());
         }
-        for (AreaSerializable areaS: excludedAreas){
+        for (AreaSerializable areaS : excludedAreas) {
             area.excludedAreas().add(areaS.deserialize());
         }
         return area;
