@@ -13,7 +13,8 @@ import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObject;
 public class InputOnRun {
 
     private final AnchorPane panel;
-    private final int clicksCount = 0;    private final EventHandler<MouseEvent> mouseInputHandler = this::getMouseInput;
+    private final int clicksCount = 0;
+    private final EventHandler<MouseEvent> mouseInputHandler = this::getMouseInput;
     private Circle positionMarker;
     private final EventHandler<MouseEvent> mouseMovedHandler = this::onMouseMoved;
     private final MovingObject object;

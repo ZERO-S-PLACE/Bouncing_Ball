@@ -15,12 +15,17 @@ import java.util.TreeSet;
 
 public class Animation {
     public final Level level;
-    private final Borders borders;
+    private Borders borders;
     private final TreeSet<Double> timesElapsed = new TreeSet<>();
-    private double startTime;
     private double timeUsed = 0;
     private int mObj1;
     private String name;
+    private final AnimationTimer timer = new AnimationTimer() {
+        @Override
+        public void handle(long now) {
+            animateThis();
+        }
+    };
 
     public Animation(Level level) {
         this.level = level;
@@ -30,69 +35,31 @@ public class Animation {
         for (MovingObject object : level.movingObjects()) {
             object.setAnimation(this);
         }
-    }    private final AnimationTimer timer = new AnimationTimer() {
-        @Override
-        public void handle(long now) {
-            animateThis();
-        }
-
-    };
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        if (Model.getInstance().getRunningAnimations().isEmpty()) {
-            this.name = name;
-            Model.getInstance().addAnimation(this);
-        } else {
-            for (Animation animation1 : Model.getInstance().getRunningAnimations()) {
-                if (animation1.getName().equals(name)) {
-                    setName(name + "_1");
-                    return;
-                }
-            }
-            this.name = name;
-        }
     }
 
     public void animate() {
         setFinalPositions();
-        startTime = System.currentTimeMillis();
+        timeUsed=0;
         timer.start();
+    }
+    public void reloadBorders(){
+        borders = new Borders(this);
     }
 
     public void pause() {
-        timeUsed = System.currentTimeMillis() - startTime;
         timer.stop();
     }
 
-    public void addMovingObject(MovingObject movingObject) {
-        level.movingObjects().add(movingObject);
-    }
-
-    public void addObstacle(Area obstacle) {
-        level.obstacles().add(obstacle);
-    }
-
-    public void removeMovingObject(MovingObject movingObject) {
-        level.movingObjects().remove(movingObject);
-    }
-
-    public void removeObstacle(Area obstacle) {
-        level.obstacles().remove(obstacle);
-    }
-
     private void animateThis() {
+        double timeStart = System.currentTimeMillis();
         searchForBounces();
         setFinalPositions();
-        if (System.currentTimeMillis() - startTime + timeUsed > level.PROPERTIES().getTime() * 1000) {
+        timeUsed=timeUsed+System.currentTimeMillis()-timeStart;
+        if (timeUsed> level.PROPERTIES().getTIME() * 1000) {
             pause();
         }
 
     }
-
     private void searchForBounces() {
         singleBouncesCheck(0);
         int i = 0;
@@ -111,8 +78,6 @@ public class Animation {
 
             i++;
         }
-
-
     }
 
     private void singleBouncesCheck(double frameElapsed) {
@@ -133,7 +98,6 @@ public class Animation {
             }
         }
     }
-
     private void setFinalPositions() {
         for (MovingObject movingObject : level.movingObjects()) {
             movingObject.nextFrame();
@@ -195,7 +159,6 @@ public class Animation {
 
             }
         }
-
         return temp;
     }
 
@@ -225,13 +188,29 @@ public class Animation {
     public AnimationProperties getPROPERTIES() {
         return level.PROPERTIES();
     }
-
     public Level getLevel() {
         return level;
     }
-
     public Borders getBorders() {
         return borders;
+    }
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        if (Model.getInstance().getRunningAnimations().isEmpty()) {
+            this.name = name;
+            Model.getInstance().addAnimation(this);
+        } else {
+            for (Animation animation1 : Model.getInstance().getRunningAnimations()) {
+                if (animation1.getName().equals(name)) {
+                    setName(name + "_1");
+                    return;
+                }
+            }
+            this.name = name;
+        }
     }
 
 

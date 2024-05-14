@@ -1,4 +1,4 @@
-package org.zeros.bouncy_balls.Serialization.SerializableObjects;
+package org.zeros.bouncy_balls.Objects.SerializableObjects;
 
 import javafx.geometry.Point2D;
 
@@ -20,5 +20,9 @@ public class Point2DSerializable implements Serializable {
 
     public Point2D deserialize() {
         return new Point2D(x, y);
+    }
+
+    public Point2DSerializable multiply(double factor) {
+        return new Point2DSerializable(x*factor,y*factor);
     }
 }

@@ -1,4 +1,4 @@
-package org.zeros.bouncy_balls.Serialization.SerializableObjects;
+package org.zeros.bouncy_balls.Objects.SerializableObjects;
 
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Paint;
@@ -26,7 +26,6 @@ public class AreaSerializable implements Serializable {
             segmentPoints.add(points);
         }
     }
-
     public Area deserialize() {
         PolylineArea area = new PolylineArea(segmentPoints.getFirst().getFirst().deserialize());
         for (ArrayList<Point2DSerializable> points : segmentPoints) {
@@ -43,5 +42,12 @@ public class AreaSerializable implements Serializable {
         area.getPath().strokeProperty().set(Paint.valueOf(lineColor));
         area.getPath().strokeWidthProperty().set(lineWidth);
         return area;
+    }
+    public void rescale(double factor){
+        for (ArrayList<Point2DSerializable> points : segmentPoints) {
+           points.replaceAll(point ->point.multiply(factor));
+        }
+
+
     }
 }

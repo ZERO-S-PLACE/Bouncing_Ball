@@ -23,6 +23,13 @@ public class Ball extends MovingObject {
         ((Circle) shape).setCenterX(centerPoint.getX());
         ((Circle) shape).setCenterY(centerPoint.getY());
     }
+    @Override
+    public void rescale(double factor) {
+        super.rescale(factor);
+        ((Circle) shape).setCenterX(centerPoint.getX());
+        ((Circle) shape).setCenterY(centerPoint.getY());
+        ((Circle) shape).setRadius(furthestSpan);
+    }
     public void setRadius(double radius) {
         this.furthestSpan=radius;
         ((Circle) shape).setRadius(radius);

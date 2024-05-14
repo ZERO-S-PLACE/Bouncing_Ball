@@ -38,6 +38,17 @@ public abstract class MovingObject {
         updateNextCenter();
         updateVelocity();
         frameElapsed = 0.0;
+    }
+    public void rescale(double factor) {
+        velocity=velocity.multiply(factor);
+        acceleration=acceleration.multiply(factor);
+        centerPoint=centerPoint.multiply(factor);
+        furthestSpan=furthestSpan*factor;
+        if(nextCenterPoint!=null) {
+            nextCenterPoint = nextCenterPoint.multiply(factor);
+            trajectory = new LinearEquation(centerPoint, nextCenterPoint);
+        }
+
 
     }
     public void updateVelocity(Point2D velocity, double frameElapsed) {
@@ -88,6 +99,7 @@ public abstract class MovingObject {
     public void setCharge(double charge) {
         this.charge = charge;
     }
+
 
 }
 

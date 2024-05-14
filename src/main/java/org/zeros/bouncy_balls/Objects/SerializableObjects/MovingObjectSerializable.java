@@ -1,4 +1,4 @@
-package org.zeros.bouncy_balls.Serialization.SerializableObjects;
+package org.zeros.bouncy_balls.Objects.SerializableObjects;
 
 import javafx.scene.paint.Paint;
 import org.zeros.bouncy_balls.Animation.Animation;

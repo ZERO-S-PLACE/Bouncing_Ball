@@ -75,4 +75,13 @@ public class ComplexArea implements Serializable {
     public ArrayList<Area> excludedAreas() {
         return excludedAreas;
     }
+
+    public void rescale(double factor) {
+        for (Area area : includedAreas) {
+            area.rescale(factor);
+        }
+        for (Area area : excludedAreas) {
+            area.rescale(factor);
+        }
+    }
 }

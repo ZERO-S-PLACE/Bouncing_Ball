@@ -11,7 +11,7 @@ public class AnimationProperties implements Serializable {
     private   BordersType BOUNDARIES;
     private   int MAX_EVALUATIONS;
     private   double FRICTION;
-    private double time;
+    private double TIME;
 
 
 
@@ -23,7 +23,7 @@ public class AnimationProperties implements Serializable {
         this.FRAME_RATE = 120;
         this.BOUNDARIES = BordersType.BOUNCING;
         this.MAX_EVALUATIONS = 150;
-        this.time=240;
+        this.TIME =240;
         this.FRICTION=0;
     }
 
@@ -90,12 +90,12 @@ public class AnimationProperties implements Serializable {
     public void setFRICTION(double FRICTION) {
         this.FRICTION = FRICTION;
     }
-    public double getTime() {
-        return time;
+    public double getTIME() {
+        return TIME;
     }
 
-    public void setTime(double time) {
-        this.time = time;
+    public void setTIME(double TIME) {
+        this.TIME = TIME;
     }
 
 

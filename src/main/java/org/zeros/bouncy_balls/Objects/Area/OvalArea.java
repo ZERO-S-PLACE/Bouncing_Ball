@@ -6,8 +6,6 @@ import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
 public class OvalArea extends Area {
     private final double radiusX;
     private final double radiusY;
-    private  Point2D center;
-
     public double getRadiusX() {
         return radiusX;
     }
@@ -16,14 +14,11 @@ public class OvalArea extends Area {
         return radiusY;
     }
 
-    public Point2D getCenter() {
-        return center;
-    }
 
     public OvalArea(Point2D center, double radiusX, double radiusY, double rotation) {
         super();
         this.rotation=rotation;
-        this.center=center;
+        this.massCenter=center;
         this.radiusX=radiusX;
         this.radiusY=radiusY;
         calculateOval(center, radiusX, radiusY, rotation);

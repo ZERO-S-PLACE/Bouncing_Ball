@@ -17,7 +17,7 @@ public class Model {
     private final ViewFactory viewFactory;
     private GamePanelController gamePanelController;
     private LevelCreatorController levelCreatorController;
-    private ArrayList<Animation> runningAnimations=new ArrayList<>();
+    private final ArrayList<Animation> runningAnimations=new ArrayList<>();
     private static Model model;
 
     private Model() {

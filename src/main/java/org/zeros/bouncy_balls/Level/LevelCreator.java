@@ -18,7 +18,7 @@ import org.zeros.bouncy_balls.Objects.Area.PolylineArea;
 import org.zeros.bouncy_balls.Objects.Area.RectangleArea;
 import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObject;
-import org.zeros.bouncy_balls.Serialization.SerializableObjects.LevelSerializable;
+import org.zeros.bouncy_balls.Objects.SerializableObjects.LevelSerializable;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -115,7 +115,7 @@ public class LevelCreator {
         AnimationProperties properties = new AnimationProperties(HEIGHT, WIDTH);
 
         if (agreeTo("Custom properties Y/N")) {
-            properties.setTime(Math.abs(getNumber("Time of animation: ")));
+            properties.setTIME(Math.abs(getNumber("Time of animation: ")));
             properties.setGRAVITY(getGravity());
             properties.setBOUNDARIES(getBordersType());
             properties.setFRICTION(getNumber("Friction 0-1"));
@@ -275,11 +275,11 @@ public class LevelCreator {
                 case 1 ->
                         oval = new OvalArea(getPoint("Center:"), oval.getRadiusX(), oval.getRadiusY(), oval.getRotation());
                 case 2 ->
-                        oval = new OvalArea(oval.getCenter(), oval.getRadiusX(), oval.getRadiusY(), getNumber("Rotation") / 360 * 2 * Math.PI);
+                        oval = new OvalArea(oval.getMassCenter(), oval.getRadiusX(), oval.getRadiusY(), getNumber("Rotation") / 360 * 2 * Math.PI);
                 case 3 ->
-                        oval = new OvalArea(oval.getCenter(), getDimension("Radius X:", oval.getCenter()), oval.getRadiusY(), oval.getRotation());
+                        oval = new OvalArea(oval.getMassCenter(), getDimension("Radius X:", oval.getMassCenter()), oval.getRadiusY(), oval.getRotation());
                 case 4 ->
-                        oval = new OvalArea(oval.getCenter(), oval.getRadiusX(), getDimension("Radius Y:", oval.getCenter()), oval.getRotation());
+                        oval = new OvalArea(oval.getMassCenter(), oval.getRadiusX(), getDimension("Radius Y:", oval.getMassCenter()), oval.getRotation());
             }
             removeObstacle(temp);
         }

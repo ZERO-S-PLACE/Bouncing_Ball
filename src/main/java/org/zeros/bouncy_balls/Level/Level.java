@@ -5,7 +5,9 @@ import org.zeros.bouncy_balls.Animation.AnimationType;
 import org.zeros.bouncy_balls.Objects.Area.Area;
 import org.zeros.bouncy_balls.Objects.Area.ComplexArea;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObject;
-import org.zeros.bouncy_balls.Serialization.SerializableObjects.LevelSerializable;
+import org.zeros.bouncy_balls.Objects.SerializableObjects.AreaSerializable;
+import org.zeros.bouncy_balls.Objects.SerializableObjects.LevelSerializable;
+import org.zeros.bouncy_balls.Objects.SerializableObjects.MovingObjectSerializable;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -41,6 +43,32 @@ public class Level implements Serializable {
             return null;
         } else {
             return save.deserialize();
+        }
+    }
+
+    public void rescale(double factor){
+        if(factor>0&&factor!=1){
+            PROPERTIES.setGRAVITY(factor*PROPERTIES.getGRAVITY());
+            PROPERTIES.setWIDTH((int) (PROPERTIES.getWIDTH()*factor));
+            PROPERTIES.setHEIGHT((int) (PROPERTIES.getHEIGHT()*factor));
+            for (MovingObject object : movingObjects) {
+                object.rescale(factor);
+            }
+            for (Area area : obstacles) {
+                area.rescale(factor);
+            }
+            for (MovingObject object : movingObjectsToAdd) {
+               object.rescale(factor);
+            }
+            for (Area area : obstaclesToAdd) {
+                area.rescale(factor);
+            }
+            if (inputArea != null) {
+                inputArea.rescale(factor);
+            }
+            if (targetArea != null) {
+                targetArea.rescale(factor);
+            }
         }
 
 

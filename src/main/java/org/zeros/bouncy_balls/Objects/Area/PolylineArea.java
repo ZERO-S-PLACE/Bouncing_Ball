@@ -19,8 +19,6 @@ public class PolylineArea extends Area {
         path = new Path();
         cornerPoints = new ArrayList<>();
         segmentPoints = new ArrayList<>();
-        controlPointsTotalCount = new ArrayList<>();
-        curvedSegmentsTotalCount = new ArrayList<>();
         path.setFill(Color.WHITE);
         path.setStroke(Color.WHITE);
         path.setStrokeWidth(1);
@@ -52,6 +50,7 @@ public class PolylineArea extends Area {
         editable = false;
         calculateBoundaryLines();
         calculateRoughBinds();
+        calculateMassCenter();
     }
     public void removeLastSegment(){
         if (editable&&cornerPoints.size()>1) {

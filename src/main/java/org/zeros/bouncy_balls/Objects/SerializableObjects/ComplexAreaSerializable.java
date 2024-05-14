@@ -1,4 +1,4 @@
-package org.zeros.bouncy_balls.Serialization.SerializableObjects;
+package org.zeros.bouncy_balls.Objects.SerializableObjects;
 
 import org.zeros.bouncy_balls.Objects.Area.Area;
 import org.zeros.bouncy_balls.Objects.Area.ComplexArea;

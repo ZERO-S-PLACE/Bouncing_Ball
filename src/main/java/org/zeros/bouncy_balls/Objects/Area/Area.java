@@ -6,6 +6,7 @@ import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
 import org.zeros.bouncy_balls.Calculations.VectorMath;
+import org.zeros.bouncy_balls.Objects.SerializableObjects.AreaSerializable;
 
 import java.util.ArrayList;
 
@@ -18,68 +19,50 @@ public class Area {
     protected ArrayList<ArrayList<Point2D>> segmentPoints = new ArrayList<>();
     protected ArrayList<LinearEquation> cornerLines = new ArrayList<>();
     protected ArrayList<ArrayList<LinearEquation>> segmentLines = new ArrayList<>();
-    protected ArrayList<Integer> controlPointsTotalCount = new ArrayList<>();
-    protected ArrayList<Integer> curvedSegmentsTotalCount = new ArrayList<>();
     protected double rotation=0;
-
-
-
+    protected Point2D massCenter;
     protected Area() {
         path.setFill(Color.WHITE);
         path.setStroke(Color.WHITE);
         path.setStrokeWidth(0);
     }
 
-    public ArrayList<LinearEquation> getCornerLines() {
-        return cornerLines;
+
+
+    public void rescale(double factor) {
+        AreaSerializable temp = new AreaSerializable(this);
+        temp.rescale(factor);
+        Area area=temp.deserialize();
+        this.path=area.getPath();
+        this.segmentPoints=area.segmentPoints;
+        this.cornerPoints=area.cornerPoints;
+        this.cornerLines=area.getCornerLines();
+        this.segmentLines=area.getSegmentLines();
+        this.rotation=area.getRotation();
+        this.massCenter=area.getMassCenter();
+        this.roughMin=area.roughMin;
+        this.roughMax=area.roughMax;
+
     }
 
-    public ArrayList<LinearEquation> getSegmentLines(int segment) {
-        return segmentLines.get(segment);
-    }
 
-    public Point2D getRoughMin() {
-        return roughMin;
-    }
-
-    public Point2D getRoughMax() {
-        return roughMax;
-    }
-
-    public ArrayList<Point2D> getSegmentPoints(int segment) {
-        return segmentPoints.get(segment);
-    }
-
-    public Path getPath() {
-        return path;
-    }
-
-    public ArrayList<Point2D> getCorners() {
-        return cornerPoints;
-    }
-
-    public ArrayList<Point2D> getAllPoints() {
-        ArrayList<Point2D> points = new ArrayList<>();
-        points.add(segmentPoints.getFirst().getFirst());
-        for (ArrayList<Point2D> iSegmentPoints : segmentPoints) {
-            for (int i = 1; i < iSegmentPoints.size(); i++) {
-                points.add(iSegmentPoints.get(i));
-            }
-        }
-        return points;
-    }
-
-    public ArrayList<LinearEquation> getAllLines() {
-        ArrayList<LinearEquation> lines = new ArrayList<>();
-        for (ArrayList<LinearEquation> iSegmentLines : segmentLines) {
-            lines.addAll(iSegmentLines);
-        }
-        return lines;
-    }
 
     protected void addStartPoint(Point2D point) {
         path.getElements().add(new MoveTo(point.getX(), point.getY()));
         cornerPoints.add(point);
+    }
+    protected void calculateMassCenter(){
+        /*double totalArea=0;
+        Point2D sumCoordinate=new Point2D(0,0);
+        Point2D first =cornerPoints.getFirst();
+        Point2D second=cornerPoints.get(1);
+        for (int i=2;i<cornerPoints.size();i++)
+
+        for (ArrayList<Point2D> points:segmentPoints){
+            if()
+        }*/
+
+
     }
 
     protected void addStraightLineTo(Point2D point) {
@@ -184,6 +167,64 @@ public class Area {
     public double getRotation() {
         return rotation;
     }
+    public ArrayList<LinearEquation> getCornerLines() {
+        return cornerLines;
+    }
+
+    public ArrayList<LinearEquation> getSegmentLines(int segment) {
+        return segmentLines.get(segment);
+    }
+
+    public Point2D getRoughMin() {
+        return roughMin;
+    }
+
+    public Point2D getRoughMax() {
+        return roughMax;
+    }
+
+    public ArrayList<Point2D> getSegmentPoints(int segment) {
+        return segmentPoints.get(segment);
+    }
+
+
+    public Path getPath() {
+        return path;
+    }
+
+    public ArrayList<Point2D> getCorners() {
+        return cornerPoints;
+    }
+
+    public Point2D getMassCenter() {
+        return massCenter;
+    }
+
+    public ArrayList<Point2D> getAllPoints() {
+        ArrayList<Point2D> points = new ArrayList<>();
+        points.add(segmentPoints.getFirst().getFirst());
+        for (ArrayList<Point2D> iSegmentPoints : segmentPoints) {
+            for (int i = 1; i < iSegmentPoints.size(); i++) {
+                points.add(iSegmentPoints.get(i));
+            }
+        }
+        return points;
+    }
+    public ArrayList<ArrayList<Point2D>> getSegmentPoints() {
+        return segmentPoints;
+    }
+
+    public ArrayList<LinearEquation> getAllLines() {
+        ArrayList<LinearEquation> lines = new ArrayList<>();
+        for (ArrayList<LinearEquation> iSegmentLines : segmentLines) {
+            lines.addAll(iSegmentLines);
+        }
+        return lines;
+    }
+    public ArrayList<ArrayList<LinearEquation>> getSegmentLines() {
+        return segmentLines;
+    }
+
 
 
 }
