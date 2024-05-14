@@ -1,6 +1,8 @@
-package org.zeros.bouncy_balls.Animation;
+package org.zeros.bouncy_balls.Animation.Borders;
 
 import javafx.geometry.Point2D;
+import org.zeros.bouncy_balls.Animation.Animation.Animation;
+import org.zeros.bouncy_balls.Animation.Animation.AnimationProperties;
 import org.zeros.bouncy_balls.Calculations.Bounce;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
 import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;

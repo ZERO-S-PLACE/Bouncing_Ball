@@ -6,10 +6,10 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import org.zeros.bouncy_balls.Animation.Animation;
-import org.zeros.bouncy_balls.Animation.AnimationProperties;
-import org.zeros.bouncy_balls.Animation.AnimationType;
-import org.zeros.bouncy_balls.Animation.BordersType;
+import org.zeros.bouncy_balls.Animation.Animation.Animation;
+import org.zeros.bouncy_balls.Animation.Animation.AnimationProperties;
+import org.zeros.bouncy_balls.Animation.Animation.AnimationType;
+import org.zeros.bouncy_balls.Animation.Borders.BordersType;
 import org.zeros.bouncy_balls.Controllers.LevelCreatorController;
 import org.zeros.bouncy_balls.Model.Model;
 import org.zeros.bouncy_balls.Objects.Area.Area;
@@ -335,7 +335,9 @@ public class LevelCreator {
                 case 2 -> {
                     return BordersType.INFINITE;
                 }
-                default -> System.out.println("Wrong value");
+                default -> {
+                    return getBordersType();
+                }
             }
         }
     }
@@ -346,7 +348,7 @@ public class LevelCreator {
             if (value > 0 && value < 100) {
                 return value;
             } else {
-                System.out.println("Wrong value");
+                return getGravity();
             }
         }
     }

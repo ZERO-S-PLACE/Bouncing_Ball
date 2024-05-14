@@ -1,4 +1,6 @@
-package org.zeros.bouncy_balls.Animation;
+package org.zeros.bouncy_balls.Animation.Animation;
+
+import org.zeros.bouncy_balls.Animation.Borders.BordersType;
 
 import java.io.Serializable;
 
@@ -8,7 +10,7 @@ public class AnimationProperties implements Serializable {
     private   int WIDTH;
     private   double GRAVITY;
     private   double FRAME_RATE;
-    private   BordersType BOUNDARIES;
+    private BordersType BOUNDARIES;
     private   int MAX_EVALUATIONS;
     private   double FRICTION;
     private double TIME;

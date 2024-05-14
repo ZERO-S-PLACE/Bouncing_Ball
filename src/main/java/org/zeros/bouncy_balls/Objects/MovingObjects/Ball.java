@@ -3,7 +3,7 @@ package org.zeros.bouncy_balls.Objects.MovingObjects;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import org.zeros.bouncy_balls.Animation.Animation;
+import org.zeros.bouncy_balls.Animation.Animation.Animation;
 
 public class Ball extends MovingObject {
     public Ball(double radius, Animation animation) {

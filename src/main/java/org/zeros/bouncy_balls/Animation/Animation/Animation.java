@@ -1,7 +1,9 @@
-package org.zeros.bouncy_balls.Animation;
+package org.zeros.bouncy_balls.Animation.Animation;
 
 import javafx.animation.AnimationTimer;
 import javafx.geometry.Point2D;
+import org.zeros.bouncy_balls.Animation.Borders.Borders;
+import org.zeros.bouncy_balls.Animation.Borders.BordersType;
 import org.zeros.bouncy_balls.Calculations.BindsCheck;
 import org.zeros.bouncy_balls.Calculations.Bounce;
 import org.zeros.bouncy_balls.Level.Level;
@@ -20,6 +22,7 @@ public class Animation {
     private double timeUsed = 0;
     private int mObj1;
     private String name;
+
     private final AnimationTimer timer = new AnimationTimer() {
         @Override
         public void handle(long now) {

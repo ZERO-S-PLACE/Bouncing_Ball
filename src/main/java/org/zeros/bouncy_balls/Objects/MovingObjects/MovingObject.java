@@ -2,12 +2,10 @@ package org.zeros.bouncy_balls.Objects.MovingObjects;
 
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Shape;
-import org.zeros.bouncy_balls.Animation.Animation;
-import org.zeros.bouncy_balls.Animation.AnimationProperties;
+import org.zeros.bouncy_balls.Animation.Animation.Animation;
+import org.zeros.bouncy_balls.Animation.Animation.AnimationProperties;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
 import org.zeros.bouncy_balls.Model.Model;
-
-import java.io.Serializable;
 
 public abstract class MovingObject {
 
@@ -52,13 +50,13 @@ public abstract class MovingObject {
 
     }
     public void updateVelocity(Point2D velocity, double frameElapsed) {
-        this.velocity = velocity.add(acceleration.multiply(frameElapsed - frameElapsed()));
+        this.velocity = velocity.add(frameAcceleration().multiply(frameElapsed - frameElapsed()));
         velocity = velocity.multiply((1 - friction)*(frameElapsed - frameElapsed()));
         this.trajectory = new LinearEquation(centerPoint, centerPoint.add(velocity));
     }
 
     public void updateVelocity() {
-        this.velocity = velocity.add(acceleration.multiply(1 - frameElapsed()));
+        this.velocity = velocity.add(frameAcceleration().multiply(1 - frameElapsed()));
         velocity = velocity.multiply((1 - friction));
         this.trajectory = new LinearEquation(centerPoint, centerPoint.add(velocity));
     }
@@ -74,7 +72,6 @@ public abstract class MovingObject {
     public double getFriction() {return friction;}
     public void setFriction(double friction) {this.friction = friction;}
     public void setMass(double mass) {this.mass = mass;}
-    public void setVelocity(Point2D velocity) {this.velocity = velocity;}
     public Point2D velocity() {return velocity;}
     public Point2D acceleration() {return acceleration;}
     public Point2D frameVelocity() {return velocity.multiply(1 / animationProperties.getFRAME_RATE());}

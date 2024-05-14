@@ -1,13 +1,11 @@
 package org.zeros.bouncy_balls.Level;
 
-import org.zeros.bouncy_balls.Animation.AnimationProperties;
-import org.zeros.bouncy_balls.Animation.AnimationType;
+import org.zeros.bouncy_balls.Animation.Animation.AnimationProperties;
+import org.zeros.bouncy_balls.Animation.Animation.AnimationType;
 import org.zeros.bouncy_balls.Objects.Area.Area;
 import org.zeros.bouncy_balls.Objects.Area.ComplexArea;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObject;
-import org.zeros.bouncy_balls.Objects.SerializableObjects.AreaSerializable;
 import org.zeros.bouncy_balls.Objects.SerializableObjects.LevelSerializable;
-import org.zeros.bouncy_balls.Objects.SerializableObjects.MovingObjectSerializable;
 
 import java.io.FileInputStream;
 import java.io.IOException;

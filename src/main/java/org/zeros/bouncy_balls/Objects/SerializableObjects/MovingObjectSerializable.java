@@ -1,7 +1,7 @@
 package org.zeros.bouncy_balls.Objects.SerializableObjects;
 
 import javafx.scene.paint.Paint;
-import org.zeros.bouncy_balls.Animation.Animation;
+import org.zeros.bouncy_balls.Animation.Animation.Animation;
 import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObject;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObjectType;
