@@ -14,6 +14,7 @@ public class PolylineArea extends Area {
         super();
         startDrawingFromPoint(start);
     }
+
     private void startDrawingFromPoint(Point2D point) {
         editable = true;
         path = new Path();
@@ -50,10 +51,11 @@ public class PolylineArea extends Area {
         editable = false;
         calculateBoundaryLines();
         calculateRoughBinds();
-        calculateMassCenter();
+        calculateRoughMassCenter();
     }
-    public void removeLastSegment(){
-        if (editable&&cornerPoints.size()>1) {
+
+    public void removeLastSegment() {
+        if (editable && cornerPoints.size() > 1) {
             path.getElements().removeLast();
             segmentPoints.removeLast();
             cornerPoints.removeLast();

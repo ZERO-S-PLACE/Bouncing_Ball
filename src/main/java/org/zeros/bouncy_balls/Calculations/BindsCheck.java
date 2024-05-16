@@ -1,12 +1,14 @@
 package org.zeros.bouncy_balls.Calculations;
 
 import javafx.geometry.Point2D;
+import org.zeros.bouncy_balls.Calculations.Equations.BezierCurve;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
+import org.zeros.bouncy_balls.Objects.Area.Area;
 import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObject;
-import org.zeros.bouncy_balls.Objects.Area.Area;
 
 import java.util.ArrayList;
+
 
 public class BindsCheck {
 
@@ -23,8 +25,54 @@ public class BindsCheck {
 
     }
 
-    public static boolean intersectsWithObstacle(Ball ball, Area obstacle) {
+    public static boolean intersectsWithObstacleEdge(Ball ball, Area obstacle) {
         return (intersectWithCornersPolygon(ball, obstacle.getCornerLines(), obstacle.getCorners()) || intersectWithCornersPolygon(ball, obstacle.getAllLines(), obstacle.getAllPoints()));
+    }
+
+    public static boolean intersectsWithObstacleExact(Ball ball, Area obstacle) {
+        boolean t1 = intersectWithCornersPolygon(ball, obstacle.getCornerLines(), obstacle.getCorners());
+        boolean t2 = intersectWithCornersPolygon(ball, obstacle.getAllLines(), obstacle.getAllPoints());
+        if (t1 && t2) return true;
+        if (t1) return intersectWithPart(ball, obstacle);
+        if (t2) return intersectWithPart(ball, obstacle);
+        return false;
+    }
+
+    private static boolean intersectWithPart(Ball ball, Area obstacle) {
+
+        for (int i = 0; i < obstacle.getSegmentPoints().size(); i++) {
+            ArrayList<Point2D> points = obstacle.getSegmentPoints(i);
+            if (points.size() > 2) {
+                if (intersectWithCurveBoundary(ball, obstacle.getSegmentLines(i), points)) {
+                    if (checkSimplifiedIntersection(ball, points)) return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private static boolean checkSimplifiedIntersection(Ball ball, ArrayList<Point2D> segmentPoints) {
+        int divisions=0;
+        for (int i=0;i<segmentPoints.size()-1;i++){
+            divisions=divisions+(int)segmentPoints.get(i).subtract(segmentPoints.get(i+1)).magnitude();
+        }
+        divisions=(int) Math.sqrt(divisions);
+        BezierCurve curve = new BezierCurve(segmentPoints);
+        ArrayList<Point2D> simplifiedCurvePoints = new ArrayList<>();
+        ArrayList<LinearEquation> simplifiedCurveLines = new ArrayList<>();
+        Point2D first = segmentPoints.getFirst();
+        for (int i = 1; i <= divisions; i++) {
+            Point2D second = curve.getPointAt((double) 1 / divisions * i);
+            simplifiedCurvePoints.add(first);
+            simplifiedCurveLines.add(new LinearEquation(first, second));
+            first = second;
+        }
+        simplifiedCurvePoints.add(segmentPoints.getLast());
+        simplifiedCurveLines.add(new LinearEquation(segmentPoints.getLast(), segmentPoints.getFirst()));
+        simplifiedCurvePoints.add(segmentPoints.getFirst());
+        return intersectWithCornersPolygon(ball, simplifiedCurveLines, simplifiedCurvePoints);
+
+
     }
 
 
@@ -75,8 +123,6 @@ public class BindsCheck {
         lines.removeLast();
         points.removeLast();
         return temp;
-
-
     }
 
 

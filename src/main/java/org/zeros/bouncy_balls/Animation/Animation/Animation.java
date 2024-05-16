@@ -17,18 +17,11 @@ import java.util.TreeSet;
 
 public class Animation {
     public final Level level;
-    private Borders borders;
     private final TreeSet<Double> timesElapsed = new TreeSet<>();
+    private Borders borders;
     private double timeUsed = 0;
     private int mObj1;
     private String name;
-
-    private final AnimationTimer timer = new AnimationTimer() {
-        @Override
-        public void handle(long now) {
-            animateThis();
-        }
-    };
 
     public Animation(Level level) {
         this.level = level;
@@ -38,14 +31,20 @@ public class Animation {
         for (MovingObject object : level.movingObjects()) {
             object.setAnimation(this);
         }
-    }
+    }    private final AnimationTimer timer = new AnimationTimer() {
+        @Override
+        public void handle(long now) {
+            animateThis();
+        }
+    };
 
     public void animate() {
         setFinalPositions();
-        timeUsed=0;
+        timeUsed = 0;
         timer.start();
     }
-    public void reloadBorders(){
+
+    public void reloadBorders() {
         borders = new Borders(this);
     }
 
@@ -57,12 +56,13 @@ public class Animation {
         double timeStart = System.currentTimeMillis();
         searchForBounces();
         setFinalPositions();
-        timeUsed=timeUsed+System.currentTimeMillis()-timeStart;
-        if (timeUsed> level.PROPERTIES().getTIME() * 1000) {
+        timeUsed = timeUsed + System.currentTimeMillis() - timeStart;
+        if (timeUsed > level.PROPERTIES().getTIME() * 1000) {
             pause();
         }
 
     }
+
     private void searchForBounces() {
         singleBouncesCheck(0);
         int i = 0;
@@ -101,6 +101,7 @@ public class Animation {
             }
         }
     }
+
     private void setFinalPositions() {
         for (MovingObject movingObject : level.movingObjects()) {
             movingObject.nextFrame();
@@ -129,7 +130,7 @@ public class Animation {
         for (Area obstacle : level.obstacles()) {
             if (BindsCheck.isInsideRoughBinds(level.movingObjects().get(mObj1), obstacle)) {
                 if (level.movingObjects().get(mObj1).getType().equals(MovingObjectType.BALL)) {
-                    if (BindsCheck.intersectsWithObstacle(((Ball) level.movingObjects().get(mObj1)), obstacle)) {
+                    if (BindsCheck.intersectsWithObstacleEdge(((Ball) level.movingObjects().get(mObj1)), obstacle)) {
                         temp = Bounce.ballFromObstacle(((Ball) level.movingObjects().get(mObj1)), obstacle);
                     }
                 }
@@ -141,9 +142,9 @@ public class Animation {
     }
 
     private boolean bouncedByAnother(double frameElapsed) {
-        boolean temp = false;
-        int closestObj;
-        double minDistanceMeasured = Double.MAX_VALUE;
+
+        int closestObj = -1;
+        double shortestTime = Double.MAX_VALUE;
 
         for (int j = 0; j < level.movingObjects().size(); j++) {
             if (level.movingObjects().get(j).frameElapsed() <= frameElapsed && j != mObj1) {
@@ -154,15 +155,23 @@ public class Animation {
                 if (intersection != null) {
                     trajectoriesIntersect = BindsCheck.isBetweenPoints(intersection, level.movingObjects().get(mObj1).center(), level.movingObjects().get(mObj1).nextCenter()) && BindsCheck.isBetweenPoints(intersection, level.movingObjects().get(j).center(), level.movingObjects().get(j).nextCenter());
                     if ((distance <= minDistanceAllow || trajectoriesIntersect)) {
-                        closestObj = j;
-                        temp = Bounce.twoBalls(((Ball) level.movingObjects().get(mObj1)), ((Ball) level.movingObjects().get(closestObj)));
-
+                        Double t = Bounce.calculateTimeToCollision((Ball) level.movingObjects().get(mObj1).clone(), (Ball) level.movingObjects().get(j).clone());
+                        if (t != null) {
+                            if (t < shortestTime) {
+                                closestObj = j;
+                                shortestTime = t;
+                            }
+                        }
                     }
-                }
 
+                }
             }
         }
-        return temp;
+        if (closestObj >= 0) {
+            return Bounce.twoBalls(((Ball) level.movingObjects().get(mObj1)), ((Ball) level.movingObjects().get(closestObj)));
+
+        }
+        return false;
     }
 
     public boolean hasFreePlace(Ball ball) {
@@ -171,32 +180,30 @@ public class Animation {
             return false;
         } else {
             for (MovingObject object : level.movingObjects()) {
-
                 if (object.getType().equals(MovingObjectType.BALL) && !object.equals(ball)) {
                     if (object.center().distance(ball.center()) <= ((Ball) object).getRadius() + ball.getRadius()) {
                         return false;
                     }
                 }
-
             }
             for (Area obstacle2 : level.obstacles()) {
-                if (BindsCheck.intersectsWithObstacle(ball, obstacle2)) {
+                if (BindsCheck.intersectsWithObstacleExact(ball, obstacle2)) {
                     return false;
                 }
             }
+
+            return true;
         }
-        return true;
     }
 
     public AnimationProperties getPROPERTIES() {
         return level.PROPERTIES();
     }
+
     public Level getLevel() {
         return level;
     }
-    public Borders getBorders() {
-        return borders;
-    }
+
     public String getName() {
         return name;
     }
@@ -215,6 +222,7 @@ public class Animation {
             this.name = name;
         }
     }
+
 
 
 

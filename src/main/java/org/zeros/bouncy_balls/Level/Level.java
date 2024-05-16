@@ -44,11 +44,11 @@ public class Level implements Serializable {
         }
     }
 
-    public void rescale(double factor){
-        if(factor>0&&factor!=1){
-            PROPERTIES.setGRAVITY(factor*PROPERTIES.getGRAVITY());
-            PROPERTIES.setWIDTH((int) (PROPERTIES.getWIDTH()*factor));
-            PROPERTIES.setHEIGHT((int) (PROPERTIES.getHEIGHT()*factor));
+    public void rescale(double factor) {
+        if (factor > 0 && factor != 1) {
+            PROPERTIES.setGRAVITY(factor * PROPERTIES.getGRAVITY());
+            PROPERTIES.setWIDTH((int) (PROPERTIES.getWIDTH() * factor));
+            PROPERTIES.setHEIGHT((int) (PROPERTIES.getHEIGHT() * factor));
             for (MovingObject object : movingObjects) {
                 object.rescale(factor);
             }
@@ -56,7 +56,7 @@ public class Level implements Serializable {
                 area.rescale(factor);
             }
             for (MovingObject object : movingObjectsToAdd) {
-               object.rescale(factor);
+                object.rescale(factor);
             }
             for (Area area : obstaclesToAdd) {
                 area.rescale(factor);

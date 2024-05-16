@@ -3,9 +3,7 @@ package org.zeros.bouncy_balls.Objects.Area;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
-import javafx.scene.transform.Rotate;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
-import org.zeros.bouncy_balls.Calculations.VectorMath;
 import org.zeros.bouncy_balls.Objects.SerializableObjects.AreaSerializable;
 
 import java.util.ArrayList;
@@ -19,8 +17,9 @@ public class Area {
     protected ArrayList<ArrayList<Point2D>> segmentPoints = new ArrayList<>();
     protected ArrayList<LinearEquation> cornerLines = new ArrayList<>();
     protected ArrayList<ArrayList<LinearEquation>> segmentLines = new ArrayList<>();
-    protected double rotation=0;
+    protected double rotation = 0;
     protected Point2D massCenter;
+
     protected Area() {
         path.setFill(Color.WHITE);
         path.setStroke(Color.WHITE);
@@ -28,41 +27,39 @@ public class Area {
     }
 
 
-
     public void rescale(double factor) {
         AreaSerializable temp = new AreaSerializable(this);
         temp.rescale(factor);
-        Area area=temp.deserialize();
-        this.path=area.getPath();
-        this.segmentPoints=area.segmentPoints;
-        this.cornerPoints=area.cornerPoints;
-        this.cornerLines=area.getCornerLines();
-        this.segmentLines=area.getSegmentLines();
-        this.rotation=area.getRotation();
-        this.massCenter=area.getMassCenter();
-        this.roughMin=area.roughMin;
-        this.roughMax=area.roughMax;
+        Area area = temp.deserialize();
+        rewriteValues(area);
 
     }
 
+    private void rewriteValues(Area area) {
+        this.path = area.getPath();
+        this.segmentPoints = area.segmentPoints;
+        this.cornerPoints = area.cornerPoints;
+        this.cornerLines = area.getCornerLines();
+        this.segmentLines = area.getSegmentLines();
+        this.rotation = area.getRotation();
+        this.massCenter = area.getMassCenter();
+        this.roughMin = area.roughMin;
+        this.roughMax = area.roughMax;
+    }
 
 
     protected void addStartPoint(Point2D point) {
         path.getElements().add(new MoveTo(point.getX(), point.getY()));
         cornerPoints.add(point);
     }
-    protected void calculateMassCenter(){
-        /*double totalArea=0;
-        Point2D sumCoordinate=new Point2D(0,0);
-        Point2D first =cornerPoints.getFirst();
-        Point2D second=cornerPoints.get(1);
-        for (int i=2;i<cornerPoints.size();i++)
 
-        for (ArrayList<Point2D> points:segmentPoints){
-            if()
-        }*/
+    protected void calculateRoughMassCenter() {
+        Point2D sumPoint = new Point2D(0, 0);
+        for (Point2D point : getAllPoints()) {
+            sumPoint = sumPoint.add(point);
+        }
 
-
+        massCenter = sumPoint.multiply((double) 1 / getAllPoints().size());
     }
 
     protected void addStraightLineTo(Point2D point) {
@@ -126,27 +123,18 @@ public class Area {
 
         }
     }
-    public void rotateObstacle(Point2D center, double rotation) {
-        rotateObstaclePoints(rotation, center);
+
+    public void move(Point2D newCenter) {
+        Point2D vector = newCenter.subtract(massCenter);
+        massCenter = newCenter;
+        for (ArrayList<Point2D> points : segmentPoints) {
+            points.replaceAll(point2D -> point2D.add(vector));
+        }
+        cornerPoints.replaceAll(point2D -> point2D.add(vector));
+        path.setTranslateX(path.getTranslateX() + vector.getX());
+        path.setTranslateY(path.getTranslateY() + vector.getY());
         calculateBoundaryLines();
         calculateRoughBinds();
-    }
-
-
-    protected void rotateObstaclePoints(double rotation, Point2D center) {
-        if (rotation != 0) {
-
-            Rotate rotate = new Rotate();
-            rotate.setPivotX(center.getX());
-            rotate.setPivotY(center.getY());
-
-            path.getTransforms().add(rotate);
-            path.rotateProperty().set(-rotation * 360 / Math.PI / 2);
-
-            segmentPoints.replaceAll(points -> VectorMath.rotatePoints(points, center, rotation));
-            cornerPoints = VectorMath.rotatePoints(cornerPoints, center, rotation);
-        }
-
     }
 
     protected void calculateBoundaryLines() {
@@ -164,9 +152,21 @@ public class Area {
             cornerLines.add(new LinearEquation(cornerPoints.get(i), cornerPoints.get(i + 1)));
         }
     }
+
     public double getRotation() {
         return rotation;
     }
+
+    public void setRotation(double rotation) {
+        if (rotation != 0) {
+            AreaSerializable temp = new AreaSerializable(this);
+            temp.rotate(rotation, massCenter);
+            Area area = temp.deserialize();
+            rewriteValues(area);
+
+        }
+    }
+
     public ArrayList<LinearEquation> getCornerLines() {
         return cornerLines;
     }
@@ -210,6 +210,7 @@ public class Area {
         }
         return points;
     }
+
     public ArrayList<ArrayList<Point2D>> getSegmentPoints() {
         return segmentPoints;
     }
@@ -221,10 +222,10 @@ public class Area {
         }
         return lines;
     }
+
     public ArrayList<ArrayList<LinearEquation>> getSegmentLines() {
         return segmentLines;
     }
-
 
 
 }

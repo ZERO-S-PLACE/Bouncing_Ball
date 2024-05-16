@@ -1,13 +1,11 @@
 package org.zeros.bouncy_balls.Animation.InputOnRun;
 
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import org.zeros.bouncy_balls.Animation.Animation.Animation;
 import org.zeros.bouncy_balls.Model.Model;
 import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObject;
@@ -18,31 +16,23 @@ public class InputOnRunMovingObject extends InputOnRun {
     private final Circle[] trajectoryMarkers = new Circle[10];
     private final MovingObject object;
     private Circle velocityMarker;
-    private int spacing = 8;
+    private Circle positionMarker;
 
     public InputOnRunMovingObject(MovingObject object, AnchorPane panel) {
-        super(object.getAnimation(),panel);
+        super(object.getAnimation(), panel);
         this.object = object;
     }
 
-    public void setSpacing(int spacing) {
-        this.spacing = spacing;
-    }
 
-    public void insert() {
-        configureMarkerAtCenterPick();
-        panel.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseInputHandler);
-        panel.addEventHandler(MouseEvent.MOUSE_MOVED, mouseMovedHandler);
-    }
     @Override
     public void dismiss() {
         super.dismiss();
         Platform.runLater(() -> {
+            Platform.runLater(() -> panel.getChildren().remove(positionMarker));
             panel.getChildren().remove(velocityMarker);
             panel.getChildren().removeAll(trajectoryMarkers);
         });
     }
-
 
 
     @Override
@@ -54,6 +44,7 @@ public class InputOnRunMovingObject extends InputOnRun {
         }
         Platform.runLater(() -> panel.getChildren().add(positionMarker));
     }
+
     private void configureMarkersAtVelocityPick() {
         velocityMarker = new Circle(3);
         velocityMarker.setFill(Color.TRANSPARENT);
@@ -83,6 +74,7 @@ public class InputOnRunMovingObject extends InputOnRun {
             ball.setInitialVelocity(object.center().subtract(new Point2D(mouseEvent.getX(), mouseEvent.getY())));
 
             for (int i = 0; i < trajectoryMarkers.length; i++) {
+                int spacing = 8;
                 for (int j = 0; j < spacing + 2 * i; j++) {
                     ball.nextFrame();
                 }
@@ -122,26 +114,44 @@ public class InputOnRunMovingObject extends InputOnRun {
 
     @Override
     protected void animateObjectArrival() {
-        Platform.runLater(() ->
-            panel.getChildren().add(object.getShape()));
-        while (true) {
+        Platform.runLater(() -> panel.getChildren().add(object.getShape()));
+
+        for (int i = 0; i < 4; i++) {
+            increaseOpacity();
             if (animation.hasFreePlace((Ball) object)) {
                 animation.getLevel().movingObjects().add(object);
                 Model.getInstance().getGamePanelController().addInputOnRun();
                 return;
             }
-            for (int i = 0; i < 20; i++) {
-                object.getShape().setOpacity((double) i / 20);
-                try {
-                    Thread.sleep(20);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+            decreaseOpacity();
+        }
+        Platform.runLater(() -> panel.getChildren().remove(object.getShape()));
+        object.updateCenter(new Point2D(-10000, -10000));
+        animation.getLevel().movingObjectsToAdd().addFirst(object);
+        Model.getInstance().getGamePanelController().addInputOnRun();
+    }
+
+    private void decreaseOpacity() {
+        for (int i = 90; i > 10; i--) {
+            object.getShape().setOpacity((double) i / 100);
+            try {
+                Thread.sleep(5);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
         }
     }
 
-
+    private void increaseOpacity() {
+        for (int i = 10; i < 90; i = i + 2) {
+            object.getShape().setOpacity((double) i / 100);
+            try {
+                Thread.sleep(5);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 
 
 }

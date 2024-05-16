@@ -4,8 +4,8 @@ import javafx.geometry.Point2D;
 import org.zeros.bouncy_balls.Calculations.Equations.BezierCurve;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
 import org.zeros.bouncy_balls.Calculations.Equations.QuadraticEquation;
-import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;
 import org.zeros.bouncy_balls.Objects.Area.Area;
+import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;
 
 import java.util.ArrayList;
 
@@ -57,7 +57,7 @@ public class Bounce {
         return true;
     }
 
-    private static Double calculateTimeToCollision(Ball ball1, Ball ball2) {
+    public static Double calculateTimeToCollision(Ball ball1, Ball ball2) {
 
         /*equation describing when distance between middle points of the circles moving in
     velocities (Vx1,Vy1) and (Vx2,Vy2) with starting points(x1,y1),(x2,y2) is equal to d
@@ -193,7 +193,7 @@ public class Bounce {
         double distance = Double.MAX_VALUE;
         double offset = ball.getRadius() / divisions;
 
-        Point2D pointOnLine = bezierCurve.getIntersectionWithLine(ball.center(), ball.frameVelocity());
+        Point2D pointOnLine = bezierCurve.getClosestIntersectionWithLine(ball.center(), ball.frameVelocity());
         if (pointOnLine != null) {
             distance = ball.center().distance(pointOnLine) - ball.getRadius();
         }
@@ -202,8 +202,8 @@ public class Bounce {
             double iOffset = offset * i - 0.0001;
             Point2D tPointInBall1 = ball.trajectory().offsetLine(iOffset).intersection(diameter);
             Point2D tPointInBall2 = ball.trajectory().offsetLine(-iOffset).intersection(diameter);
-            Point2D tPointOnLine1 = bezierCurve.getIntersectionWithLine(tPointInBall1, ball.velocity());
-            Point2D tPointOnLine2 = bezierCurve.getIntersectionWithLine(tPointInBall2, ball.velocity());
+            Point2D tPointOnLine1 = bezierCurve.getClosestIntersectionWithLine(tPointInBall1, ball.velocity());
+            Point2D tPointOnLine2 = bezierCurve.getClosestIntersectionWithLine(tPointInBall2, ball.velocity());
             double chordLength = Math.sqrt(Math.pow(ball.getRadius(), 2) - Math.pow(iOffset, 2));
             double tDistance;
             if (tPointOnLine1 != null) {

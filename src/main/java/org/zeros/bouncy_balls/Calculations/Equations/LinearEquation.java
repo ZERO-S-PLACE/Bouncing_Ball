@@ -54,6 +54,14 @@ public class LinearEquation {
 
     }
 
+    public Point2D getDirection() {
+        if (!isVertical()) {
+            return new Point2D(1, getValue(1) - getValue(0));
+        } else {
+            return new Point2D(0, 1);
+        }
+    }
+
     public Point2D getPoint(double x) {
         return new Point2D(x, getValue(x));
     }

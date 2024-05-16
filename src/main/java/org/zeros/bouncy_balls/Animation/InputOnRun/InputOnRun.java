@@ -1,10 +1,8 @@
 package org.zeros.bouncy_balls.Animation.InputOnRun;
 
-import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.shape.Circle;
 import org.zeros.bouncy_balls.Animation.Animation.Animation;
 
 public abstract class InputOnRun {
@@ -13,7 +11,6 @@ public abstract class InputOnRun {
     protected final Animation animation;
     protected final EventHandler<MouseEvent> mouseMovedHandler = this::onMouseMoved;
     protected boolean centerPicked = false;
-    protected Circle positionMarker;
 
     public InputOnRun(Animation animation, AnchorPane panel) {
         this.panel = panel;
@@ -29,7 +26,6 @@ public abstract class InputOnRun {
     public void dismiss() {
         panel.removeEventHandler(MouseEvent.MOUSE_CLICKED, mouseInputHandler);
         panel.removeEventHandler(MouseEvent.MOUSE_MOVED, mouseMovedHandler);
-        Platform.runLater(() -> panel.getChildren().remove(positionMarker));
     }
 
     protected abstract void configureMarkerAtCenterPick();

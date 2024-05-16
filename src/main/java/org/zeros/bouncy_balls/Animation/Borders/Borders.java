@@ -10,7 +10,6 @@ import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObject;
 
 public class Borders {
     private final AnimationProperties PROPERTIES;
-    private final Animation animation;
     private final LinearEquation OX = new LinearEquation(0, 0);
     private final LinearEquation OY = new LinearEquation(0, Double.NaN);
     private final LinearEquation OY2;
@@ -18,7 +17,6 @@ public class Borders {
 
     public Borders(Animation animation) {
         this.PROPERTIES = animation.getPROPERTIES();
-        this.animation = animation;
         OY2 = new LinearEquation(animation.getPROPERTIES().getWIDTH(), Double.NaN);
         OX2 = new LinearEquation(0, animation.getPROPERTIES().getHEIGHT());
     }
