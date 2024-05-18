@@ -13,14 +13,12 @@ public class ViewFactory {
 
     private AnchorPane gamePanel;
 
-
-
-
     public void showMainWindow() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/MainWindow.fxml"));
         createStage(loader);
 
     }
+
     public void showLevelCreator() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/LevelCreator.fxml"));
         loader.setController(Model.getInstance().getLevelCreatorController());
@@ -31,9 +29,9 @@ public class ViewFactory {
 
         if (gamePanel == null) {
             try {
-                FXMLLoader loader=new FXMLLoader(getClass().getResource("/FXML/GamePanel.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/GamePanel.fxml"));
                 loader.setController(Model.getInstance().getGamePanelController());
-                gamePanel =loader.load();
+                gamePanel = loader.load();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -44,9 +42,7 @@ public class ViewFactory {
     }
 
 
-
-
-    private static void createStage(FXMLLoader loader) {
+    private void createStage(FXMLLoader loader) {
         Scene scene;
         try {
             scene = new Scene(loader.load());

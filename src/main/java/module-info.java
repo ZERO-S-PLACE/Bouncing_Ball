@@ -13,7 +13,6 @@ module org.zeros.bouncy_balls {
 
     exports org.zeros.bouncy_balls;
     exports org.zeros.bouncy_balls.Model;
-    exports org.zeros.bouncy_balls.Animation;
     exports org.zeros.bouncy_balls.Calculations;
     exports org.zeros.bouncy_balls.Calculations.Equations;
     exports org.zeros.bouncy_balls.Controllers;
@@ -21,5 +20,8 @@ module org.zeros.bouncy_balls {
     exports org.zeros.bouncy_balls.Objects.MovingObjects;
     exports org.zeros.bouncy_balls.Objects.Area;
     exports org.zeros.bouncy_balls.Level;
+    exports org.zeros.bouncy_balls.Animation.InputOnRun;
+    exports org.zeros.bouncy_balls.Animation.Borders;
+    exports org.zeros.bouncy_balls.Animation.Animation;
 
 }

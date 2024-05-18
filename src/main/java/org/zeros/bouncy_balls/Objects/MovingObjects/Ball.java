@@ -3,7 +3,7 @@ package org.zeros.bouncy_balls.Objects.MovingObjects;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import org.zeros.bouncy_balls.Animation.Animation;
+import org.zeros.bouncy_balls.Animation.Animation.Animation;
 
 public class Ball extends MovingObject {
     public Ball(double radius, Animation animation) {
@@ -22,6 +22,13 @@ public class Ball extends MovingObject {
         super.updateCenter(centerPoint);
         ((Circle) shape).setCenterX(centerPoint.getX());
         ((Circle) shape).setCenterY(centerPoint.getY());
+    }
+    @Override
+    public void rescale(double factor) {
+        super.rescale(factor);
+        ((Circle) shape).setCenterX(centerPoint.getX());
+        ((Circle) shape).setCenterY(centerPoint.getY());
+        ((Circle) shape).setRadius(furthestSpan);
     }
     public void setRadius(double radius) {
         this.furthestSpan=radius;

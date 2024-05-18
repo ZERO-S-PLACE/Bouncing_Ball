@@ -14,13 +14,12 @@ public class PolylineArea extends Area {
         super();
         startDrawingFromPoint(start);
     }
+
     private void startDrawingFromPoint(Point2D point) {
         editable = true;
         path = new Path();
         cornerPoints = new ArrayList<>();
         segmentPoints = new ArrayList<>();
-        controlPointsTotalCount = new ArrayList<>();
-        curvedSegmentsTotalCount = new ArrayList<>();
         path.setFill(Color.WHITE);
         path.setStroke(Color.WHITE);
         path.setStrokeWidth(1);
@@ -52,9 +51,11 @@ public class PolylineArea extends Area {
         editable = false;
         calculateBoundaryLines();
         calculateRoughBinds();
+        calculateRoughMassCenter();
     }
-    public void removeLastSegment(){
-        if (editable&&cornerPoints.size()>1) {
+
+    public void removeLastSegment() {
+        if (editable && cornerPoints.size() > 1) {
             path.getElements().removeLast();
             segmentPoints.removeLast();
             cornerPoints.removeLast();

@@ -6,7 +6,17 @@ import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
 public class OvalArea extends Area {
     private final double radiusX;
     private final double radiusY;
-    private  Point2D center;
+
+    public OvalArea(Point2D center, double radiusX, double radiusY, double rotation) {
+        super();
+        this.rotation = rotation;
+        this.massCenter = center;
+        this.radiusX = radiusX;
+        this.radiusY = radiusY;
+        calculateOval(center, radiusX, radiusY, rotation);
+        calculateRoughBinds();
+        setRotation(rotation);
+    }
 
     public double getRadiusX() {
         return radiusX;
@@ -15,23 +25,6 @@ public class OvalArea extends Area {
     public double getRadiusY() {
         return radiusY;
     }
-
-    public Point2D getCenter() {
-        return center;
-    }
-
-    public OvalArea(Point2D center, double radiusX, double radiusY, double rotation) {
-        super();
-        this.rotation=rotation;
-        this.center=center;
-        this.radiusX=radiusX;
-        this.radiusY=radiusY;
-        calculateOval(center, radiusX, radiusY, rotation);
-        rotateObstacle(center, rotation);
-    }
-
-
-
 
     private void calculateOval(Point2D center, double radiusX, double radiusY, double rotation) {
         double quadOffset = 0.552284749831;//for creating circles and ellipses from 4 segments

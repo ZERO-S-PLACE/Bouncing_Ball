@@ -8,10 +8,10 @@ public class RectangleArea extends Area {
 
     public RectangleArea(Point2D corner1, Point2D corner3, double rotation) {
         super();
-        this.rotation=rotation;
         calculateRectanglePointPointRotation(corner1, corner3, rotation);
         calculateBoundaryLines();
         calculateRoughBinds();
+        this.massCenter = corner1.add(corner3.subtract(corner1).multiply(0.5));
     }
 
     private void calculateRectanglePointPointRotation(Point2D corner1, Point2D corner3, double rotation) {

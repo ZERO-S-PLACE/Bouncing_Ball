@@ -1,23 +1,17 @@
 package org.zeros.bouncy_balls.Model;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
-import org.zeros.bouncy_balls.Animation.Animation;
+import org.zeros.bouncy_balls.Animation.Animation.Animation;
 import org.zeros.bouncy_balls.Controllers.GamePanelController;
 import org.zeros.bouncy_balls.Controllers.LevelCreatorController;
 import org.zeros.bouncy_balls.Views.ViewFactory;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class Model {
     private final ViewFactory viewFactory;
     private GamePanelController gamePanelController;
     private LevelCreatorController levelCreatorController;
-    private ArrayList<Animation> runningAnimations=new ArrayList<>();
+    private final ArrayList<Animation> runningAnimations=new ArrayList<>();
     private static Model model;
 
     private Model() {

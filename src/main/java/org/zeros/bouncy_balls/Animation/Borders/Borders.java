@@ -1,6 +1,8 @@
-package org.zeros.bouncy_balls.Animation;
+package org.zeros.bouncy_balls.Animation.Borders;
 
 import javafx.geometry.Point2D;
+import org.zeros.bouncy_balls.Animation.Animation.Animation;
+import org.zeros.bouncy_balls.Animation.Animation.AnimationProperties;
 import org.zeros.bouncy_balls.Calculations.Bounce;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
 import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;
@@ -8,7 +10,6 @@ import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObject;
 
 public class Borders {
     private final AnimationProperties PROPERTIES;
-    private final Animation animation;
     private final LinearEquation OX = new LinearEquation(0, 0);
     private final LinearEquation OY = new LinearEquation(0, Double.NaN);
     private final LinearEquation OY2;
@@ -16,7 +17,6 @@ public class Borders {
 
     public Borders(Animation animation) {
         this.PROPERTIES = animation.getPROPERTIES();
-        this.animation = animation;
         OY2 = new LinearEquation(animation.getPROPERTIES().getWIDTH(), Double.NaN);
         OX2 = new LinearEquation(0, animation.getPROPERTIES().getHEIGHT());
     }

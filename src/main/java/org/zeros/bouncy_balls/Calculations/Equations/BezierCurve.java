@@ -59,13 +59,46 @@ public class BezierCurve {
 
     }
 
-    public Point2D getIntersectionWithLine(Point2D center, Point2D direction) {
-       /* Calculating intersection of curve with line
-        Xb-Yb*(Vx/Vy)-Xo+Yo*(Vx/Vy)=0
-        Yb*m-Xb +c=0
-        m=(Vx/Vy)
-        c=-Xo+Yo*m
-        where Yb and Xb are bezier polynomials*/
+    public Point2D getClosestIntersectionWithLine(Point2D center, Point2D direction) {
+        ArrayList<Point2D> solutions = getIntersectionsWithLine(center, direction);
+        if (solutions.isEmpty()) return null;
+
+        Point2D closestPoint = null;
+        double minDistance = Double.MAX_VALUE;
+
+        for (Point2D solution : solutions) {
+
+
+                double distance = solution.distance(center);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    closestPoint = solution;
+                }
+
+        }
+
+        return closestPoint;
+    }
+
+
+    public ArrayList<Point2D> getIntersectionsWithLine(Point2D center, Point2D direction) {
+
+        ArrayList<Double> solutions = getLineIntersectionParameterSolutions(getIntersectionWithLineEquationCoefficients(center, direction));
+        ArrayList<Point2D>solutionPoints=new ArrayList<>();
+        for (double solution:solutions){
+            solutionPoints.add(this.getPointAt(solution));
+        }
+        return solutionPoints;
+    }
+
+
+    private double[] getIntersectionWithLineEquationCoefficients(Point2D center, Point2D direction) {
+    /* Calculating intersection of curve with line
+     Xb-Yb*(Vx/Vy)-Xo+Yo*(Vx/Vy)=0
+     Yb*m-Xb +c=0
+     m=(Vx/Vy)
+     c=-Xo+Yo*m
+     where Yb and Xb are bezier polynomials*/
 
         double[] coefficients = this.get_xPolynomialCoefficients();
         if (direction.getY() != 0) {
@@ -80,8 +113,9 @@ public class BezierCurve {
             coefficients = this.get_yPolynomialCoefficients();
             coefficients[0] = coefficients[0] - center.getY();
         }
-
-
+        return coefficients;
+    }
+    private static ArrayList<Double> getLineIntersectionParameterSolutions(double[] coefficients) {
         PolynomialFunction function = new PolynomialFunction(coefficients);
         BrentSolver solver = new BrentSolver(0.0001);
         ArrayList<Double> solutions = new ArrayList<>();
@@ -98,32 +132,11 @@ public class BezierCurve {
             }
             loop++;
         }
-
-        if (solutions.isEmpty()) {
-            return null;
-        }
-
-
-        Point2D closestPoint = null;
-        double minDistance = Double.MAX_VALUE;
-
-        for (Double solution : solutions) {
-            Point2D temp = this.getPointAt(solution);
-
-            if (temp != null) {
-                double distance = temp.distance(center);
-                if (distance < minDistance) {
-                    minDistance = distance;
-                    closestPoint = temp;
-                }
-            }
-        }
-
-        return closestPoint;
+        return solutions;
     }
 
     public boolean areOnDifferentSides(Point2D point1, Point2D point2) {
-        return BindsCheck.isBetweenPoints(this.getIntersectionWithLine(point1, point2.subtract(point1)), point1, point2);
+        return BindsCheck.isBetweenPoints(this.getClosestIntersectionWithLine(point1, point2.subtract(point1)), point1, point2);
     }
 
 }
