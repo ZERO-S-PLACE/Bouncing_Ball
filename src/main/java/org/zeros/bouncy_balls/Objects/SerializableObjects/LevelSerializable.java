@@ -22,16 +22,16 @@ public class LevelSerializable implements Serializable {
     public LevelSerializable(Level level) {
         this.NAME = level.getNAME();
         this.PROPERTIES = level.PROPERTIES();
-        for (MovingObject object : level.movingObjects()) {
+        for (MovingObject object : level.getMovingObjects()) {
             movingObjects.add(new MovingObjectSerializable(object));
         }
-        for (Area area : level.obstacles()) {
+        for (Area area : level.getObstacles()) {
             obstacles.add(new AreaSerializable(area));
         }
-        for (MovingObject object : level.movingObjectsToAdd()) {
+        for (MovingObject object : level.getMovingObjectsToAdd()) {
             movingObjectsToAdd.add(new MovingObjectSerializable(object));
         }
-        for (Area area : level.obstaclesToAdd()) {
+        for (Area area : level.getObstaclesToAdd()) {
             obstaclesToAdd.add(new AreaSerializable(area));
         }
         if (level.getInputArea() != null) {
@@ -47,16 +47,16 @@ public class LevelSerializable implements Serializable {
         Animation animation = new Animation(level);
         level.setNAME(NAME);
         for (MovingObjectSerializable object : movingObjects) {
-            level.movingObjects().add(object.deserialize(animation));
+            level.getMovingObjects().add(object.deserialize(animation));
         }
         for (AreaSerializable area : obstacles) {
-            level.obstacles().add(area.deserialize());
+            level.getObstacles().add(area.deserialize());
         }
         for (MovingObjectSerializable object : movingObjectsToAdd) {
-            level.movingObjectsToAdd().add(object.deserialize(animation));
+            level.getMovingObjectsToAdd().add(object.deserialize(animation));
         }
         for (AreaSerializable area : obstaclesToAdd) {
-            level.obstaclesToAdd().add(area.deserialize());
+            level.getObstaclesToAdd().add(area.deserialize());
         }
         if (inputArea != null) {
             level.setInputArea(inputArea.deserialize());

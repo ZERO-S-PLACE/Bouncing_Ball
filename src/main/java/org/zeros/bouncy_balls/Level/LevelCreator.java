@@ -77,10 +77,10 @@ public class LevelCreator {
         if (agreeTo("Check animation?")) {
             animation = new Animation(level);
             Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().removeAll(Model.getInstance().getLevelCreatorController().preview.getChildren()));
-            for (Area obstacle : animation.level.obstacles()) {
+            for (Area obstacle : animation.getLevel().getObstacles()) {
                 Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().add(obstacle.getPath()));
             }
-            for (MovingObject obj : animation.level.movingObjects()) {
+            for (MovingObject obj : animation.getLevel().getMovingObjects()) {
                 obj.setAnimation(animation);
                 Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().add(obj.getShape()));
             }
@@ -149,7 +149,7 @@ public class LevelCreator {
         Ball ball = new Ball(radius, animation);
         ball.updateCenter(center);
         ball.updateNextCenter(ball.center());
-        level.movingObjects().add(ball);
+        level.addMovingObject(ball);
         Circle velocityShadow = new Circle(radius);
         velocityShadow.setOpacity(0.1);
         velocityShadow.setFill(Color.BLACK);
@@ -168,13 +168,13 @@ public class LevelCreator {
     }
 
     private void removeBall(Ball ball, Circle velocityShadow) {
-        level.movingObjects().remove(ball);
+        level.removeMovingObject(ball);
         Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().remove(ball.getShape()));
         Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().remove(velocityShadow));
     }
 
     private void updateVelocityShadow(Circle velocityShadow) {
-        Ball ball = ((Ball) level.movingObjects().getLast());
+        Ball ball = ((Ball) level.getMovingObjects().getLast());
         velocityShadow.setRadius(ball.getRadius());
         velocityShadow.setCenterX(ball.center().add(ball.velocity()).getX());
         velocityShadow.setCenterY(ball.center().add(ball.velocity()).getY());
@@ -215,12 +215,12 @@ public class LevelCreator {
     }
 
     private void addObstacle(Area obstacle) {
-        level.obstacles().add(obstacle);
+        level.addObstacle(obstacle);
         Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().add(obstacle.getPath()));
     }
 
     private void removeObstacle(Area obstacle) {
-        level.obstacles().removeLast();
+        level.removeObstacle(obstacle);
         Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().remove(obstacle.getPath()));
     }
 
@@ -323,7 +323,6 @@ public class LevelCreator {
     }
 
     private BordersType getBordersType() {
-        while (true) {
             int value = (int) getNumber("Border types: 0-bouncing, 1-connected, 2-infinite");
             switch (value) {
                 case 0 -> {
@@ -339,18 +338,18 @@ public class LevelCreator {
                     return getBordersType();
                 }
             }
-        }
+
     }
 
     private double getGravity() {
-        while (true) {
+
             double value = getNumber("Gravity strength");
             if (value > 0 && value < 100) {
                 return value;
             } else {
                 return getGravity();
             }
-        }
+
     }
 
     private double getDimension(String message, Point2D reference) {
@@ -420,7 +419,6 @@ public class LevelCreator {
         try (FileOutputStream fileOut = new FileOutputStream(name); ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
             out.writeObject(save);
         } catch (IOException e) {
-            e.printStackTrace();
             if (agreeTo("Saving failed, try again?")) {
                 saveLevel(getStringInput("Enter new name:"));
             }

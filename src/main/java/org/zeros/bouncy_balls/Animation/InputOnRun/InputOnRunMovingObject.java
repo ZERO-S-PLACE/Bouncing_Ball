@@ -119,7 +119,7 @@ public class InputOnRunMovingObject extends InputOnRun {
         for (int i = 0; i < 4; i++) {
             increaseOpacity();
             if (animation.hasFreePlace((Ball) object)) {
-                animation.getLevel().movingObjects().add(object);
+                animation.getLevel().addMovingObject(object);
                 Model.getInstance().getGamePanelController().addInputOnRun();
                 return;
             }
@@ -127,7 +127,7 @@ public class InputOnRunMovingObject extends InputOnRun {
         }
         Platform.runLater(() -> panel.getChildren().remove(object.getShape()));
         object.updateCenter(new Point2D(-10000, -10000));
-        animation.getLevel().movingObjectsToAdd().addFirst(object);
+        animation.getLevel().addMovingObjectToAdd(object);
         Model.getInstance().getGamePanelController().addInputOnRun();
     }
 
