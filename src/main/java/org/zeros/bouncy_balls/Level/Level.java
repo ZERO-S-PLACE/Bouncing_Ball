@@ -12,16 +12,26 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Level implements Serializable {
     private final AnimationProperties PROPERTIES;
-    private final ArrayList<MovingObject> movingObjects = new ArrayList<>();
-    private final ArrayList<Area> obstacles = new ArrayList<>();
-    private final ArrayList<MovingObject> movingObjectsToAdd = new ArrayList<>();
-    private final ArrayList<Area> obstaclesToAdd = new ArrayList<>();
+    private final List<MovingObject> movingObjects = new CopyOnWriteArrayList<>();
+    private final List<Area> obstacles = new CopyOnWriteArrayList<>();
+    private final List<MovingObject> movingObjectsToAdd = new CopyOnWriteArrayList<>();
+    private final List<Area> obstaclesToAdd = new CopyOnWriteArrayList<>();
     private String NAME = "New_Level";
     private ComplexArea inputArea;
     private ComplexArea targetArea;
+    private final Lock movingObjectsLock = new ReentrantLock();
+    private final Lock movingObjectsToAddLock = new ReentrantLock();
+    private final Lock obstaclesLock = new ReentrantLock();
+    private final Lock obstaclesToAddLock = new ReentrantLock();
+    private final Lock inputAreaLock = new ReentrantLock();
+    private final Lock targetAreaLock = new ReentrantLock();
 
     public Level(AnimationProperties properties) {
         PROPERTIES = properties;
@@ -72,14 +82,6 @@ public class Level implements Serializable {
 
     }
 
-    public ArrayList<MovingObject> movingObjects() {
-        return movingObjects;
-    }
-
-    public ArrayList<Area> obstacles() {
-        return obstacles;
-    }
-
     public String getNAME() {
         return NAME;
     }
@@ -93,36 +95,151 @@ public class Level implements Serializable {
     }
 
     public ComplexArea getInputArea() {
-        return inputArea;
+        inputAreaLock.lock();
+        try {
+            return inputArea;
+
+        }finally {
+            inputAreaLock.unlock();
+        }
     }
 
     public void setInputArea(ComplexArea inputArea) {
-        if (PROPERTIES.getTYPE().equals(AnimationType.GAME)) {
-            this.inputArea = inputArea;
+        inputAreaLock.lock();
+        try {
+            if (PROPERTIES.getTYPE().equals(AnimationType.GAME)) {
+                this.inputArea = inputArea;
+            }
+        }finally {
+            inputAreaLock.unlock();
         }
     }
 
     public ComplexArea getTargetArea() {
-        return targetArea;
+        targetAreaLock.lock();
+        try {
+                return targetArea;
+
+        }finally {
+            targetAreaLock.unlock();
+        }
     }
 
     public void setTargetArea(ComplexArea targetArea) {
-        if (PROPERTIES.getTYPE().equals(AnimationType.GAME)) {
-            this.targetArea = targetArea;
+        targetAreaLock.lock();
+        try {
+            if (PROPERTIES.getTYPE().equals(AnimationType.GAME)) {
+                this.targetArea = targetArea;
+            }
+        }finally {
+            targetAreaLock.unlock();
         }
     }
 
-    public ArrayList<MovingObject> movingObjectsToAdd() {
-        if (PROPERTIES.getTYPE().equals(AnimationType.SIMULATION)) {
-            return null;
+    public void addMovingObject(MovingObject obj) {
+        movingObjectsLock.lock();
+        try {
+            movingObjects.add(obj);
+        } finally {
+            movingObjectsLock.unlock();
         }
-        return movingObjectsToAdd;
     }
 
-    public ArrayList<Area> obstaclesToAdd() {
-        if (PROPERTIES.getTYPE().equals(AnimationType.SIMULATION)) {
-            return null;
+    public void removeMovingObject(MovingObject obj) {
+        movingObjectsLock.lock();
+        try {
+            movingObjects.remove(obj);
+        } finally {
+            movingObjectsLock.unlock();
         }
-        return obstaclesToAdd;
     }
+
+    public List<MovingObject> getMovingObjects() {
+        movingObjectsLock.lock();
+        try {
+            return movingObjects;
+        } finally {
+            movingObjectsLock.unlock();
+        }
+    }
+    public void removeMovingObjectToAdd(MovingObject obj) {
+        movingObjectsToAddLock.lock();
+        try {
+            movingObjectsToAdd.remove(obj);
+        } finally {
+            movingObjectsToAddLock.unlock();
+        }
+    }
+
+    public void addMovingObjectToAdd(MovingObject obj) {
+        movingObjectsToAddLock.lock();
+        try {
+            movingObjectsToAdd.add(obj);
+        } finally {
+            movingObjectsToAddLock.unlock();
+        }
+    }
+    public List<MovingObject> getMovingObjectsToAdd() {
+        movingObjectsToAddLock.lock();
+        try {
+            return movingObjectsToAdd;
+        } finally {
+            movingObjectsToAddLock.unlock();
+        }
+    }
+    public void addObstacle(Area obs) {
+        obstaclesLock.lock();
+        try {
+            obstacles.add(obs);
+        } finally {
+            obstaclesLock.unlock();
+        }
+    }
+
+    public void removeObstacle(Area obs) {
+        obstaclesLock.lock();
+        try {
+            obstacles.remove(obs);
+        } finally {
+            obstaclesLock.unlock();
+        }
+    }
+
+    public List<Area> getObstacles() {
+        obstaclesLock.lock();
+        try {
+            return obstacles;
+        } finally {
+            obstaclesLock.unlock();
+        }
+    }
+    public void addObstacleToAdd(Area obs) {
+        obstaclesToAddLock.lock();
+        try {
+            obstaclesToAdd.add(obs);
+        } finally {
+            obstaclesToAddLock.unlock();
+        }
+    }
+
+    public void removeObstacleToAdd(Area obs) {
+        obstaclesToAddLock.lock();
+        try {
+            obstaclesToAdd.remove(obs);
+        } finally {
+            obstaclesToAddLock.unlock();
+        }
+    }
+
+    public List<Area> getObstaclesToAdd() {
+        obstaclesToAddLock.lock();
+        try {
+            return new ArrayList<>(obstaclesToAdd);
+        } finally {
+            obstaclesToAddLock.unlock();
+        }
+    }
+
+
+
 }

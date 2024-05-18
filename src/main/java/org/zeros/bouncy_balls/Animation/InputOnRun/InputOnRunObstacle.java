@@ -84,7 +84,7 @@ public class InputOnRunObstacle extends InputOnRun {
 
             if (doesNotIntersectWithBall()) {
                 obstacle.getPath().setOpacity(1);
-                animation.getLevel().obstacles().add(obstacle);
+                animation.getLevel().addObstacle(obstacle);
                 Model.getInstance().getGamePanelController().addInputOnRun();
                 return;
             }
@@ -93,7 +93,7 @@ public class InputOnRunObstacle extends InputOnRun {
         obstacle.move(new Point2D(-10000, -10000));
         Platform.runLater(() -> panel.getChildren().remove(obstacle.getPath()));
 
-        animation.getLevel().obstaclesToAdd().addFirst(obstacle);
+        animation.getLevel().addObstacleToAdd(obstacle);
         Model.getInstance().getGamePanelController().addInputOnRun();
 
 
@@ -101,7 +101,7 @@ public class InputOnRunObstacle extends InputOnRun {
 
     private boolean doesNotIntersectWithBall() {
         boolean intersectsWithBall = false;
-        for (MovingObject object : animation.getLevel().movingObjects()) {
+        for (MovingObject object : animation.getLevel().getMovingObjects()) {
             if (object.getType().equals(MovingObjectType.BALL)) {
                 if (BindsCheck.intersectsWithObstacleExact((Ball) object, obstacle)) {
                     intersectsWithBall = true;

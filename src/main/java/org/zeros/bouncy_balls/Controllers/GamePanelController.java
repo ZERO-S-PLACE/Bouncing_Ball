@@ -34,24 +34,24 @@ public class GamePanelController implements Initializable {
     }
 
     private void setUp() {
-        loadLevel("program_data/user_levels/try8.ser");
-        animation.getLevel().PROPERTIES().setFRICTION(0.0001);
+        loadLevel("program_data/user_levels/try9.ser");
+        animation.getLevel().PROPERTIES().setFRICTION(0.01);
         for (int i = 0; i < 20; i++) {
-            for (int j = 0; j < 2; j++) {
-                Ball ball = new Ball(3, animation);
-                ball.updateCenter(new Point2D(700 + 20 * i, 50 + 10 * j));
-                ball.updateNextCenter(new Point2D(700 + 20 * i, 50 + 10 * j));
-                animation.level.movingObjects().add(ball);
+            for (int j = 0; j < 3; j++) {
+                Ball ball = new Ball(6, animation);
+                ball.updateCenter(new Point2D(700 + 20 * i, 50 + 19 * j));
+                ball.updateNextCenter(new Point2D(700 + 20 * i, 50 + 19 * j));
+                animation.getLevel().addMovingObject(ball);
             }
         }
         animation.getLevel().PROPERTIES().setTIME(60);
-        animation.getLevel().movingObjectsToAdd().add(new Ball(5, animation));
-        animation.getLevel().movingObjectsToAdd().getLast().setInitialVelocity(new Point2D(300, 300));
-        animation.getLevel().movingObjectsToAdd().add(new Ball(15, animation));
-        animation.getLevel().movingObjectsToAdd().getLast().setInitialVelocity(new Point2D(90, 90));
-        animation.getLevel().obstaclesToAdd().add(new OvalArea(new Point2D(-10000, -10000), 30, 70, 0));
-        animation.getLevel().obstaclesToAdd().add(new RectangleArea(new Point2D(-20, -20), new Point2D(-30, -50), 0));
-        animation.getLevel().obstaclesToAdd().add(new OvalArea(new Point2D(-10000, -10000), 30, 50, 0));
+        animation.getLevel().addMovingObjectToAdd(new Ball(5, animation));
+        animation.getLevel().getMovingObjects().getLast().setInitialVelocity(new Point2D(300, 300));
+        animation.getLevel().addMovingObjectToAdd(new Ball(15, animation));
+        animation.getLevel().getMovingObjects().getLast().setInitialVelocity(new Point2D(90, 90));
+        animation.getLevel().addObstacleToAdd(new OvalArea(new Point2D(-10000, -10000), 30, 70, 0));
+        animation.getLevel().addObstacleToAdd(new RectangleArea(new Point2D(-20, -20), new Point2D(-30, -50), 0));
+        animation.getLevel().addObstacleToAdd(new OvalArea(new Point2D(-10000, -10000), 30, 50, 0));
 
 
         addRescaleObserver();
@@ -83,19 +83,19 @@ public class GamePanelController implements Initializable {
         return Math.min(factor1, factor2);
     }
 
-    public InputOnRun getInputOnRun() {
-        return input;
-    }
+
 
     public void addInputOnRun() {
-        if (!animation.getLevel().movingObjectsToAdd().isEmpty()) {
-            input = new InputOnRunMovingObject(animation.getLevel().movingObjectsToAdd().getFirst(), gameBackground);
+        if (!animation.getLevel().getMovingObjectsToAdd().isEmpty()) {
+            MovingObject object=animation.getLevel().getMovingObjectsToAdd().getFirst();
+            input = new InputOnRunMovingObject(object, gameBackground);
             new Thread(() -> input.insert()).start();
-            animation.getLevel().movingObjectsToAdd().removeFirst();
-        } else if (!animation.getLevel().obstaclesToAdd().isEmpty()) {
-            input = new InputOnRunObstacle(animation.getLevel().obstaclesToAdd().getFirst(), animation, gameBackground);
+            animation.getLevel().removeMovingObjectToAdd(object);
+        } else if (!animation.getLevel().getObstaclesToAdd().isEmpty()) {
+            Area obstacle=animation.getLevel().getObstaclesToAdd().getFirst();
+            input = new InputOnRunObstacle(obstacle, animation, gameBackground);
             new Thread(() -> input.insert()).start();
-            animation.getLevel().obstaclesToAdd().removeFirst();
+            animation.getLevel().removeObstacleToAdd(obstacle);
         } else {
             input = null;
         }
@@ -114,10 +114,10 @@ public class GamePanelController implements Initializable {
             animation.reloadBorders();
             gameBackground.getChildren().removeAll(gameBackground.getChildren());
             setBackground();
-            for (Area obstacle : animation.getLevel().obstacles()) {
+            for (Area obstacle : animation.getLevel().getObstacles()) {
                 gameBackground.getChildren().add(obstacle.getPath());
             }
-            for (MovingObject object : animation.getLevel().movingObjects()) {
+            for (MovingObject object : animation.getLevel().getMovingObjects()) {
                 gameBackground.getChildren().add(object.getShape());
             }
         }

@@ -14,6 +14,7 @@ public class OvalArea extends Area {
         this.radiusX = radiusX;
         this.radiusY = radiusY;
         calculateOval(center, radiusX, radiusY, rotation);
+        calculateRoughBinds();
         setRotation(rotation);
     }
 

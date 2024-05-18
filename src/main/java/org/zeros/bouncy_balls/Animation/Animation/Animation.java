@@ -16,7 +16,7 @@ import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObjectType;
 import java.util.TreeSet;
 
 public class Animation {
-    public final Level level;
+    private final Level level;
     private final TreeSet<Double> timesElapsed = new TreeSet<>();
     private Borders borders;
     private double timeUsed = 0;
@@ -28,10 +28,11 @@ public class Animation {
         borders = new Borders(this);
         setName(level.getNAME());
         Model.getInstance().addAnimation(this);
-        for (MovingObject object : level.movingObjects()) {
+        for (MovingObject object : level.getMovingObjects()) {
             object.setAnimation(this);
         }
-    }    private final AnimationTimer timer = new AnimationTimer() {
+    }
+    private final AnimationTimer timer = new AnimationTimer() {
         @Override
         public void handle(long now) {
             animateThis();
@@ -85,16 +86,16 @@ public class Animation {
 
     private void singleBouncesCheck(double frameElapsed) {
         mObj1 = 0;
-        for (; mObj1 < level.movingObjects().size(); mObj1++) {
-            if (level.movingObjects().get(mObj1).frameElapsed() <= frameElapsed) {
+        for (; mObj1 < level.getMovingObjects().size(); mObj1++) {
+            if (level.getMovingObjects().get(mObj1).frameElapsed() <= frameElapsed) {
 
                 if (crossesBorder()) {
-                    timesElapsed.add(level.movingObjects().get(mObj1).frameElapsed());
+                    timesElapsed.add(level.getMovingObjects().get(mObj1).frameElapsed());
 
                 } else if (bouncedAgainstObstacle()) {
-                    timesElapsed.add(level.movingObjects().get(mObj1).frameElapsed());
+                    timesElapsed.add(level.getMovingObjects().get(mObj1).frameElapsed());
                 } else if (bouncedByAnother(frameElapsed)) {
-                    timesElapsed.add(level.movingObjects().get(mObj1).frameElapsed());
+                    timesElapsed.add(level.getMovingObjects().get(mObj1).frameElapsed());
                 }
 
 
@@ -103,21 +104,21 @@ public class Animation {
     }
 
     private void setFinalPositions() {
-        for (MovingObject movingObject : level.movingObjects()) {
+        for (MovingObject movingObject : level.getMovingObjects()) {
             movingObject.nextFrame();
         }
     }
 
     private boolean crossesBorder() {
         boolean temp = false;
-        if (!borders.isInside(level.movingObjects().get(mObj1).nextCenter(), level.movingObjects().get(mObj1).getFurthestSpan())) {
+        if (!borders.isInside(level.getMovingObjects().get(mObj1).nextCenter(), level.getMovingObjects().get(mObj1).getFurthestSpan())) {
             switch (level.PROPERTIES().getBOUNDARIES()) {
                 case BordersType.BOUNCING -> {
-                    if (level.movingObjects().get(mObj1).getType().equals(MovingObjectType.BALL)) {
-                        temp = borders.ballFromWall((Ball) level.movingObjects().get(mObj1));
+                    if (level.getMovingObjects().get(mObj1).getType().equals(MovingObjectType.BALL)) {
+                        temp = borders.ballFromWall((Ball) level.getMovingObjects().get(mObj1));
                     }
                 }
-                case BordersType.CONNECTED -> temp = borders.moveToOtherSide(level.movingObjects().get(mObj1));
+                case BordersType.CONNECTED -> temp = borders.moveToOtherSide(level.getMovingObjects().get(mObj1));
 
 
             }
@@ -127,11 +128,11 @@ public class Animation {
 
     private boolean bouncedAgainstObstacle() {
         boolean temp = false;
-        for (Area obstacle : level.obstacles()) {
-            if (BindsCheck.isInsideRoughBinds(level.movingObjects().get(mObj1), obstacle)) {
-                if (level.movingObjects().get(mObj1).getType().equals(MovingObjectType.BALL)) {
-                    if (BindsCheck.intersectsWithObstacleEdge(((Ball) level.movingObjects().get(mObj1)), obstacle)) {
-                        temp = Bounce.ballFromObstacle(((Ball) level.movingObjects().get(mObj1)), obstacle);
+        for (Area obstacle : level.getObstacles()) {
+            if (BindsCheck.isInsideRoughBinds(level.getMovingObjects().get(mObj1), obstacle)) {
+                if (level.getMovingObjects().get(mObj1).getType().equals(MovingObjectType.BALL)) {
+                    if (BindsCheck.intersectsWithObstacleEdge(((Ball) level.getMovingObjects().get(mObj1)), obstacle)) {
+                        temp = Bounce.ballFromObstacle(((Ball) level.getMovingObjects().get(mObj1)), obstacle);
                     }
                 }
             }
@@ -146,16 +147,16 @@ public class Animation {
         int closestObj = -1;
         double shortestTime = Double.MAX_VALUE;
 
-        for (int j = 0; j < level.movingObjects().size(); j++) {
-            if (level.movingObjects().get(j).frameElapsed() <= frameElapsed && j != mObj1) {
-                double distance = level.movingObjects().get(mObj1).nextCenter().distance(level.movingObjects().get(j).nextCenter());
-                double minDistanceAllow = level.movingObjects().get(mObj1).getFurthestSpan() + level.movingObjects().get(j).getFurthestSpan();
-                Point2D intersection = level.movingObjects().get(mObj1).trajectory().intersection(level.movingObjects().get(j).trajectory());
+        for (int j = 0; j < level.getMovingObjects().size(); j++) {
+            if (level.getMovingObjects().get(j).frameElapsed() <= frameElapsed && j != mObj1) {
+                double distance = level.getMovingObjects().get(mObj1).nextCenter().distance(level.getMovingObjects().get(j).nextCenter());
+                double minDistanceAllow = level.getMovingObjects().get(mObj1).getFurthestSpan() + level.getMovingObjects().get(j).getFurthestSpan();
+                Point2D intersection = level.getMovingObjects().get(mObj1).trajectory().intersection(level.getMovingObjects().get(j).trajectory());
                 boolean trajectoriesIntersect;
                 if (intersection != null) {
-                    trajectoriesIntersect = BindsCheck.isBetweenPoints(intersection, level.movingObjects().get(mObj1).center(), level.movingObjects().get(mObj1).nextCenter()) && BindsCheck.isBetweenPoints(intersection, level.movingObjects().get(j).center(), level.movingObjects().get(j).nextCenter());
+                    trajectoriesIntersect = BindsCheck.isBetweenPoints(intersection, level.getMovingObjects().get(mObj1).center(), level.getMovingObjects().get(mObj1).nextCenter()) && BindsCheck.isBetweenPoints(intersection, level.getMovingObjects().get(j).center(), level.getMovingObjects().get(j).nextCenter());
                     if ((distance <= minDistanceAllow || trajectoriesIntersect)) {
-                        Double t = Bounce.calculateTimeToCollision((Ball) level.movingObjects().get(mObj1).clone(), (Ball) level.movingObjects().get(j).clone());
+                        Double t = Bounce.calculateTimeToCollision((Ball) level.getMovingObjects().get(mObj1).clone(), (Ball) level.getMovingObjects().get(j).clone());
                         if (t != null) {
                             if (t < shortestTime) {
                                 closestObj = j;
@@ -168,7 +169,7 @@ public class Animation {
             }
         }
         if (closestObj >= 0) {
-            return Bounce.twoBalls(((Ball) level.movingObjects().get(mObj1)), ((Ball) level.movingObjects().get(closestObj)));
+            return Bounce.twoBalls(((Ball) level.getMovingObjects().get(mObj1)), ((Ball) level.getMovingObjects().get(closestObj)));
 
         }
         return false;
@@ -179,14 +180,14 @@ public class Animation {
         if (!borders.isInside(ball)) {
             return false;
         } else {
-            for (MovingObject object : level.movingObjects()) {
+            for (MovingObject object : level.getMovingObjects()) {
                 if (object.getType().equals(MovingObjectType.BALL) && !object.equals(ball)) {
                     if (object.center().distance(ball.center()) <= ((Ball) object).getRadius() + ball.getRadius()) {
                         return false;
                     }
                 }
             }
-            for (Area obstacle2 : level.obstacles()) {
+            for (Area obstacle2 : level.getObstacles()) {
                 if (BindsCheck.intersectsWithObstacleExact(ball, obstacle2)) {
                     return false;
                 }
