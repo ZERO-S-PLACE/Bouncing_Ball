@@ -3,6 +3,8 @@ package org.zeros.bouncy_balls.Objects.Area;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
+import org.zeros.bouncy_balls.Calculations.Equations.BezierCurve;
+import org.zeros.bouncy_balls.Calculations.Equations.Equation;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
 import org.zeros.bouncy_balls.Objects.SerializableObjects.AreaSerializable;
 
@@ -17,6 +19,7 @@ public class Area {
     protected ArrayList<ArrayList<Point2D>> segmentPoints = new ArrayList<>();
     protected ArrayList<LinearEquation> cornerLines = new ArrayList<>();
     protected ArrayList<ArrayList<LinearEquation>> segmentLines = new ArrayList<>();
+    protected ArrayList<Equation> segmentEquations=new ArrayList<>();
     protected double rotation = 0;
     protected Point2D massCenter;
 
@@ -41,18 +44,12 @@ public class Area {
         this.cornerPoints = area.cornerPoints;
         this.cornerLines = area.getCornerLines();
         this.segmentLines = area.getSegmentLines();
+        this.segmentEquations=area.segmentEquations;
         this.rotation = area.getRotation();
         this.massCenter = area.getMassCenter();
         this.roughMin = area.roughMin;
         this.roughMax = area.roughMax;
     }
-
-
-    protected void addStartPoint(Point2D point) {
-        path.getElements().add(new MoveTo(point.getX(), point.getY()));
-        cornerPoints.add(point);
-    }
-
     protected void calculateRoughMassCenter() {
         Point2D sumPoint = new Point2D(0, 0);
         for (Point2D point : getAllPoints()) {
@@ -61,6 +58,13 @@ public class Area {
 
         massCenter = sumPoint.multiply((double) 1 / getAllPoints().size());
     }
+
+    protected void addStartPoint(Point2D point) {
+        path.getElements().add(new MoveTo(point.getX(), point.getY()));
+        cornerPoints.add(point);
+    }
+
+
 
     protected void addStraightLineTo(Point2D point) {
         path.getElements().add(new LineTo(point.getX(), point.getY()));
@@ -140,6 +144,7 @@ public class Area {
     protected void calculateBoundaryLines() {
         cornerLines = new ArrayList<>();
         segmentLines = new ArrayList<>();
+        segmentEquations=new ArrayList<>();
 
         for (int i = 0; i < cornerPoints.size() - 1; i++) {
 
@@ -150,6 +155,11 @@ public class Area {
 
             segmentLines.add(temp);
             cornerLines.add(new LinearEquation(cornerPoints.get(i), cornerPoints.get(i + 1)));
+            if(segmentPoints.get(i).size()==2){
+                segmentEquations.add(cornerLines.getLast());
+            }else {
+                segmentEquations.add(new BezierCurve(segmentPoints.get(i)));
+            }
         }
     }
 
@@ -225,6 +235,13 @@ public class Area {
 
     public ArrayList<ArrayList<LinearEquation>> getSegmentLines() {
         return segmentLines;
+    }
+
+    public ArrayList<Equation> getSegmentEquations() {
+        return segmentEquations;
+    }
+    public Equation getSegmentEquation(int segment) {
+        return segmentEquations.get(segment);
     }
 
 

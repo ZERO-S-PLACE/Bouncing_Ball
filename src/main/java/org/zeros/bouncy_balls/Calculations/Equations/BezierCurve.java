@@ -9,7 +9,7 @@ import org.zeros.bouncy_balls.Calculations.VectorMath;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class BezierCurve {
+public class BezierCurve extends Equation{
     private final int degree;
     private final ArrayList<Point2D> points;
     private final double[] xPolynomialCoefficients; //curve equation converted to form of polynomial of variable t0

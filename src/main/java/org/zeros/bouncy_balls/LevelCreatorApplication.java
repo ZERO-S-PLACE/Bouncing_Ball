@@ -1,10 +1,11 @@
-package org.zeros.bouncy_balls.Level;
+package org.zeros.bouncy_balls;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
+import org.zeros.bouncy_balls.Level.LevelCreator;
 import org.zeros.bouncy_balls.Model.Model;
 
-public class CreatorApplication extends Application {
+public class LevelCreatorApplication extends Application {
 
     public static void main(String[] args) {
         launch();

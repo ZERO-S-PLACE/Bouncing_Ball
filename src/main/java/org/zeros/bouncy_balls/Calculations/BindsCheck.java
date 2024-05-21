@@ -44,20 +44,21 @@ public class BindsCheck {
             ArrayList<Point2D> points = obstacle.getSegmentPoints(i);
             if (points.size() > 2) {
                 if (intersectWithCurveBoundary(ball, obstacle.getSegmentLines(i), points)) {
-                    if (checkSimplifiedIntersection(ball, points)) return true;
+                    if (checkSimplifiedIntersection(ball, obstacle,i)) return true;
                 }
             }
         }
         return false;
     }
 
-    private static boolean checkSimplifiedIntersection(Ball ball, ArrayList<Point2D> segmentPoints) {
+    private static boolean checkSimplifiedIntersection(Ball ball, Area obstacle, int segment) {
         int divisions=0;
+        ArrayList<Point2D> segmentPoints =obstacle.getSegmentPoints(segment);
         for (int i=0;i<segmentPoints.size()-1;i++){
             divisions=divisions+(int)segmentPoints.get(i).subtract(segmentPoints.get(i+1)).magnitude();
         }
         divisions=(int) Math.sqrt(divisions);
-        BezierCurve curve = new BezierCurve(segmentPoints);
+        BezierCurve curve = (BezierCurve)obstacle.getSegmentEquation(segment);
         ArrayList<Point2D> simplifiedCurvePoints = new ArrayList<>();
         ArrayList<LinearEquation> simplifiedCurveLines = new ArrayList<>();
         Point2D first = segmentPoints.getFirst();
@@ -71,8 +72,6 @@ public class BindsCheck {
         simplifiedCurveLines.add(new LinearEquation(segmentPoints.getLast(), segmentPoints.getFirst()));
         simplifiedCurvePoints.add(segmentPoints.getFirst());
         return intersectWithCornersPolygon(ball, simplifiedCurveLines, simplifiedCurvePoints);
-
-
     }
 
 

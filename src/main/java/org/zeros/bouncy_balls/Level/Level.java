@@ -1,5 +1,6 @@
 package org.zeros.bouncy_balls.Level;
 
+import javafx.geometry.Point2D;
 import org.zeros.bouncy_balls.Animation.Animation.AnimationProperties;
 import org.zeros.bouncy_balls.Animation.Animation.AnimationType;
 import org.zeros.bouncy_balls.Objects.Area.Area;
@@ -163,6 +164,7 @@ public class Level implements Serializable {
         }
     }
     public void removeMovingObjectToAdd(MovingObject obj) {
+        obj.updateCenter(new Point2D(-10000,-10000));
         movingObjectsToAddLock.lock();
         try {
             movingObjectsToAdd.remove(obj);
@@ -214,6 +216,7 @@ public class Level implements Serializable {
         }
     }
     public void addObstacleToAdd(Area obs) {
+        obs.move(new Point2D(-10000,-10000));
         obstaclesToAddLock.lock();
         try {
             obstaclesToAdd.add(obs);
@@ -234,6 +237,7 @@ public class Level implements Serializable {
     public List<Area> getObstaclesToAdd() {
         obstaclesToAddLock.lock();
         try {
+
             return new ArrayList<>(obstaclesToAdd);
         } finally {
             obstaclesToAddLock.unlock();

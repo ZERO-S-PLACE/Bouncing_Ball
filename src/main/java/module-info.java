@@ -23,5 +23,7 @@ module org.zeros.bouncy_balls {
     exports org.zeros.bouncy_balls.Animation.InputOnRun;
     exports org.zeros.bouncy_balls.Animation.Borders;
     exports org.zeros.bouncy_balls.Animation.Animation;
+    opens org.zeros.bouncy_balls.Level to javafx.fxml;
+    exports org.zeros.bouncy_balls.Calculations.AreasMath;
 
 }

@@ -1,5 +1,8 @@
 package org.zeros.bouncy_balls.Objects.Area;
 
+import javafx.scene.paint.Color;
+import org.zeros.bouncy_balls.Model.Properties;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -7,7 +10,18 @@ public class ComplexArea implements Serializable {
     private final ArrayList<Area> includedAreas=new ArrayList<>();
     private final ArrayList<Area> excludedAreas=new ArrayList<>();
 
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    private Color color=Color.BLACK;
+
     public void includeArea(Area inputArea){
+        if(inputArea!=null) {
         /*
         if(isInsideIncludedAreas(inputArea)%2==0)
         {
@@ -40,10 +54,16 @@ public class ComplexArea implements Serializable {
         }
         if(addArea!=null)includedAreas.add(addArea);
         */
-        includedAreas.add(inputArea);
+            inputArea.getPath().setFill(color);
+            includedAreas.add(inputArea);
+        }
     }
     public void excludeArea(Area inputArea){
-        excludedAreas.add(inputArea);
+        if(inputArea!=null) {
+            inputArea.getPath().setFill(Properties.BACKGROUND_COLOR);
+            inputArea.getPath().setOpacity(1);
+            excludedAreas.add(inputArea);
+        }
     }
 
 

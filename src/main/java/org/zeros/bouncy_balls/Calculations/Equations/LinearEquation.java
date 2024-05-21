@@ -5,7 +5,7 @@ import org.zeros.bouncy_balls.Calculations.BindsCheck;
 
 import static java.lang.Float.NaN;
 
-public class LinearEquation {
+public class LinearEquation extends Equation{
     private boolean vertical = false;
     private double a;
     private double b;

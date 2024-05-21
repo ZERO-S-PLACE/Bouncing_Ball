@@ -2,7 +2,7 @@ package org.zeros.bouncy_balls.Calculations.Equations;
 
 import static java.lang.Float.NaN;
 
-public class QuadraticEquation {
+public class QuadraticEquation extends Equation {
 
     private final double a;
     private final double b;
