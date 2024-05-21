@@ -3,6 +3,7 @@ package org.zeros.bouncy_balls.Calculations.Equations;
 import javafx.geometry.Point2D;
 import org.apache.commons.math3.analysis.polynomials.PolynomialFunction;
 import org.apache.commons.math3.analysis.solvers.BrentSolver;
+import org.zeros.bouncy_balls.Calculations.AreasMath.ConvexHull;
 import org.zeros.bouncy_balls.Calculations.BindsCheck;
 import org.zeros.bouncy_balls.Calculations.VectorMath;
 
@@ -12,6 +13,8 @@ import java.util.Arrays;
 public class BezierCurve extends Equation{
     private final int degree;
     private final ArrayList<Point2D> points;
+    private ArrayList<Point2D> convexHullPoints;
+    private final ArrayList<LinearEquation> convexHullLines=new ArrayList<>();
     private final double[] xPolynomialCoefficients; //curve equation converted to form of polynomial of variable t0
     private final double[] yPolynomialCoefficients;
 
@@ -21,6 +24,16 @@ public class BezierCurve extends Equation{
         xPolynomialCoefficients = new double[degree + 1];
         yPolynomialCoefficients = new double[degree + 1];
         calculateCoefficients();
+        convexHullPoints = calculateConvexHull();
+    }
+
+    private ArrayList<Point2D> calculateConvexHull() {
+
+        convexHullPoints= ConvexHull.calculate(points);
+        for (int i=1;i<convexHullPoints.size();i++){
+            convexHullLines.add(new LinearEquation(convexHullPoints.get(i-1),convexHullPoints.get(i)));
+        }
+        return convexHullPoints;
     }
 
     public double[] get_xPolynomialCoefficients() {
@@ -138,5 +151,22 @@ public class BezierCurve extends Equation{
     public boolean areOnDifferentSides(Point2D point1, Point2D point2) {
         return BindsCheck.isBetweenPoints(this.getClosestIntersectionWithLine(point1, point2.subtract(point1)), point1, point2);
     }
+    public int getDegree() {
+        return degree;
+    }
+
+    public ArrayList<Point2D> getPoints() {
+        return points;
+    }
+
+    public ArrayList<Point2D> getConvexHullPoints() {
+        return convexHullPoints;
+    }
+
+    public ArrayList<LinearEquation> getConvexHullLines() {
+        return convexHullLines;
+    }
+
+
 
 }
