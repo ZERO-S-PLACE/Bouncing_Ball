@@ -5,8 +5,13 @@ import org.zeros.bouncy_balls.Animation.Animation.Animation;
 import org.zeros.bouncy_balls.Animation.Animation.AnimationProperties;
 import org.zeros.bouncy_balls.Calculations.Bounce;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
+import org.zeros.bouncy_balls.Objects.Area.Area;
+import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.LineSegment;
+import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.Segment;
 import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObject;
+
+import java.util.ArrayList;
 
 public class Borders {
     private final AnimationProperties PROPERTIES;
@@ -14,11 +19,16 @@ public class Borders {
     private final LinearEquation OY = new LinearEquation(0, Double.NaN);
     private final LinearEquation OY2;
     private final LinearEquation OX2;
+    private final ArrayList<LineSegment> boundaryLines=new ArrayList<>();
 
     public Borders(Animation animation) {
         this.PROPERTIES = animation.getPROPERTIES();
         OY2 = new LinearEquation(animation.getPROPERTIES().getWIDTH(), Double.NaN);
         OX2 = new LinearEquation(0, animation.getPROPERTIES().getHEIGHT());
+        boundaryLines.add(new LineSegment(new Point2D(0,0), new Point2D(0,animation.getPROPERTIES().getHEIGHT())));
+        boundaryLines.add(new LineSegment(new Point2D(0,animation.getPROPERTIES().getHEIGHT()), new Point2D(animation.getPROPERTIES().getWIDTH(),animation.getPROPERTIES().getHEIGHT())));
+        boundaryLines.add(new LineSegment(new Point2D(animation.getPROPERTIES().getWIDTH(),animation.getPROPERTIES().getHEIGHT()), new Point2D(animation.getPROPERTIES().getWIDTH(),0)));
+        boundaryLines.add(new LineSegment(new Point2D(animation.getPROPERTIES().getWIDTH(),0),new Point2D(0,0)));
     }
 
     public boolean isInside(Point2D point) {
@@ -85,4 +95,15 @@ public class Borders {
     }
 
 
+    public boolean isInside(Area obstacle) {
+        for(Point2D point:obstacle.getCorners()){
+            if(!isInside(point)) return false;
+        }
+        for(Segment segment:boundaryLines){
+            for (Segment segment1:obstacle.getSegments()){
+                if(segment.intersectsWith(segment1))return false;
+            }
+        }
+        return true;
+    }
 }

@@ -1,17 +1,16 @@
 package org.zeros.bouncy_balls.Calculations.AreasMath;
 
-import javafx.application.Platform;
 import javafx.geometry.Point2D;
-import javafx.scene.shape.Line;
-import org.zeros.bouncy_balls.Model.Model;
+import org.zeros.bouncy_balls.Calculations.BindsCheck;
+import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.LineSegment;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 
 public class ConvexHull {
-    public static ArrayList<Point2D> calculate(ArrayList<Point2D> points){
+    public static ArrayList<Point2D> calculatePoints(ArrayList<Point2D> inputPoints){
         //calculating convex hull of set of points by Graham scan
+        ArrayList<Point2D>points = new ArrayList<>(inputPoints);
         ArrayList<Point2D> hullPoints=new ArrayList<>();
 
         Point2D lowestPoint = calculateLowestPoint(points);
@@ -33,6 +32,14 @@ public class ConvexHull {
             }
 
      return hullPoints;
+    }
+    public static ArrayList<LineSegment> calculateLines(ArrayList<Point2D> inputPoints){
+        ArrayList<Point2D>points =calculatePoints(inputPoints);
+        ArrayList<LineSegment> lineSegments =new ArrayList<>();
+        for (int i=1;i<points.size();i++){
+            lineSegments.add(new LineSegment(points.get(i-1),points.get(i)));
+        }
+        return lineSegments;
     }
 
 
@@ -122,5 +129,19 @@ public class ConvexHull {
         return sortedPoints;
 
 
+    }
+
+    public static boolean hullsIntersects(ArrayList<LineSegment> hull1LineSegments, ArrayList<LineSegment> hull2LineSegments){
+        for (LineSegment lineSegment1 : hull1LineSegments){
+            for (LineSegment lineSegment2 : hull2LineSegments){
+                Point2D intersection= lineSegment1.getEquation().intersection(lineSegment2.getEquation());
+                if(intersection!=null){
+                    if(BindsCheck.linesIntersect(lineSegment1, lineSegment2)){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 }

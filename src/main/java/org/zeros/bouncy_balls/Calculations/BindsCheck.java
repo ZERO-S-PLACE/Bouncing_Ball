@@ -4,6 +4,7 @@ import javafx.geometry.Point2D;
 import org.zeros.bouncy_balls.Calculations.Equations.BezierCurve;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
 import org.zeros.bouncy_balls.Objects.Area.Area;
+import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.LineSegment;
 import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObject;
 
@@ -19,10 +20,17 @@ public class BindsCheck {
     }
 
     public static boolean isBetweenPoints(Point2D point, Point2D border1, Point2D border2) {
-
-
         return point.getX() >= Math.min(border1.getX(), border2.getX()) && point.getX() <= Math.max(border1.getX(), border2.getX()) && point.getY() >= Math.min(border1.getY(), border2.getY()) && point.getY() <= Math.max(border1.getY(), border2.getY());
-
+    }
+    public static boolean isOnLine(Point2D point, LineSegment lineSegment) {
+        return isBetweenPoints(point, lineSegment.getPoint1(), lineSegment.getPoint2());
+    }
+    public static boolean linesIntersect(LineSegment line1, LineSegment lineSegment2) {
+        Point2D intersection=line1.getEquation().intersection(lineSegment2.getEquation());
+        if(intersection!=null) {
+            return isBetweenPoints(intersection, line1.getPoint1(), line1.getPoint2()) && isBetweenPoints(intersection, lineSegment2.getPoint1(), lineSegment2.getPoint2());
+        }
+        return false;
     }
 
     public static boolean intersectsWithObstacleEdge(Ball ball, Area obstacle) {

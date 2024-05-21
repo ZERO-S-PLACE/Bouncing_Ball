@@ -1,7 +1,16 @@
 package org.zeros.bouncy_balls.Objects.Area;
 
+import javafx.application.Platform;
 import javafx.geometry.Point2D;
+import javafx.scene.shape.Circle;
+import org.zeros.bouncy_balls.Calculations.Equations.BezierCurve;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
+import org.zeros.bouncy_balls.Model.Model;
+import org.zeros.bouncy_balls.Model.Properties;
+import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.CurveSegment;
+import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.Segment;
+
+import java.util.ArrayList;
 
 public class OvalArea extends Area {
     private final double radiusX;
@@ -14,6 +23,7 @@ public class OvalArea extends Area {
         this.radiusX = radiusX;
         this.radiusY = radiusY;
         calculateOval(center, radiusX, radiusY, rotation);
+        calculateBoundaryLines();
         calculateRoughBinds();
         setRotation(rotation);
     }

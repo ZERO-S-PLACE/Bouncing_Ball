@@ -60,7 +60,7 @@ public class ComplexArea implements Serializable {
     }
     public void excludeArea(Area inputArea){
         if(inputArea!=null) {
-            inputArea.getPath().setFill(Properties.BACKGROUND_COLOR);
+            inputArea.getPath().setFill(Properties.BACKGROUND_COLOR());
             inputArea.getPath().setOpacity(1);
             excludedAreas.add(inputArea);
         }

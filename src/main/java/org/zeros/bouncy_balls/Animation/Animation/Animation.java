@@ -4,6 +4,7 @@ import javafx.animation.AnimationTimer;
 import javafx.geometry.Point2D;
 import org.zeros.bouncy_balls.Animation.Borders.Borders;
 import org.zeros.bouncy_balls.Animation.Borders.BordersType;
+import org.zeros.bouncy_balls.Calculations.AreasMath.AreasMath;
 import org.zeros.bouncy_balls.Calculations.BindsCheck;
 import org.zeros.bouncy_balls.Calculations.Bounce;
 import org.zeros.bouncy_balls.Level.Level;
@@ -195,6 +196,30 @@ public class Animation {
 
             return true;
         }
+    }
+    public boolean hasFreePlace(Area obstacle) {
+
+        if (!borders.isInside(obstacle)) return false;
+        else if(intersectsWithBall(obstacle))return false;
+        else {
+            for (Area obstacle2 : level.getObstacles()) {
+                if (AreasMath.areasIntersect(obstacle, obstacle2)) {
+                    return false;
+                }
+            }
+        }
+            return true;
+    }
+    public boolean intersectsWithBall(Area obstacle) {
+        boolean intersectsWithBall = false;
+        for (MovingObject object : this.getLevel().getMovingObjects()) {
+            if (object.getType().equals(MovingObjectType.BALL)) {
+                if (BindsCheck.intersectsWithObstacleExact((Ball) object, obstacle)) {
+                    intersectsWithBall = true;
+                }
+            }
+        }
+        return intersectsWithBall;
     }
 
     public AnimationProperties getPROPERTIES() {

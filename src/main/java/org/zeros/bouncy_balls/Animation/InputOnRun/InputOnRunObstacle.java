@@ -82,7 +82,7 @@ public class InputOnRunObstacle extends InputOnRun {
         for (int i = 0; i < 3; i++) {
             increaseOpacity();
 
-            if (doesNotIntersectWithBall()) {
+            if (animation.hasFreePlace(obstacle)) {
                 obstacle.getPath().setOpacity(1);
                 animation.getLevel().addObstacle(obstacle);
                 Model.getInstance().getGamePanelController().addInputOnRun();
@@ -99,17 +99,7 @@ public class InputOnRunObstacle extends InputOnRun {
 
     }
 
-    private boolean doesNotIntersectWithBall() {
-        boolean intersectsWithBall = false;
-        for (MovingObject object : animation.getLevel().getMovingObjects()) {
-            if (object.getType().equals(MovingObjectType.BALL)) {
-                if (BindsCheck.intersectsWithObstacleExact((Ball) object, obstacle)) {
-                    intersectsWithBall = true;
-                }
-            }
-        }
-        return !intersectsWithBall;
-    }
+
 
     private void decreaseOpacity() {
         for (int i = 90; i > 10; i--) {
