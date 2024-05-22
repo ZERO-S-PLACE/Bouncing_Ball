@@ -21,7 +21,7 @@ public class Properties {
         Properties.ACCURACY = ACCURACY;
     }
 
-    private static  double ACCURACY =0.00001;
+    private static  double ACCURACY =0.0001;
 
 
 }

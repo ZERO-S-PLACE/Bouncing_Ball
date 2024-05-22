@@ -66,7 +66,7 @@ public class VectorMath {
     }
     public static double counterClockWiseAngle(Point2D reference,Point2D vector){
         double angle=reference.angle(vector);
-        if(reference.crossProduct(vector).getZ()<0)return 360-angle;
+        if(reference.crossProduct(vector).getZ()>0)return 360-angle;
         return angle;
     }
 

@@ -3,6 +3,7 @@ package org.zeros.bouncy_balls.Objects.Area;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
+import org.zeros.bouncy_balls.Calculations.AreasMath.AreasMath;
 import org.zeros.bouncy_balls.Calculations.Equations.Equation;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
 import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.CurveSegment;
@@ -11,6 +12,7 @@ import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.Segment;
 import org.zeros.bouncy_balls.Objects.SerializableObjects.AreaSerializable;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Area {
 
@@ -305,6 +307,15 @@ public class Area {
             return i;
         }
         return i;
+    }
+
+    public Point2D getPointInside() {
+        if(AreasMath.isInsideArea(this,massCenter))return massCenter;
+        Random random=new Random();
+        while (true){
+            Point2D point=new Point2D(random.nextDouble(roughMin.getX(),roughMax.getX()),random.nextDouble(roughMin.getY(),roughMax.getY()));
+            if(AreasMath.isInsideArea(this,point))return massCenter;
+        }
     }
 }
 

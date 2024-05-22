@@ -149,12 +149,12 @@ public class BezierCurve extends Equation{
     }
     private static ArrayList<Double> getPolynomialSolutions(double[] coefficients) {
         PolynomialFunction function = new PolynomialFunction(coefficients);
-        BrentSolver solver = new BrentSolver(Math.pow(Properties.ACCURACY(),3));
+        BrentSolver solver = new BrentSolver();
         ArrayList<Double> solutions = new ArrayList<>();
         int loop = 0;
         while (loop < 10) {
             try {
-                double temp = solver.solve(300, function, 0.1 * loop, 0.1 + 0.1 * loop);
+                double temp = solver.solve(100, function, 0.1 * loop, 0.1 + 0.1 * loop);
                 if (solutions.isEmpty()) {
                     solutions.add(temp);
                 } else if (Math.abs(solutions.getLast() - temp) > Properties.ACCURACY()) {
@@ -299,7 +299,7 @@ public class BezierCurve extends Equation{
         ArrayList<Double> solutions = new ArrayList<>();
         for (double xSolution:xParameters){
             for (double ySolution:yParameters){
-                if(ySolution>=xSolution-Properties.ACCURACY()&&ySolution<=xSolution+Properties.ACCURACY()){
+                if(ySolution>=xSolution-Properties.ACCURACY()/100&&ySolution<=xSolution+Properties.ACCURACY()/100){
                     solutions.add( startParameter+((xSolution+ySolution)/2)*(endParameter-startParameter));
                 }
             }

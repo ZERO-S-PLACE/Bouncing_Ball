@@ -89,4 +89,23 @@ public class LineSegment extends Segment {
         this.point1=point2;
         point2=temp;
     }
+
+    @Override
+    public boolean isOnBoundary(Point2D point) {
+        return BindsCheck.isOnLine(point,this);
+    }
+
+    @Override
+    public boolean overlapsWith(Segment segment2) {
+        if(segment2.getType().equals(SegmentType.LINE)){
+            if(equation.getDirection().equals(((LineSegment)segment2).getEquation().getDirection())){
+                return BindsCheck.isBetweenPoints(point1, ((LineSegment) segment2).point1, ((LineSegment) segment2).point2) ||
+                        BindsCheck.isBetweenPoints(point2, ((LineSegment) segment2).point1, ((LineSegment) segment2).point2) ||
+                        BindsCheck.isBetweenPoints(((LineSegment) segment2).point1, point1, point2) ||
+                        BindsCheck.isBetweenPoints(((LineSegment) segment2).point2, point1, point2);
+                }
+            }
+
+        return false;
+    }
 }

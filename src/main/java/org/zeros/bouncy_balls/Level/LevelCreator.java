@@ -16,6 +16,7 @@ import org.zeros.bouncy_balls.Calculations.AreasMath.AreasMath;
 import org.zeros.bouncy_balls.Calculations.AreasMath.ConvexHull;
 import org.zeros.bouncy_balls.Controllers.LevelCreatorController;
 import org.zeros.bouncy_balls.Model.Model;
+import org.zeros.bouncy_balls.Model.Properties;
 import org.zeros.bouncy_balls.Objects.Area.*;
 import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.Segment;
 import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;
@@ -314,7 +315,7 @@ public class LevelCreator {
                 if (obstacle != null) {
                     if (agreeTo("Save?")) {//&&animation.hasFreePlace(obstacle)) {
                         saveObstacle(obstacle);
-                        checkIntersections();
+                        //checkIntersections();
                         checkingAreaSubdivision();
                     } else {
                         removeObstaclePreview(obstacle);
@@ -331,20 +332,24 @@ public class LevelCreator {
         if (level.getObstacles().size() >= 2) {
             for (Area obs1 : level.getObstacles()) {
                 for (Area obs2 : level.getObstacles()) {
-                    if (!obs1.equals(obs2)) {
+                    if (!obs1.isEqualTo(obs2)) {
 
                         ArrayList<Area> subdivisions = AreasMath.areaSplit(obs1,obs2);
 
                         Random random = new Random();
                         for (Area area : subdivisions) {
-                            Platform.runLater(() -> {
-                                area.getPath().setFill(new Color(random.nextDouble(), random.nextDouble(), random.nextDouble(), 1));
-                                Model.getInstance().getLevelCreatorController().preview.getChildren().add(area.getPath());
-                            });
-                            try {
-                                Thread.sleep(50);
-                            } catch (InterruptedException e) {
-                                throw new RuntimeException(e);
+                            if(! Model.getInstance().getLevelCreatorController().preview.getChildren().contains(area.getPath())) {
+                                Platform.runLater(() -> {
+
+                                    area.getPath().setFill(new Color(random.nextDouble(), random.nextDouble(), random.nextDouble(), 1));
+                                    Model.getInstance().getLevelCreatorController().preview.getChildren().add(area.getPath());
+
+                                });
+                                try {
+                                    Thread.sleep(500);
+                                } catch (InterruptedException e) {
+                                    throw new RuntimeException(e);
+                                }
                             }
 
                         }
@@ -473,17 +478,17 @@ public class LevelCreator {
         while (true) {
             switch ((int) getNumber("Next segment:0-no 1- line ,2- quad curve,3-cubic curve 4-removeLast")) {
                 case 0 -> {
-                     if(!plObst.getCorners().getFirst().equals(plObst.getCorners().getLast()))
-                    {plObst.drawStraightSegmentTo(plObst.getCorners().getFirst());}
-                     if(!isSelfIntersecting(plObst)){
-                    plObst.closeAndSave();
-                    return plObst;
-                    }else plObst.removeLastSegment();
+
+
+                        plObst.drawStraightSegmentTo(plObst.getSegments().getFirst().getPoints().getFirst());
+                        if(!isSelfIntersecting(plObst)) {
+                            plObst.closeAndSave();
+                            return plObst;
+                        } else plObst.removeLastSegment();
                 }
                 case 1 -> plObst.drawStraightSegmentTo(getPoint("Next Point: "));
                 case 2 -> plObst.drawQuadCurveTo(getPoint("Control Point: "), getPoint("Next Point: "));
-                case 3 ->
-                        plObst.drawCubicCurveTo(getPoint("Control Point 1: "), getPoint("Control Point 2: "), getPoint("Next Point: "));
+                case 3 -> plObst.drawCubicCurveTo(getPoint("Control Point 1: "), getPoint("Control Point 2: "), getPoint("Next Point: "));
                 case 4 -> plObst.removeLastSegment();
             }
             if (isSelfIntersecting(plObst)) {
@@ -499,8 +504,13 @@ public class LevelCreator {
         if (!plObst.getSegments().isEmpty()) {
             Segment segment1 = plObst.getSegments().getLast();
             for (Segment segment2 : plObst.getSegments()) {
-                if (!segment1.getIntersectionsWith(segment2).isEmpty()) {
-                    return true;
+                if(!segment1.equals(segment2)) {
+                    ArrayList<Point2D> intersections=segment1.getIntersectionsWith(segment2);
+                    if (!(intersections.isEmpty()||(intersections.size()==1&&
+                            (intersections.getFirst().distance(segment2.getPoints().getFirst())<= Properties.ACCURACY()
+                                    ||intersections.getFirst().distance(segment2.getPoints().getLast())<= Properties.ACCURACY())))) {
+                        return true;
+                    }
                 }
             }
         }

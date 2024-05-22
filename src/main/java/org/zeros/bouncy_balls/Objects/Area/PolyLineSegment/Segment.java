@@ -1,9 +1,6 @@
 package org.zeros.bouncy_balls.Objects.Area.PolyLineSegment;
 
 import javafx.geometry.Point2D;
-import javafx.scene.shape.Line;
-import org.zeros.bouncy_balls.Calculations.BindsCheck;
-import org.zeros.bouncy_balls.Calculations.Equations.BezierCurve;
 import org.zeros.bouncy_balls.Calculations.Equations.Equation;
 import org.zeros.bouncy_balls.Model.Properties;
 
@@ -56,4 +53,8 @@ public abstract class Segment {
         throw new IllegalArgumentException("Segment does not end at specified point");
 
     }
+
+    public abstract boolean isOnBoundary(Point2D point);
+
+    public abstract boolean overlapsWith(Segment segment2);
 }
