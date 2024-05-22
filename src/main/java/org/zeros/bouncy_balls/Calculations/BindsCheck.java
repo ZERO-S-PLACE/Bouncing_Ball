@@ -3,6 +3,7 @@ package org.zeros.bouncy_balls.Calculations;
 import javafx.geometry.Point2D;
 import org.zeros.bouncy_balls.Calculations.Equations.BezierCurve;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
+import org.zeros.bouncy_balls.Model.Properties;
 import org.zeros.bouncy_balls.Objects.Area.Area;
 import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.LineSegment;
 import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;
@@ -20,10 +21,14 @@ public class BindsCheck {
     }
 
     public static boolean isBetweenPoints(Point2D point, Point2D border1, Point2D border2) {
-        return point.getX() >= Math.min(border1.getX(), border2.getX()) && point.getX() <= Math.max(border1.getX(), border2.getX()) && point.getY() >= Math.min(border1.getY(), border2.getY()) && point.getY() <= Math.max(border1.getY(), border2.getY());
+        return     point.getX() >= Math.min(border1.getX(), border2.getX())-Properties.ACCURACY()
+                && point.getX() <= Math.max(border1.getX(), border2.getX())+Properties.ACCURACY()
+                && point.getY() >= Math.min(border1.getY(), border2.getY())-Properties.ACCURACY()
+                && point.getY() <= Math.max(border1.getY(), border2.getY())+Properties.ACCURACY();
     }
     public static boolean isOnLine(Point2D point, LineSegment lineSegment) {
-        return isBetweenPoints(point, lineSegment.getPoint1(), lineSegment.getPoint2());
+        return  isBetweenPoints(point, lineSegment.getPoint1(), lineSegment.getPoint2())&&
+                lineSegment.getEquation().distance(point)<= Properties.ACCURACY();
     }
     public static boolean linesIntersect(LineSegment line1, LineSegment lineSegment2) {
         Point2D intersection=line1.getEquation().intersection(lineSegment2.getEquation());

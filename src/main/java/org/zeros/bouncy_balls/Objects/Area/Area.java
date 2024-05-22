@@ -260,6 +260,52 @@ public class Area {
     public Segment getSegment(int segment) {
         return segments.get(segment);
     }
+
+
+    public boolean isEqualTo(Area area){
+        if(this.segments.size()!=area.segments.size())return false;
+        Segment firstSegment = null;
+        for(Segment segment: area.segments){
+            if(segment.isEqualTo(this.getSegment(0)))firstSegment=segment;
+        }
+        if(firstSegment==null)return false;
+
+        int start=area.segments.indexOf(firstSegment);
+            int incrementFactor;
+            if(this.segments.get(1).isEqualTo(area.segments.get(turnToIndex(start+1,area.segments.size())))){
+                incrementFactor=1;
+            }else if(this.segments.get(1).isEqualTo(area.segments.get(turnToIndex(start-1,area.segments.size())))){
+                incrementFactor=-1;
+            }else return false;
+
+            for (int i=2;i<segments.size();i++){
+                if(!this.segments.get(i).isEqualTo(area.segments.get(turnToIndex(start+incrementFactor*i,area.segments.size())))){
+                    return false;
+                }
+            }
+            return true;
+
+
+
+
+    }
+
+    private int turnToIndex(int i, int size) {
+
+        if(i>=size){
+            while (i>=size){
+                i=i-size;
+            }
+            return i;
+        }
+        if (i<0){
+            while (i<0){
+                i=i+size;
+            }
+            return i;
+        }
+        return i;
+    }
 }
 
 

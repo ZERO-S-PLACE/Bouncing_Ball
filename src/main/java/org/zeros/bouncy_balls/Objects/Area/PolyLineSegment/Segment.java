@@ -5,6 +5,7 @@ import javafx.scene.shape.Line;
 import org.zeros.bouncy_balls.Calculations.BindsCheck;
 import org.zeros.bouncy_balls.Calculations.Equations.BezierCurve;
 import org.zeros.bouncy_balls.Calculations.Equations.Equation;
+import org.zeros.bouncy_balls.Model.Properties;
 
 import java.util.ArrayList;
 
@@ -20,39 +21,39 @@ public abstract class Segment {
     }
     public abstract ArrayList<Point2D> getPoints();
     public abstract Equation getEquation();
-
-    public boolean intersectsWith(Segment segment2) {
-        if(this.getType().equals(SegmentType.LINE)&&segment2.getType().equals(SegmentType.LINE)){
-            return BindsCheck.linesIntersect((LineSegment) this, (LineSegment) segment2);
-        }
-        else if(this.getType().equals(SegmentType.LINE)){
-            return !((CurveSegment) segment2).getEquation().getIntersectionsWithLine((LineSegment) this).isEmpty();
-        }else if(segment2.getType().equals(SegmentType.LINE)){
-            return !((CurveSegment) this).getEquation().getIntersectionsWithLine((LineSegment) segment2).isEmpty();
-        }
-        else {
-            return !BezierCurve.getIntersections(((CurveSegment) this).getEquation(), ((CurveSegment) segment2).getEquation()).isEmpty();
-        }
-
-    }
-    public ArrayList<Point2D> getIntersectionsWith(Segment segment2) {
-        ArrayList<Point2D> intersections =new ArrayList<>();
-        if(this.getType().equals(SegmentType.LINE)&&segment2.getType().equals(SegmentType.LINE)){
-            if(BindsCheck.linesIntersect((LineSegment) this,(LineSegment) segment2)) {
-                intersections.add(((LineSegment) this).getEquation().intersection(((LineSegment) segment2).getEquation()));
-
-            }
-        }
-        else if(this.getType().equals(SegmentType.LINE)){
-            intersections=((CurveSegment) segment2).getEquation().getIntersectionsWithLine((LineSegment) this);
-
-        }else if(segment2.getType().equals(SegmentType.LINE)){
-            intersections=((CurveSegment) this).getEquation().getIntersectionsWithLine((LineSegment) segment2);
-        }
-        else {
-            intersections=BezierCurve.getIntersections(((CurveSegment) this).getEquation(), ((CurveSegment) segment2).getEquation());
-        }
-        return intersections;
-    }
+    public abstract ArrayList<Point2D> getIntersectionsWith(Segment segment2);
     public abstract ArrayList<Segment> splitAtPoint(Point2D point);
+
+    public boolean isEqualTo(Segment segment){
+        if(this.getPoints().size()!=segment.getPoints().size())return false;
+        int incrementFactor;
+        int start;
+        if(this.getPoints().getFirst().equals(segment.getPoints().getFirst())){
+            incrementFactor=1;
+            start=0;
+        }else if(this.getPoints().getFirst().equals(segment.getPoints().getLast())){
+            incrementFactor=-1;
+            start=this.getPoints().size()-1;
+        }else return false;
+
+        for (int i=1;i<this.getPoints().size();i++){
+        if(!this.getPoints().get(i).equals(segment.getPoints().get(start+incrementFactor*i))){
+            return false;
+        }
+        }
+        return true;
+    }
+
+    public abstract Point2D getTangentVectorPointingEnd(Point2D nextPoint);
+    public abstract void reversePoints();
+    public Point2D getOtherEnd(Point2D endPoint) {
+        if(getPoints().getFirst().distance(endPoint)<= Properties.ACCURACY()){
+            return getPoints().getLast();
+        }
+        if(getPoints().getLast().distance(endPoint)<=Properties.ACCURACY()){
+            return getPoints().getFirst();
+        }
+        throw new IllegalArgumentException("Segment does not end at specified point");
+
+    }
 }

@@ -6,24 +6,18 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.CubicCurve;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Shape;
 import org.zeros.bouncy_balls.Animation.Animation.Animation;
 import org.zeros.bouncy_balls.Animation.Animation.AnimationProperties;
 import org.zeros.bouncy_balls.Animation.Animation.AnimationType;
 import org.zeros.bouncy_balls.Animation.Borders.BordersType;
+import org.zeros.bouncy_balls.Calculations.AreasMath.AreasMath;
 import org.zeros.bouncy_balls.Calculations.AreasMath.ConvexHull;
-import org.zeros.bouncy_balls.Calculations.BindsCheck;
-import org.zeros.bouncy_balls.Calculations.Equations.BezierCurve;
-import org.zeros.bouncy_balls.Calculations.Equations.Equation;
 import org.zeros.bouncy_balls.Controllers.LevelCreatorController;
 import org.zeros.bouncy_balls.Model.Model;
 import org.zeros.bouncy_balls.Objects.Area.*;
-import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.CurveSegment;
-import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.LineSegment;
 import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.Segment;
-import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.SegmentType;
 import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObject;
 import org.zeros.bouncy_balls.Objects.SerializableObjects.LevelSerializable;
@@ -32,6 +26,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class LevelCreator {
 
@@ -69,10 +64,13 @@ public class LevelCreator {
         }
     }
 
+
+
     public void create() {
         Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().removeAll(Model.getInstance().getLevelCreatorController().preview.getChildren()));
         level = new Level(getAnimationProperties());
         animation = new Animation(level);
+        addObstacles();
         addElements();
         simulateAnimation();
         if (agreeTo("Save level ? Y/N")) {
@@ -146,8 +144,8 @@ public class LevelCreator {
 
     private void addComplexArea(boolean isTargetArea) {
         ComplexArea complexArea = new ComplexArea();
-        if (isTargetArea) complexArea.setColor(new Color(0.5,0.5,0.5,0.5));
-        else complexArea.setColor(new Color(0.5,0,0,0.5));
+        if (isTargetArea) complexArea.setColor(new Color(0.5, 0.5, 0.5, 0.5));
+        else complexArea.setColor(new Color(0.5, 0, 0, 0.5));
         while (true) {
             Area areaToAdd = null;
             Area areaToExclude = null;
@@ -157,14 +155,18 @@ public class LevelCreator {
                     removeComplexAreaPreview(complexArea);
                     return;
                 }
-                case 1 -> {areaToAdd = createNewArea();
-                removeObstaclePreview(areaToAdd);}
-                case 2 ->{ areaToExclude = createNewArea();
-                removeObstaclePreview(areaToExclude);}
+                case 1 -> {
+                    areaToAdd = createNewArea();
+                    removeObstaclePreview(areaToAdd);
+                }
+                case 2 -> {
+                    areaToExclude = createNewArea();
+                    removeObstaclePreview(areaToExclude);
+                }
                 case 3 -> {
                     if (isTargetArea) {
                         level.setTargetArea(complexArea);
-                    }else {
+                    } else {
                         level.setInputArea(complexArea);
                     }
                     return;
@@ -193,7 +195,6 @@ public class LevelCreator {
             Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().remove(area.getPath()));
         }
     }
-
 
     private AnimationProperties getAnimationProperties() {
 
@@ -311,14 +312,47 @@ public class LevelCreator {
             if (agreeTo(" Add new obstacle ? N/Y")) {
                 obstacle = createNewArea();
                 if (obstacle != null) {
-                    if (agreeTo("Save?")&&animation.hasFreePlace(obstacle)) {
+                    if (agreeTo("Save?")) {//&&animation.hasFreePlace(obstacle)) {
                         saveObstacle(obstacle);
+                        checkIntersections();
+                        checkingAreaSubdivision();
                     } else {
                         removeObstaclePreview(obstacle);
                     }
                 }
 
             } else return;
+
+
+        }
+    }
+
+    private void checkingAreaSubdivision() {
+        if (level.getObstacles().size() >= 2) {
+            for (Area obs1 : level.getObstacles()) {
+                for (Area obs2 : level.getObstacles()) {
+                    if (!obs1.equals(obs2)) {
+
+                        ArrayList<Area> subdivisions = AreasMath.areaSplit(obs1,obs2);
+
+                        Random random = new Random();
+                        for (Area area : subdivisions) {
+                            Platform.runLater(() -> {
+                                area.getPath().setFill(new Color(random.nextDouble(), random.nextDouble(), random.nextDouble(), 1));
+                                Model.getInstance().getLevelCreatorController().preview.getChildren().add(area.getPath());
+                            });
+                            try {
+                                Thread.sleep(50);
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+
+                        }
+                    }
+                }
+            }
+
+
         }
     }
 
@@ -329,30 +363,28 @@ public class LevelCreator {
             case 1 -> area = getOval();
             case 2 -> area = getPolyLine();
         }
-
         return area;
     }
 
-    private static void checkIntersections(Area area) {
-        ArrayList<BezierCurve> curves=new ArrayList<>();
-        for (Equation equation: area.getSegmentEquations()){
-            if(equation.getClass().equals(BezierCurve.class)){
-                curves.add((BezierCurve) equation);
+    private void checkIntersections() {
+        ArrayList<Point2D> intersections = new ArrayList<>();
+        for (Area area : level.getObstacles()) {
+            for (Area area1 : level.getObstacles()) {
+                for (Segment segment : area.getSegments()) {
+                    for (Segment segment1 : area1.getSegments()) {
+                        intersections.addAll(segment.getIntersectionsWith(segment1));
+                    }
+
+                }
+
+                for (Point2D intersection : intersections) {
+                    Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().add(
+                            new Circle(intersection.getX(), intersection.getY(), 1, Color.BLUE)
+                    ));
+                }
+
+
             }
-        }
-        for (BezierCurve curve1:curves){
-            for (BezierCurve curve2:curves){
-                   ArrayList<Point2D> intersections= BezierCurve.getIntersections(curve1,curve2);
-                   for (Point2D intersection:intersections){
-                       Platform.runLater(()->Model.getInstance().getLevelCreatorController().preview.getChildren().add(
-                               new Circle(intersection.getX(),intersection.getY(),4,Color.BLUE)
-                       ));
-                   }
-
-
-
-            }
-
         }
     }
 
@@ -372,28 +404,6 @@ public class LevelCreator {
             level.addObstacleToAdd(obstacle);
         }
 
-    }
-
-    private static void checkingHullCalculations(Area obstacle) {
-        ArrayList<Point2D> hull= ConvexHull.calculatePoints(obstacle.getAllPoints());
-        Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren()
-                .add(new Circle(hull.getFirst().getX(),hull.getFirst().getY(),8)));
-
-        for (Point2D point: obstacle.getAllPoints()){
-            Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren()
-                    .add(new Circle(point.getX(),point.getY(),1)));
-        }
-        for (int i=1;i<hull.size();i++){
-
-            int finalI = i;
-            Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren()
-                    .add(new Line(hull.get(finalI -1).getX(),hull.get(finalI -1).getY()
-                            ,hull.get(finalI).getX(),hull.get(finalI).getY())));
-            Circle circle=new Circle(hull.get(finalI).getX(),hull.get(finalI).getY(),3);
-            circle.setFill(Color.RED);
-            Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren()
-                    .add(circle));
-            }
     }
 
     private Area getRectangle() {
@@ -426,22 +436,7 @@ public class LevelCreator {
         return modifyOval(oval);
     }
 
-    private void checkSubCurveBrake(OvalArea oval) {
-        for (Equation equation: oval.getSegmentEquations()){
-            BezierCurve curve=(BezierCurve) equation;
-            ArrayList<BezierCurve>subCurves =curve.getSubCurves(0.3);
-            for (BezierCurve sCurve:subCurves) {
-                CubicCurve cubicCurve = new CubicCurve(sCurve.getPoints().get(0).getX(),sCurve.getPoints().get(0).getY(),sCurve.getPoints().get(1).getX(),sCurve.getPoints().get(1).getY(),sCurve.getPoints().get(2).getX(),sCurve.getPoints().get(2).getY(),sCurve.getPoints().get(3).getX(),sCurve.getPoints().get(3).getY());
-                cubicCurve.setStroke(Color.RED);
-                cubicCurve.setFill(new Color(0.3,0.3,0.3,0.3));
-                Platform.runLater(() -> {Model.getInstance().getLevelCreatorController().preview.getChildren().add(cubicCurve);
-                    Model.getInstance().getLevelCreatorController().preview.getChildren().add(new Circle(sCurve.getPoints().get(0).getX(),sCurve.getPoints().get(0).getY(),3));});
 
-            }
-
-
-        }
-    }
 
     private OvalArea modifyOval(OvalArea oval) {
         while (true) {
@@ -478,11 +473,11 @@ public class LevelCreator {
         while (true) {
             switch ((int) getNumber("Next segment:0-no 1- line ,2- quad curve,3-cubic curve 4-removeLast")) {
                 case 0 -> {
-                    if(!plObst.getCorners().getFirst().equals(plObst.getCorners().getLast()))
+                     if(!plObst.getCorners().getFirst().equals(plObst.getCorners().getLast()))
                     {plObst.drawStraightSegmentTo(plObst.getCorners().getFirst());}
-                    if(!isSelfIntersecting(plObst))
-                    {  plObst.closeAndSave();
-                        return plObst;
+                     if(!isSelfIntersecting(plObst)){
+                    plObst.closeAndSave();
+                    return plObst;
                     }else plObst.removeLastSegment();
                 }
                 case 1 -> plObst.drawStraightSegmentTo(getPoint("Next Point: "));
@@ -491,9 +486,8 @@ public class LevelCreator {
                         plObst.drawCubicCurveTo(getPoint("Control Point 1: "), getPoint("Control Point 2: "), getPoint("Next Point: "));
                 case 4 -> plObst.removeLastSegment();
             }
-            if(isSelfIntersecting(plObst))
-            {
-                plObst.removeLastSegment();
+            if (isSelfIntersecting(plObst)) {
+                   plObst.removeLastSegment();
             }
 
         }
@@ -502,15 +496,15 @@ public class LevelCreator {
     }
 
     private boolean isSelfIntersecting(PolylineArea plObst) {
-        if(!plObst.getSegments().isEmpty()) {
+        if (!plObst.getSegments().isEmpty()) {
             Segment segment1 = plObst.getSegments().getLast();
             for (Segment segment2 : plObst.getSegments()) {
-                if (segment1.intersectsWith(segment2)) {
+                if (!segment1.getIntersectionsWith(segment2).isEmpty()) {
                     return true;
                 }
             }
         }
-    return false;
+        return false;
 
     }
 
@@ -622,5 +616,27 @@ public class LevelCreator {
         Model.getInstance().getLevelCreatorController().preview.setMinSize(WIDTH, HEIGHT);
         Model.getInstance().getLevelCreatorController().preview.setMaxSize(WIDTH, HEIGHT);
         Model.getInstance().getLevelCreatorController().preview.backgroundProperty().set(Background.fill(Color.BEIGE));
+    }
+
+    private static void checkingHullCalculations(Area obstacle) {
+        ArrayList<Point2D> hull = ConvexHull.calculatePoints(obstacle.getAllPoints());
+        Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren()
+                .add(new Circle(hull.getFirst().getX(), hull.getFirst().getY(), 8)));
+
+        for (Point2D point : obstacle.getAllPoints()) {
+            Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren()
+                    .add(new Circle(point.getX(), point.getY(), 1)));
+        }
+        for (int i = 1; i < hull.size(); i++) {
+
+            int finalI = i;
+            Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren()
+                    .add(new Line(hull.get(finalI - 1).getX(), hull.get(finalI - 1).getY()
+                            , hull.get(finalI).getX(), hull.get(finalI).getY())));
+            Circle circle = new Circle(hull.get(finalI).getX(), hull.get(finalI).getY(), 3);
+            circle.setFill(Color.RED);
+            Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren()
+                    .add(circle));
+        }
     }
 }

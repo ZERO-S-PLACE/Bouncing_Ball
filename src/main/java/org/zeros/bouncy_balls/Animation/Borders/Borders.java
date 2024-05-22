@@ -101,7 +101,7 @@ public class Borders {
         }
         for(Segment segment:boundaryLines){
             for (Segment segment1:obstacle.getSegments()){
-                if(segment.intersectsWith(segment1))return false;
+                if(!segment.getIntersectionsWith(segment1).isEmpty())return false;
             }
         }
         return true;

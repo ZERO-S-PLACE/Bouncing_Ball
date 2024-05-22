@@ -12,6 +12,7 @@ import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.LineSegment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class BezierCurve extends Equation{
     private final int degree;
@@ -80,6 +81,7 @@ public class BezierCurve extends Equation{
 
     }
 
+
     public Point2D getClosestIntersectionWithLine(Point2D center, Point2D direction) {
         ArrayList<Point2D> solutions = getIntersectionsWithLine(center, direction);
         if (solutions.isEmpty()) return null;
@@ -102,36 +104,27 @@ public class BezierCurve extends Equation{
     }
 
 
-    public ArrayList<Point2D> getIntersectionsWithLine(Point2D center, Point2D direction) {
+    public ArrayList<Point2D> getIntersectionsWithLine(Point2D pointOnLine, Point2D direction) {
 
-        ArrayList<Double> solutions = getPolynomialSolutions(getIntersectionWithLineEquationCoefficients(center, direction));
+        ArrayList<Double> solutions = getPolynomialSolutions(getLineIntersectionEquationCoefficients(pointOnLine, direction));
         ArrayList<Point2D>solutionPoints=new ArrayList<>();
         for (double solution:solutions){
-            solutionPoints.add(this.getPointAt(solution));
+            solutionPoints.add(getPointAt(startParameter+(endParameter-startParameter)*solution));
         }
         return solutionPoints;
     }
     public ArrayList<Point2D> getIntersectionsWithLine(LineSegment lineSegment) {
-        ArrayList<Double> solutions = getPolynomialSolutions(getIntersectionWithLineEquationCoefficients(lineSegment.getPoint1(), lineSegment.getEquation().getDirection()));
-        ArrayList<Point2D>solutionPoints=new ArrayList<>();
-        for (double solution:solutions){
-            Point2D intersection=this.getPointAt(solution);
-            if(BindsCheck.isOnLine(intersection, lineSegment)) solutionPoints.add(intersection);
-        }
+
+        ArrayList<Point2D>solutionPoints=getIntersectionsWithLine(lineSegment.getPoint1(),lineSegment.getEquation().getDirection());
+        solutionPoints.removeIf(solution -> !BindsCheck.isOnLine(solution, lineSegment));
         return solutionPoints;
-    }
-    public ArrayList<Double> getIntersectionsWithLineParameters(LineSegment lineSegment) {
-        ArrayList<Double> solutions = getPolynomialSolutions(getIntersectionWithLineEquationCoefficients(lineSegment.getPoint1(), lineSegment.getEquation().getDirection()));
-        for (double solution:solutions){
-            Point2D intersection=this.getPointAt(solution);
-            if(!BindsCheck.isOnLine(intersection, lineSegment)) solutions.remove(solution);
-        }
-        return solutions;
+
     }
 
 
 
-    private double[] getIntersectionWithLineEquationCoefficients(Point2D linePoint, Point2D direction) {
+
+    private double[] getLineIntersectionEquationCoefficients(Point2D linePoint, Point2D direction) {
     /* Calculating intersection of curve with line
      Xb-Yb*(Vx/Vy)-Xo+Yo*(Vx/Vy)=0
      Yb*m-Xb +c=0
@@ -156,15 +149,15 @@ public class BezierCurve extends Equation{
     }
     private static ArrayList<Double> getPolynomialSolutions(double[] coefficients) {
         PolynomialFunction function = new PolynomialFunction(coefficients);
-        BrentSolver solver = new BrentSolver(Properties.ACCURACY()*Properties.ACCURACY());
+        BrentSolver solver = new BrentSolver(Math.pow(Properties.ACCURACY(),3));
         ArrayList<Double> solutions = new ArrayList<>();
         int loop = 0;
-        while (loop < 5) {
+        while (loop < 10) {
             try {
-                double temp = solver.solve(100, function, 0.2 * loop, 0.2 + 0.2 * loop);
+                double temp = solver.solve(300, function, 0.1 * loop, 0.1 + 0.1 * loop);
                 if (solutions.isEmpty()) {
                     solutions.add(temp);
-                } else if (Math.abs(solutions.getLast() - temp) > 0.05) {
+                } else if (Math.abs(solutions.getLast() - temp) > Properties.ACCURACY()) {
                     solutions.add(temp);
                 }
             } catch (Exception ignored) {
@@ -196,8 +189,6 @@ public class BezierCurve extends Equation{
         ArrayList<BezierCurve> subCurves=new ArrayList<>();
         if(brakeParameter<=endParameter&&brakeParameter>=startParameter) {
             double t0=(brakeParameter-startParameter)/(endParameter-startParameter);
-
-
             Point2D[][] coefficients = getCasteljauTree(t0);
 
             ArrayList<Point2D> firstCurvePoints=new ArrayList<>();
@@ -221,7 +212,7 @@ public class BezierCurve extends Equation{
         subCurves.add(this);
         for (double parameter:brakeParameters){
             for (BezierCurve subCurve:subCurves){
-                if(parameter>=subCurve.startParameter&&parameter<=subCurve.endParameter){
+                if(parameter>subCurve.startParameter&&parameter<subCurve.endParameter){
                     subCurves.addAll(subCurve.getSubCurves(parameter));
                     subCurves.remove(subCurve);
                 }
@@ -248,12 +239,12 @@ public class BezierCurve extends Equation{
 
     public static ArrayList<Point2D> getIntersections(BezierCurve curve1,BezierCurve curve2){
         ArrayList<Point2D> intersections=new ArrayList<>();
+        if(curve1.equals(curve2)){
+           return intersections;
+        }
         if(ConvexHull.hullsIntersects(curve1.convexHull,curve2.convexHull)){
-            if(curve1.equals(curve2)){
-                ArrayList<BezierCurve>subCurves =curve1.getSubCurves(curve1.startParameter+(curve1.endParameter-curve1.startParameter)/2);
-                intersections.addAll(BezierCurve.getIntersections(subCurves.get(0), subCurves.get(1)));
-            }
-            else if(curve1.couldBeSimplified()&&curve2.couldBeSimplified()){
+
+             if(curve1.couldBeSimplified()&&curve2.couldBeSimplified()){
                 LineSegment lineSegment1 =curve1.simplifyToLine();
                 LineSegment lineSegment2 =curve2.simplifyToLine();
                 if(BindsCheck.linesIntersect(lineSegment1, lineSegment2)){
@@ -277,7 +268,7 @@ public class BezierCurve extends Equation{
         public boolean couldBeSimplified(){
         LinearEquation equation= new LinearEquation(points.getFirst(),points.getLast());
         for(int i=1;i<points.size()-1;i++){
-            if(equation.distance(points.get(i))>= Properties.ACCURACY()){
+            if(equation.distance(points.get(i))>=Properties.ACCURACY()/200){
                 return false;
             }
         }
@@ -296,7 +287,9 @@ public class BezierCurve extends Equation{
         }
 
 
-    public ArrayList<Double> getParameterAtPoint(Point2D point, double accuracy) {
+    public ArrayList<Double> getParameterAtPoint(Point2D point) {
+        if(point.distance(points.getFirst())<=Properties.ACCURACY())return new ArrayList<>(List.of(0.0));
+        if(point.distance(points.getLast())<=Properties.ACCURACY())return new ArrayList<>(List.of(1.0));
         double[] xCoefficients =get_xPolynomialCoefficients();
         xCoefficients[0]=xCoefficients[0]-point.getX();
         ArrayList<Double> xParameters=getPolynomialSolutions(xCoefficients);
@@ -306,9 +299,8 @@ public class BezierCurve extends Equation{
         ArrayList<Double> solutions = new ArrayList<>();
         for (double xSolution:xParameters){
             for (double ySolution:yParameters){
-                if(ySolution>=xSolution-accuracy&&ySolution<=xSolution+accuracy){
-                    solutions.add((xSolution+ySolution)/2);
-                    System.out.println(point.distance(getPointAt(solutions.getLast())));
+                if(ySolution>=xSolution-Properties.ACCURACY()&&ySolution<=xSolution+Properties.ACCURACY()){
+                    solutions.add( startParameter+((xSolution+ySolution)/2)*(endParameter-startParameter));
                 }
             }
         }

@@ -3,6 +3,7 @@ package org.zeros.bouncy_balls.Objects.Area;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Path;
+import org.zeros.bouncy_balls.Model.Properties;
 import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.Segment;
 
 import java.util.ArrayList;
@@ -14,32 +15,55 @@ public class PolylineArea extends Area {
         super();
         startDrawingFromPoint(start);
     }
+
     public PolylineArea(ArrayList<Segment> segments) {
         super();
-        checkSegmentsContinuity(segments);
+        checkSegmentsContinuityAndMatchPoints(segments);
         createAreaFromSegments(segments);
     }
 
-    private void createAreaFromSegments(ArrayList<Segment> segments) {
-        if(!segments.getFirst().getPoints().getFirst().equals(segments.getLast().getPoints().getLast())||segments.size()<3){
-            throw new IllegalArgumentException("Segments path is not closed");
-        }
-        for (int i=1;i<segments.size();i++){
-            if(segments.get(i-1).getPoints().getLast().equals(segments.get(i).getPoints().getFirst())){
-                throw new IllegalArgumentException("Segments path is not closed");
-            }
+    private void checkSegmentsContinuityAndMatchPoints(ArrayList<Segment> segments) {
+        matchFirstSegments(segments.getLast(), segments.getFirst());
+        for (int i = 1; i < segments.size(); i++) {
+            matchSegments(segments.get(i - 1), segments.get(i));
         }
     }
 
-    private void checkSegmentsContinuity(ArrayList<Segment> segments) {
+    private void matchFirstSegments(Segment last, Segment first) {
+        if (last.getPoints().getLast().distance(first.getPoints().getFirst())<= Properties.ACCURACY()) {
+            return;
+        }
+        if ((last.getPoints().getLast().distance(first.getPoints().getLast()) <= Properties.ACCURACY())) {
+            first.reversePoints();
+        } else if (last.getPoints().getFirst().distance(first.getPoints().getFirst())<= Properties.ACCURACY()) {
+            last.reversePoints();
+        } else if (last.getPoints().getFirst().distance(first.getPoints().getLast())<= Properties.ACCURACY()) {
+            last.reversePoints();
+            first.reversePoints();
+        }else {
+        throw new IllegalArgumentException("Points doesn't match");
+        }
+    }
+
+
+    private void matchSegments(Segment previous, Segment next) {
+        if (previous.getPoints().getLast().distance(next.getPoints().getFirst())<= Properties.ACCURACY()) return;
+        if (previous.getPoints().getLast().distance(next.getPoints().getLast())<= Properties.ACCURACY()) next.reversePoints();
+        else {
+            throw new IllegalArgumentException("Points doesn't match");
+        }
+
+    }
+
+    private void createAreaFromSegments(ArrayList<Segment> segments) {
         startDrawingFromPoint(segments.getFirst().getPoints().getFirst());
-        for(Segment segment:segments){
-            ArrayList<Point2D> points =segment.getPoints();
-            switch (points.size()){
-                case 1->throw new IllegalArgumentException("Not a segment -1 Point");
-                case 2->addStraightLineTo(points.getLast());
-                case 3->addQuadCurveTo(points.get(1),points.getLast());
-                case 4->addCubicCurveTo(points.get(1),points.get(2),points.getLast());
+        for (Segment segment : segments) {
+            ArrayList<Point2D> points = segment.getPoints();
+            switch (points.size()) {
+                case 0, 1 -> throw new IllegalArgumentException("Not a segment ");
+                case 2 -> addStraightLineTo(points.getLast());
+                case 3 -> addQuadCurveTo(points.get(1), points.getLast());
+                case 4 -> addCubicCurveTo(points.get(1), points.get(2), points.getLast());
                 default -> throw new IllegalArgumentException("Curve degree not supported");
             }
         }
