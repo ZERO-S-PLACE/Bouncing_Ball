@@ -93,7 +93,7 @@ public class AreasMath {
             out:
             for (Segment segment1 : area1segments) {
                 for (Segment segment2 : area2segments) {
-                    SegmentIntersection intersection = SegmentIntersection.getSegmentIntersection(segment1,segment2);
+                   /* SegmentIntersection intersection = SegmentIntersection.getSegmentIntersection(segment1,segment2);
 
                     if(!intersection.getIntersectionPoints().isEmpty()){
                             area1segments.remove(segment1);
@@ -103,11 +103,25 @@ public class AreasMath {
                             area2segments.addAll(intersection.getSubsegmentsOfSecondSegment());
                             newIntersectionsOccurred = true;
                             break out;
+                        }*/
+                    ArrayList<Point2D> tempIntersections = segment1.getIntersectionsWith(segment2);
+                    for (Point2D intersection : tempIntersections) {
+
+                        if (!VectorMath.containsPoint(intersection, intersections)) {
+                            intersections.add(intersection);
+                            area1segments.addAll(segment1.splitAtPoint(intersection));
+                            area2segments.addAll(segment2.splitAtPoint(intersection));
+                            area1segments.remove(segment1);
+                            area2segments.remove(segment2);
+                            newIntersectionsOccurred = true;
+                            break out;
                         }
 
-                }
-            }
 
+                    }
+                }
+
+            }
         }
         if (intersections.isEmpty()) {
             subAreas.add(area1);

@@ -10,9 +10,9 @@ import java.util.ArrayList;
 
 public abstract class SegmentIntersection {
 
-    ArrayList<Segment> firstSegmentSubsegments=new ArrayList<>();
-    ArrayList<Segment> secondSegmentSubsegments=new ArrayList<>();
-    ArrayList<Point2D> intersectionPoints=new ArrayList<>();
+    protected ArrayList<Segment> firstSegmentSubsegments=new ArrayList<>();
+    protected ArrayList<Segment> secondSegmentSubsegments=new ArrayList<>();
+    protected ArrayList<Point2D> intersectionPoints=new ArrayList<>();
     protected SegmentIntersection() {}
     public static SegmentIntersection getSegmentIntersection(Segment segment1, Segment segment2) {
         if(segment1.getType().equals(SegmentType.LINE)&&segment2.getType().equals(SegmentType.LINE)){
