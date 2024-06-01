@@ -66,7 +66,7 @@ public class BezierCurve extends Equation{
 
     }
 
-    public Point2D getPointAt(double pointParameter) {
+   /* public Point2D getPointAt(double pointParameter) {
         if(pointParameter<=endParameter&&pointParameter>=startParameter) {
             double t0=pointParameter-startParameter/(endParameter-startParameter);
             double x = 0;
@@ -80,7 +80,16 @@ public class BezierCurve extends Equation{
         }
         throw new WrongValueException(startParameter,endParameter,pointParameter);
 
-    }
+    }*/
+   public Point2D getPointAt(double pointParameter) {
+       if (pointParameter <= endParameter && pointParameter >= startParameter) {
+           double t0 = pointParameter - startParameter / (endParameter - startParameter);
+           Point2D[][] casteliau= getCasteljauTree(t0);
+           return casteliau[casteliau.length-1][casteliau[casteliau.length-1].length-1];
+       }
+       throw new WrongValueException(startParameter,endParameter,pointParameter);
+
+   }
 
 
     public Point2D getClosestIntersectionWithLine(Point2D center, Point2D direction) {
@@ -286,30 +295,44 @@ public class BezierCurve extends Equation{
 
 
     public ArrayList<Double> getParameterAtPoint(Point2D point) {
-        if(point.distance(points.getFirst())<=Properties.ACCURACY()/10)return new ArrayList<>(List.of(startParameter));
-        if(point.distance(points.getLast())<=Properties.ACCURACY()/10)return new ArrayList<>(List.of(endParameter));
-        ArrayList<Double> solutions=new ArrayList<>();
+        if (point.distance(points.getFirst()) <= Properties.ACCURACY()) return new ArrayList<>(List.of(0.0));
+        if (point.distance(points.getLast()) <= Properties.ACCURACY()) return new ArrayList<>(List.of(1.0));
+        double[] xCoefficients = get_xPolynomialCoefficients();
+        xCoefficients[0] = xCoefficients[0] - point.getX();
+        ArrayList<Double> xParameters = getPolynomialSolutions(xCoefficients);
+        double[] yCoefficients = get_yPolynomialCoefficients();
+        yCoefficients[0] = yCoefficients[0] - point.getY();
+        ArrayList<Double> yParameters = getPolynomialSolutions(yCoefficients);
+        ArrayList<Double> solutions = new ArrayList<>();
+        for (double xSolution : xParameters) {
+            for (double ySolution : yParameters) {
+                if (ySolution >= xSolution - Properties.ACCURACY() / 100 && ySolution <= xSolution + Properties.ACCURACY() / 100) {
+                    solutions.add(startParameter + ((xSolution + ySolution) / 2) * (endParameter - startParameter));
+                }
+            }
+        }
 
-        if(couldBeSimplified()){
-            solutions.add((this.startParameter+this.endParameter)
-                    /2);
-
-        }else if(AreasMath.isInsideArea(this.convexHull,point)){
-
-            {
+        return solutions;
+    }
+   /* public ArrayList<Double> getParameterAtPoint(Point2D point) {
+        if (point.distance(points.getFirst()) <= Properties.ACCURACY()/40) return new ArrayList<>(List.of(startParameter));
+        if (point.distance(points.getLast()) <= Properties.ACCURACY()/40) return new ArrayList<>(List.of(endParameter));
+        ArrayList<Double> solutions =new ArrayList<>();
+        if(couldBeSimplified()){//&&BindsCheck.isBetweenPoints(point,points.getFirst(),points.getLast())) {
+            solutions.add(this.startParameter+(this.endParameter-this.startParameter)*points.getFirst().distance(point)/points.getFirst().distance(points.getLast()));
+        }
+        else if(AreasMath.isInsideArea(this.convexHull,point)){
                 ArrayList<BezierCurve> subCurves=this.getSubCurves(this.startParameter+(this.endParameter-this.startParameter)/2);
                 for (BezierCurve subCurve:subCurves){
                     solutions.addAll(subCurve.getParameterAtPoint(point));
                 }
-            }
+
         }
-        System.out.println("Soutions"+solutions);
+        System.out.println(solutions);
         return solutions;
+    }*/
 
-
-
-    }
-    public static ArrayList<Point2D> getIntersections(BezierCurve curve1,BezierCurve curve2){
+        public static ArrayList<Point2D> getIntersections(BezierCurve curve1,BezierCurve curve2){
         ArrayList<Point2D> intersections=new ArrayList<>();
         if(curve1.equals(curve2)){
             return intersections;
