@@ -65,13 +65,18 @@ public class LineSegment extends Segment {
 
     @Override
     public ArrayList<Segment> splitAtPoint(Point2D point) {
+        ArrayList<Segment> split=new ArrayList<>();
+        if(point.distance(point1)<=Properties.ACCURACY()||point.distance(point2)<=Properties.ACCURACY()){
+            split.add(this);
+            return split;
+        }
         if(equation.distance(point)<= Properties.ACCURACY()&& BindsCheck.isBetweenPoints(point,point1,point2)){
-            ArrayList<Segment> split=new ArrayList<>();
+
             split.add(new LineSegment(point1,point));
             split.add(new LineSegment(point,point2));
             return split;
-
         }
+
         throw new IllegalArgumentException("Point "+point+" does not lay on the line");
     }
 
@@ -107,5 +112,10 @@ public class LineSegment extends Segment {
             }
 
         return false;
+    }
+
+    @Override
+    protected Segment copyValuesTo() {
+        return new LineSegment(point1,point2);
     }
 }

@@ -315,7 +315,7 @@ public class LevelCreator {
                 if (obstacle != null) {
                     if (agreeTo("Save?")) {//&&animation.hasFreePlace(obstacle)) {
                         saveObstacle(obstacle);
-                        //checkIntersections();
+                        checkIntersections();
                         checkingAreaSubdivision();
                     } else {
                         removeObstaclePreview(obstacle);
@@ -332,7 +332,7 @@ public class LevelCreator {
         if (level.getObstacles().size() >= 2) {
             for (Area obs1 : level.getObstacles()) {
                 for (Area obs2 : level.getObstacles()) {
-                    if (!obs1.isEqualTo(obs2)) {
+                    if (!obs1.isEqualTo(obs2)||level.getObstacles().indexOf(obs1)>level.getObstacles().indexOf(obs2)) {
 
                         ArrayList<Area> subdivisions = AreasMath.areaSplit(obs1,obs2);
 
@@ -356,6 +356,9 @@ public class LevelCreator {
                     }
                 }
             }
+
+            removeObstaclePreview(level.getObstacles().getFirst());
+            level.getObstacles().removeFirst();
 
 
         }

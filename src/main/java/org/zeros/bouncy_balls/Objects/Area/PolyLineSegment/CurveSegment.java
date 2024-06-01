@@ -1,12 +1,16 @@
 package org.zeros.bouncy_balls.Objects.Area.PolyLineSegment;
 
+import javafx.application.Platform;
 import javafx.geometry.Point2D;
+import javafx.scene.shape.Circle;
 import org.zeros.bouncy_balls.Calculations.Equations.BezierCurve;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
+import org.zeros.bouncy_balls.Model.Model;
 import org.zeros.bouncy_balls.Model.Properties;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class CurveSegment extends Segment {
 
@@ -21,6 +25,8 @@ public class CurveSegment extends Segment {
         super(SegmentType.CURVE);
         this.equation = equation;
     }
+
+
 
     @Override
     public ArrayList<Point2D> getPoints() {
@@ -44,10 +50,18 @@ public class CurveSegment extends Segment {
 
     @Override
     public ArrayList<Segment> splitAtPoint(Point2D point) {
-        ArrayList<BezierCurve> splitCurves = equation.getSubCurves(equation.getParameterAtPoint(point).getFirst());
+        ArrayList<Double> brakePoints=equation.getParameterAtPoint(point);
         ArrayList<Segment> splitSegments = new ArrayList<>();
-        for (BezierCurve curve : splitCurves) {
-            splitSegments.add(new CurveSegment(curve));
+        if(!brakePoints.isEmpty()) {
+            ArrayList<BezierCurve> splitCurves = equation.getSubCurves(brakePoints);
+            for (BezierCurve curve : splitCurves) {
+                splitSegments.add(new CurveSegment(curve));
+            }
+        }else {
+            Platform.runLater(()-> Model.getInstance().getLevelCreatorController().preview.getChildren().add(
+                    new Circle(point.getX(),point.getY(),3))
+            );
+            throw new IllegalArgumentException("point is not on line");
         }
         return splitSegments;
 
@@ -55,27 +69,22 @@ public class CurveSegment extends Segment {
 
     @Override
     public Point2D getTangentVectorPointingEnd(Point2D nextPoint) {
-        LinearEquation tangent;
-        LinearEquation secondTangent;
         if (nextPoint.distance(getPoints().getFirst()) <= Properties.ACCURACY()) {
-            tangent = equation.getTangentAt(0);
-            secondTangent = equation.getTangentAt(0.05);
+            return getPoints().getFirst().subtract(getPoints().get(1));
         } else if (nextPoint.distance(getPoints().getLast()) <= Properties.ACCURACY()) {
-            tangent = equation.getTangentAt(1);
-            secondTangent = equation.getTangentAt(0.95);
-        } else {
-            throw new IllegalArgumentException("Given point is not an end of a segment");
+            return getPoints().getLast().subtract(getPoints().get(getPoints().size()-2));
         }
-
-        return nextPoint.subtract(tangent.intersection(secondTangent));
-
+            throw new IllegalArgumentException("Given point is not an end of a segment");
 
     }
 
     @Override
     public void reversePoints() {
-        ArrayList<Point2D> points = equation.getPoints();
-        Collections.reverse(points);
+        ArrayList<Point2D> points= new ArrayList<>();
+        for (int i=getPoints().size()-1;i>=0;i--){
+            points.add(getPoints().get(i));
+
+        }
         this.equation = new BezierCurve(points);
     }
 
@@ -107,6 +116,11 @@ public class CurveSegment extends Segment {
             }
         }
         return false;
+    }
+
+    @Override
+    protected Segment copyValuesTo() {
+        return new CurveSegment(equation);
     }
 
 }

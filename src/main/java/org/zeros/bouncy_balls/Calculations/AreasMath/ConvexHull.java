@@ -24,7 +24,7 @@ public class ConvexHull {
                 hullPoints.add(sortedPoints.get(i));
                 Point2D firstVector=hullPoints.getLast().subtract(hullPoints.get(hullPoints.size()-3));
                 Point2D secondVector=hullPoints.get(hullPoints.size()-2).subtract(hullPoints.get(hullPoints.size()-3));
-                while (secondVector.crossProduct(firstVector).getZ()<=0){
+                while (secondVector.crossProduct(firstVector).getZ()<0&&hullPoints.size()>3){
                     hullPoints.remove(hullPoints.size()-2);
                     firstVector=hullPoints.getLast().subtract(hullPoints.get(hullPoints.size()-3));
                     secondVector=hullPoints.get(hullPoints.size()-2).subtract(hullPoints.get(hullPoints.size()-3));
@@ -144,4 +144,10 @@ public class ConvexHull {
         }
         return false;
     }
+
+    public static boolean hullIntersectsWithLine(ArrayList<LineSegment> convexHull, LineSegment line) {
+        return AreasMath.isInsideArea( convexHull,line.getPoint1() )|| AreasMath.isInsideArea( convexHull,line.getPoint2());
+    }
+
+
 }

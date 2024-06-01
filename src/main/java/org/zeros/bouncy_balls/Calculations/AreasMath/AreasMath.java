@@ -7,6 +7,7 @@ import org.zeros.bouncy_balls.Objects.Area.Area;
 import org.zeros.bouncy_balls.Objects.Area.ComplexArea;
 import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.LineSegment;
 import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.Segment;
+import org.zeros.bouncy_balls.Calculations.SegmentIntersection.SegmentIntersection;
 import org.zeros.bouncy_balls.Objects.Area.PolylineArea;
 
 import java.util.ArrayList;
@@ -41,12 +42,12 @@ public class AreasMath {
         return true;
     }
 
-    public static boolean isInsideArea(Area area, Point2D point) {
+    public static boolean isInsideArea(ArrayList<? extends Segment> segments, Point2D point) {
         // calculations using ray tracing algorithm, edges included
 
         LineSegment ray = new LineSegment(point, new Point2D(Double.MAX_VALUE, Double.MAX_VALUE));
         double intersectionsCount = 0;
-        for (Segment segment : area.getSegments()) {
+        for (Segment segment : segments) {
             if (segment.isOnBoundary(point)) return true;
             ArrayList<Point2D> intersections = segment.getIntersectionsWith(ray);
             for (Point2D intersection : intersections) {
@@ -56,6 +57,9 @@ public class AreasMath {
             }
         }
         return intersectionsCount % 2 != 0;
+    }
+    public static boolean isInsideArea(Area area, Point2D point) {
+        return isInsideArea(area.getSegments(),point);
     }
 
     public static ComplexArea areaSum(Area area1, Area area2) {
@@ -79,7 +83,9 @@ public class AreasMath {
         // which didn't belong to any of areas before intersections.
         ArrayList<Point2D> intersections = new ArrayList<>();
         ArrayList<Segment> area1segments = new ArrayList<>(area1.getSegments());
+        for (Segment segment:area1segments){segment.clone();}
         ArrayList<Segment> area2segments = new ArrayList<>(area2.getSegments());
+        for (Segment segment:area2segments){segment.clone();}
         ArrayList<Area> subAreas = new ArrayList<>();
         boolean newIntersectionsOccurred = true;
         while (newIntersectionsOccurred) {
@@ -87,22 +93,21 @@ public class AreasMath {
             out:
             for (Segment segment1 : area1segments) {
                 for (Segment segment2 : area2segments) {
-                    ArrayList<Point2D> tempIntersections = segment1.getIntersectionsWith(segment2);
-                    for (Point2D intersection : tempIntersections) {
+                    SegmentIntersection intersection = SegmentIntersection.getSegmentIntersection(segment1,segment2);
 
-                        if (!VectorMath.containsPoint(intersection, intersections)) {
-                            intersections.add(intersection);
-                            area1segments.addAll(segment1.splitAtPoint(intersection));
-                            area2segments.addAll(segment2.splitAtPoint(intersection));
+                    if(!intersection.getIntersectionPoints().isEmpty()){
                             area1segments.remove(segment1);
                             area2segments.remove(segment2);
+                            intersections.addAll(intersection.getIntersectionPoints());
+                            area1segments.addAll(intersection.getSubsegmentsOfFirstSegment());
+                            area2segments.addAll(intersection.getSubsegmentsOfSecondSegment());
                             newIntersectionsOccurred = true;
                             break out;
                         }
 
-                    }
                 }
             }
+
         }
         if (intersections.isEmpty()) {
             subAreas.add(area1);
@@ -131,31 +136,23 @@ public class AreasMath {
                     nextPoint = subAreaSegments.getLast().getOtherEnd(nextPoint);
                 }
                 subAreaSegments.removeLast();
-
-                Area newArea;
-                newArea = new PolylineArea(subAreaSegments);
-                if (isAtomicArea(newArea, subAreas)) {
-                    subAreas.removeIf(area -> AreasMath.isInsideArea(area, newArea.getPointInside()));
+                Area newArea= new PolylineArea(subAreaSegments);
+               if (isAtomicArea(newArea, subAreas)) {
+                  subAreas.removeIf(area -> AreasMath.isInsideArea(area, newArea.getPointInside()));
                     subAreas.add(newArea);
-                }
-
+               }
             }
 
         }
-
+System.out.println(subAreas.size());
         return subAreas;
     }
 
     private static boolean isAtomicArea(Area newArea, ArrayList<Area> subAreas) {
         for (Area area : subAreas) {
-            if (AreasMath.isInsideArea(newArea,area.getPointInside())) return false;
-        }
-        return true;
-    }
-
-    private static boolean doesNotContainArea(ArrayList<Area> subAreas, Area newArea) {
-        for (Area area : subAreas) {
-            if (newArea.isEqualTo(area)) return false;
+            if (AreasMath.isInsideArea(newArea,area.getPointInside())){
+                if(newArea.getSegments().size()>area.getSegments().size())return false;
+            }
         }
         return true;
     }
