@@ -41,7 +41,7 @@ public class CurveSegment extends Segment {
     @Override
     public ArrayList<Point2D> getIntersectionsWith(Segment segment2) {
         if (segment2.getType().equals(SegmentType.LINE)) {
-            return this.getEquation().getIntersectionsWithLine((LineSegment) segment2);
+            return BezierCurve.getIntersections(this.equation,(LineSegment) segment2);
         } else {
             return BezierCurve.getIntersections(this.getEquation(), ((CurveSegment) segment2).getEquation());
         }
@@ -59,7 +59,7 @@ public class CurveSegment extends Segment {
             }
         }else {
             Platform.runLater(()-> Model.getInstance().getLevelCreatorController().preview.getChildren().add(
-                    new Circle(point.getX(),point.getY(),3))
+                    new Circle(point.getX(),point.getY(),5))
             );
             throw new IllegalArgumentException("point is not on line");
         }

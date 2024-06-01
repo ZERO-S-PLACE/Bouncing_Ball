@@ -116,9 +116,9 @@ public class PolylineArea extends Area {
         if (!cornerPoints.getLast().equals(cornerPoints.getFirst())) {
             if(cornerPoints.getLast().distance(cornerPoints.getFirst())<=Properties.ACCURACY()){
                 ArrayList<Point2D> points=segments.getLast().getPoints();
-                segments.removeLast();
                 points.removeLast();
                 points.add(cornerPoints.getFirst());
+                removeLastSegment();
                 addSegment(points);
             }else {
                 addStraightLineTo(cornerPoints.getFirst());

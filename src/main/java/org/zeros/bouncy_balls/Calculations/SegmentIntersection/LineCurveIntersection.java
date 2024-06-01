@@ -1,6 +1,8 @@
 package org.zeros.bouncy_balls.Calculations.SegmentIntersection;
 
 import javafx.geometry.Point2D;
+import org.zeros.bouncy_balls.Calculations.Equations.BezierCurve;
+import org.zeros.bouncy_balls.Calculations.VectorMath;
 import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.CurveSegment;
 import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.LineSegment;
 import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.Segment;
@@ -8,7 +10,9 @@ import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.Segment;
 public class LineCurveIntersection extends SegmentIntersection {
 
     public LineCurveIntersection(LineSegment line, CurveSegment curve) {
-        intersectionPoints.addAll(curve.getIntersectionsWith(line));
+        super(line,curve);
+        intersectionPoints.addAll(BezierCurve.getIntersections(curve.getEquation(),line));
+        intersectionPoints.removeIf(intersection -> VectorMath.containsPoint(intersection, endPoints));
         if(!intersectionPoints.isEmpty()) {
             secondSegmentSubsegments=curve.splitAtPoint(intersectionPoints.getFirst());
             firstSegmentSubsegments=line.splitAtPoint(intersectionPoints.getFirst());

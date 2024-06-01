@@ -14,7 +14,7 @@ import org.zeros.bouncy_balls.Objects.SerializableObjects.AreaSerializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Area {
+public class Area implements Cloneable {
 
     protected Path path = new Path();
     protected Point2D roughMin;
@@ -27,7 +27,7 @@ public class Area {
     protected double rotation = 0;
     protected Point2D massCenter;
 
-    protected Area() {
+    protected Area()  {
         path.setFill(Color.WHITE);
         path.setStroke(Color.WHITE);
         path.setStrokeWidth(0);
@@ -315,6 +315,17 @@ public class Area {
         while (true){
             Point2D point=new Point2D(random.nextDouble(roughMin.getX(),roughMax.getX()),random.nextDouble(roughMin.getY(),roughMax.getY()));
             if(AreasMath.isInsideArea(this,point))return massCenter;
+        }
+    }
+
+    @Override
+    public Area clone() {
+        try {
+            Area clone = (Area) super.clone();
+            rewriteValues(clone);
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
         }
     }
 }

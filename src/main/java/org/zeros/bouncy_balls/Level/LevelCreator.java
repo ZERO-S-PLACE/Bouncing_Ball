@@ -330,11 +330,12 @@ public class LevelCreator {
 
     private void checkingAreaSubdivision() {
         if (level.getObstacles().size() >= 2) {
-            for (Area obs1 : level.getObstacles()) {
-                for (Area obs2 : level.getObstacles()) {
-                    if (!obs1.isEqualTo(obs2)||level.getObstacles().indexOf(obs1)>level.getObstacles().indexOf(obs2)) {
 
-                        ArrayList<Area> subdivisions = AreasMath.areaSplit(obs1,obs2);
+
+
+                        ArrayList<Area> subdivisions = AreasMath.areaSplit(level.getObstacles().getLast(),level.getObstacles().get(
+                                level.getObstacles().size()-2
+                        ));
 
                         Random random = new Random();
                         for (Area area : subdivisions) {
@@ -346,15 +347,15 @@ public class LevelCreator {
 
                                 });
                                 try {
-                                    Thread.sleep(500);
+                                    Thread.sleep(300);
                                 } catch (InterruptedException e) {
                                     throw new RuntimeException(e);
                                 }
                             }
 
-                        }
-                    }
-                }
+
+
+
             }
 
             removeObstaclePreview(level.getObstacles().getFirst());

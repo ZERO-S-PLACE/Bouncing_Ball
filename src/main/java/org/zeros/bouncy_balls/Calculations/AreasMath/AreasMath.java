@@ -93,14 +93,15 @@ public class AreasMath {
             out:
             for (Segment segment1 : area1segments) {
                 for (Segment segment2 : area2segments) {
-                   /* SegmentIntersection intersection = SegmentIntersection.getSegmentIntersection(segment1,segment2);
+                  /*  SegmentIntersection intersection = SegmentIntersection.getSegmentIntersection(segment1,segment2);
 
                     if(!intersection.getIntersectionPoints().isEmpty()){
-                            area1segments.remove(segment1);
-                            area2segments.remove(segment2);
+
                             intersections.addAll(intersection.getIntersectionPoints());
                             area1segments.addAll(intersection.getSubsegmentsOfFirstSegment());
                             area2segments.addAll(intersection.getSubsegmentsOfSecondSegment());
+                            area1segments.remove(segment1);
+                            area2segments.remove(segment2);
                             newIntersectionsOccurred = true;
                             break out;
                         }*/
@@ -116,7 +117,6 @@ public class AreasMath {
                             newIntersectionsOccurred = true;
                             break out;
                         }
-
 
                     }
                 }

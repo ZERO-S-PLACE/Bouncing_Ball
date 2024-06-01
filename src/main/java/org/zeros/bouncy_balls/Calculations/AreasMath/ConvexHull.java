@@ -146,7 +146,10 @@ public class ConvexHull {
     }
 
     public static boolean hullIntersectsWithLine(ArrayList<LineSegment> convexHull, LineSegment line) {
-        return AreasMath.isInsideArea( convexHull,line.getPoint1() )|| AreasMath.isInsideArea( convexHull,line.getPoint2());
+      for (LineSegment line1:convexHull){
+          if(BindsCheck.linesIntersect(line1,line))return true;
+      }
+      return false;
     }
 
 
