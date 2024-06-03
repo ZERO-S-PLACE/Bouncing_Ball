@@ -3,6 +3,7 @@ package org.zeros.bouncy_balls.Objects.Area.PolyLineSegment;
 import javafx.application.Platform;
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import org.zeros.bouncy_balls.Calculations.Equations.BezierCurve;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
 import org.zeros.bouncy_balls.Model.Model;
@@ -50,19 +51,13 @@ public class CurveSegment extends Segment {
 
     @Override
     public ArrayList<Segment> splitAtPoint(Point2D point) {
-        ArrayList<Double> brakePoints=equation.getParameterAtPoint(point);
+       ArrayList<Double> brakePoints=equation.getParameterAtPoint(point);
         ArrayList<Segment> splitSegments = new ArrayList<>();
-        if(!brakePoints.isEmpty()) {
-            ArrayList<BezierCurve> splitCurves = equation.getSubCurves(brakePoints);
+        ArrayList<BezierCurve> splitCurves = equation.getSubCurves(brakePoints);
             for (BezierCurve curve : splitCurves) {
                 splitSegments.add(new CurveSegment(curve));
             }
-        }else {
-            Platform.runLater(()-> Model.getInstance().getLevelCreatorController().preview.getChildren().add(
-                    new Circle(point.getX(),point.getY(),5))
-            );
-            throw new IllegalArgumentException("point is not on line");
-        }
+
         return splitSegments;
 
     }
@@ -96,26 +91,35 @@ public class CurveSegment extends Segment {
     @Override
     public boolean overlapsWith(Segment segment2) {
         if (segment2.getType().equals(SegmentType.CURVE)) {
-            if (!equation.getParameterAtPoint(segment2.getPoints().getFirst()).isEmpty() && !equation.getParameterAtPoint(segment2.getPoints().getLast()).isEmpty()) {
-                for (int i = 1; i < equation.getDegree(); i++) {
-                    if (getEquation().getParameterAtPoint(((CurveSegment)segment2).getEquation().getPointAt(1 + (double) (i / ((CurveSegment) segment2).equation.getDegree()))).isEmpty()) {
-                        return false;
+            if(this.getPoints().getFirst().distance(this.getPoints().getLast())>
+                    segment2.getPoints().getFirst().distance(segment2.getPoints().getLast())){
+                return CurveSegment.isSubsegmentOf(segment2,this);
+            }
+            if(this.getPoints().getFirst().distance(this.getPoints().getLast())<
+                    segment2.getPoints().getFirst().distance(segment2.getPoints().getLast())){
+                return CurveSegment.isSubsegmentOf(this,(CurveSegment) segment2);
+            }
+            return isEqualTo(segment2);
+        }
+        return false;
+    }
 
-                    }
+    private static boolean isSubsegmentOf(Segment subSegment1, CurveSegment segment) {
+        if(segment.getEquation().getParameterAtPoint(subSegment1.getPoints().getFirst()).isEmpty()) return false;
+        if(segment.getEquation().getParameterAtPoint(subSegment1.getPoints().getLast()).isEmpty()) return false;
+        ArrayList<Segment> subSegments=segment.splitAtPoint(subSegment1.getPoints().getFirst());
+        for (Segment subSegmentT:subSegments){
+            if(!((CurveSegment)subSegmentT).getEquation().getParameterAtPoint(subSegment1.getPoints().getLast()).isEmpty()){
+                ArrayList<Segment> subSegments2=subSegmentT.splitAtPoint(subSegment1.getPoints().getLast());
+                for (Segment segment2:subSegments2){
+                    if(segment2.isEqualTo(subSegment1))return true;
                 }
-                return true;
 
-            } else if (!((CurveSegment) segment2).getEquation().getParameterAtPoint(this.getPoints().getFirst()).isEmpty() && !((CurveSegment) segment2).getEquation().getParameterAtPoint(this.getPoints().getLast()).isEmpty()) {
-                for (int i = 1; i < ((CurveSegment) segment2).equation.getDegree(); i++) {
-                    if (((CurveSegment) segment2).getEquation().getParameterAtPoint(this.equation.getPointAt(1 + (double) (i / equation.getDegree()))).isEmpty()) {
-                        return false;
 
-                    }
-                }
-                return true;
             }
         }
         return false;
+
     }
 
     @Override

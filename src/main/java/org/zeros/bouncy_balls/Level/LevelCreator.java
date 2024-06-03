@@ -14,6 +14,7 @@ import org.zeros.bouncy_balls.Animation.Animation.AnimationType;
 import org.zeros.bouncy_balls.Animation.Borders.BordersType;
 import org.zeros.bouncy_balls.Calculations.AreasMath.AreasMath;
 import org.zeros.bouncy_balls.Calculations.AreasMath.ConvexHull;
+import org.zeros.bouncy_balls.Calculations.AreasMath.SimpleAreaBoolean;
 import org.zeros.bouncy_balls.Controllers.LevelCreatorController;
 import org.zeros.bouncy_balls.Model.Model;
 import org.zeros.bouncy_balls.Model.Properties;
@@ -181,6 +182,12 @@ public class LevelCreator {
 
     private void addComplexAreaPreview(ComplexArea complexArea) {
         for (Area area : complexArea.includedAreas()) {
+            area.getPath().setFill(Color.RED);
+            try {
+                Thread.sleep(700);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
             Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().add(area.getPath()));
         }
         for (Area area : complexArea.excludedAreas()) {
@@ -316,7 +323,7 @@ public class LevelCreator {
                     if (agreeTo("Save?")) {//&&animation.hasFreePlace(obstacle)) {
                         saveObstacle(obstacle);
                         checkIntersections();
-                        checkingAreaSubdivision();
+                        checkingAreaBoolean();
                     } else {
                         removeObstaclePreview(obstacle);
                     }
@@ -328,9 +335,8 @@ public class LevelCreator {
         }
     }
 
-    private void checkingAreaSubdivision() {
+    private void checkingAreaBoolean() {
         if (level.getObstacles().size() >= 2) {
-
 
 
                         ArrayList<Area> subdivisions = AreasMath.areaSplit(level.getObstacles().getLast(),level.getObstacles().get(
@@ -364,6 +370,19 @@ public class LevelCreator {
 
         }
     }
+    /*private void checkingAreaBoolean() {
+        if (level.getObstacles().size() >= 2) {
+            SimpleAreaBoolean simpleAreaBoolean = new SimpleAreaBoolean(level.getObstacles().getLast(), level.getObstacles().get(
+                    level.getObstacles().size() - 2));
+            //ComplexArea sum = simpleAreaBoolean.sum();
+            ComplexArea intersection = simpleAreaBoolean.intersection();
+            //ComplexArea difference1 = simpleAreaBoolean.subtractAfromB();
+            //ComplexArea difference2 = simpleAreaBoolean.subtractBfromA();
+
+            addComplexAreaPreview(intersection);
+
+        }
+    }*/
 
     private Area createNewArea() {
         Area area = null;

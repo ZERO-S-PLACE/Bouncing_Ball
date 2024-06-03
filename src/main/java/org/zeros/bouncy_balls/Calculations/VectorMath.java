@@ -73,7 +73,7 @@ public class VectorMath {
 
     public static boolean containsPoint(Point2D point, ArrayList<Point2D> points) {
         for (Point2D point2:points){
-            if(point2.distance(point)<=Properties.ACCURACY()){
+            if(point2.distance(point)<=Properties.ACCURACY()/10){
                 return true;
             }
         }

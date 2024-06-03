@@ -153,4 +153,19 @@ public class ConvexHull {
     }
 
 
+    public static boolean isInside(ArrayList<LineSegment> convexHull, Point2D point) {
+        //edges included.
+        //based on fact that if ray going through midpoint of any edge of hull should not intersect any other edge
+        for (LineSegment line:convexHull){
+            if(BindsCheck.isOnLine(point,line))return true;
+        }
+        LineSegment reference =convexHull.getFirst();
+        Point2D midPoint=reference.getPoint1().add(reference.getPoint2()).multiply(0.5);
+        Point2D vector=midPoint.subtract(point);
+        LineSegment referenceLine=new LineSegment(point,point.add(vector.multiply(100000000)));
+        for (int i=1;i<convexHull.size();i++) {
+            if(BindsCheck.linesIntersect(referenceLine,convexHull.get(i)))return false;
+        }
+        return true;
+    }
 }

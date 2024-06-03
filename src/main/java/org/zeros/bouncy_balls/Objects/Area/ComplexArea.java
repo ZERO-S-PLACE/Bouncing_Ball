@@ -7,8 +7,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class ComplexArea implements Serializable {
-    private final ArrayList<Area> includedAreas=new ArrayList<>();
-    private final ArrayList<Area> excludedAreas=new ArrayList<>();
+    private  ArrayList<Area> includedAreas=new ArrayList<>();
+    private  ArrayList<Area> excludedAreas=new ArrayList<>();
+    public ComplexArea(ArrayList<Area> includedAreas,ArrayList<Area> excludedAreas){
+        this.includedAreas=includedAreas;
+        this.excludedAreas=excludedAreas;
+    }
+    public ComplexArea(){}
 
     public Color getColor() {
         return color;

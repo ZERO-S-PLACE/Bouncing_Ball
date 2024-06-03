@@ -33,16 +33,16 @@ public abstract class Segment implements Cloneable {
         if (this.getPoints().size() != segment.getPoints().size()) return false;
         int incrementFactor;
         int start;
-        if (this.getPoints().getFirst().equals(segment.getPoints().getFirst())) {
+        if (this.getPoints().getFirst().distance(segment.getPoints().getFirst())<=Properties.ACCURACY()) {
             incrementFactor = 1;
             start = 0;
-        } else if (this.getPoints().getFirst().equals(segment.getPoints().getLast())) {
+        } else if (this.getPoints().getFirst().distance(segment.getPoints().getLast())<=Properties.ACCURACY()) {
             incrementFactor = -1;
             start = this.getPoints().size() - 1;
         } else return false;
 
         for (int i = 1; i < this.getPoints().size(); i++) {
-            if (!this.getPoints().get(i).equals(segment.getPoints().get(start + incrementFactor * i))) {
+            if (this.getPoints().get(i).distance(segment.getPoints().get(start + incrementFactor * i))>=Properties.ACCURACY()) {
                 return false;
             }
         }

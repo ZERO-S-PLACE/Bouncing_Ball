@@ -2,12 +2,12 @@ package org.zeros.bouncy_balls.Calculations.AreasMath;
 
 import javafx.geometry.Point2D;
 import org.zeros.bouncy_balls.Calculations.VectorMath;
+import org.zeros.bouncy_balls.Exceptions.WrongValueException;
 import org.zeros.bouncy_balls.Model.Properties;
 import org.zeros.bouncy_balls.Objects.Area.Area;
 import org.zeros.bouncy_balls.Objects.Area.ComplexArea;
 import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.LineSegment;
 import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.Segment;
-import org.zeros.bouncy_balls.Calculations.SegmentIntersection.SegmentIntersection;
 import org.zeros.bouncy_balls.Objects.Area.PolylineArea;
 
 import java.util.ArrayList;
@@ -44,14 +44,13 @@ public class AreasMath {
 
     public static boolean isInsideArea(ArrayList<? extends Segment> segments, Point2D point) {
         // calculations using ray tracing algorithm, edges included
-
-        LineSegment ray = new LineSegment(point, new Point2D(Double.MAX_VALUE, Double.MAX_VALUE));
+        LineSegment ray = new LineSegment(point, new Point2D(10^100, 10^100));
         double intersectionsCount = 0;
         for (Segment segment : segments) {
             if (segment.isOnBoundary(point)) return true;
             ArrayList<Point2D> intersections = segment.getIntersectionsWith(ray);
             for (Point2D intersection : intersections) {
-                if (intersection.distance(segment.getPoints().getLast()) <= Properties.ACCURACY() || intersection.distance(segment.getPoints().getFirst()) <= Properties.ACCURACY()) {
+                if (intersection.equals(segment.getPoints().getLast()) || intersection.equals(segment.getPoints().getFirst())) {
                     intersectionsCount = intersectionsCount + 0.5;
                 } else intersectionsCount++;
             }
@@ -60,20 +59,6 @@ public class AreasMath {
     }
     public static boolean isInsideArea(Area area, Point2D point) {
         return isInsideArea(area.getSegments(),point);
-    }
-
-    public static ComplexArea areaSum(Area area1, Area area2) {
-
-        return null;
-    }
-
-
-    public static ComplexArea areaSum(ComplexArea areaC, Area areaS) {
-        return null;
-    }
-
-    public static ComplexArea areaSum(ComplexArea areaC1, ComplexArea areaC2) {
-        return null;
     }
 
     public static ArrayList<Area> areaSplit(Area area1, Area area2) {
@@ -152,7 +137,7 @@ public class AreasMath {
                 subAreaSegments.removeLast();
                 Area newArea= new PolylineArea(subAreaSegments);
                if (isAtomicArea(newArea, subAreas)) {
-                  subAreas.removeIf(area -> AreasMath.isInsideArea(area, newArea.getPointInside()));
+                 subAreas.removeIf(area -> AreasMath.isInsideArea(area, newArea.getPointInside()));
                     subAreas.add(newArea);
                }
             }
@@ -204,4 +189,65 @@ System.out.println(subAreas.size());
 
     }
 
+
+
+    public static boolean haveCommonEdge(Area subArea1, Area subArea2) {
+        for (Segment segment1:subArea1.getSegments()){
+            for (Segment segment2:subArea2.getSegments()){
+                if(segment1.isEqualTo(segment2))return true;
+
+            }
+        }
+        return false;
+    }
+    public static ArrayList<Area> combineTangentAreas(ArrayList<Area>tanAreas) {
+        ArrayList<Segment> segmentsToCombine=getUniqueSegments(tanAreas);
+        ArrayList<Area> mergedAreas=new ArrayList<>();
+        while (!segmentsToCombine.isEmpty()){
+            mergedAreas.add(combineAreaFromSegments(segmentsToCombine));
+        }
+        return mergedAreas;
+
+        }
+
+    private static Area combineAreaFromSegments(ArrayList<Segment> segmentsToCombine) {
+        ArrayList<Segment>areaSegments=new ArrayList<>();
+        areaSegments.add(segmentsToCombine.getFirst());
+        segmentsToCombine.removeFirst();
+        Point2D firstPoint=areaSegments.getFirst().getPoints().getFirst();
+        Point2D lastPoint=areaSegments.getFirst().getPoints().getLast();
+        while (lastPoint.distance(firstPoint)>=Properties.ACCURACY()){
+            ArrayList<Segment> segmentsAtPoint=findSegmentsConnectedAtPoint(lastPoint,segmentsToCombine);
+            if(segmentsAtPoint.isEmpty())throw new IllegalArgumentException("Unconnected set");
+            if(segmentsAtPoint.size()>1)throw new IllegalArgumentException("Self intersecting set");
+            areaSegments.add(segmentsAtPoint.getFirst());
+            segmentsToCombine.remove(segmentsAtPoint.getFirst());
+            lastPoint=areaSegments.getLast().getOtherEnd(lastPoint);
+        }
+        return new PolylineArea(areaSegments);
+    }
+
+    private static ArrayList<Segment> getUniqueSegments(ArrayList<Area> tanAreas) {
+        ArrayList<Segment>uniqueSegments=new ArrayList<>();
+        for (Area area:tanAreas){
+            for (Segment addSegment:area.getSegments()){
+                if(uniqueSegments.isEmpty()){
+                    uniqueSegments.add(addSegment);
+                }else {
+                    boolean wasInList=false;
+                    for (Segment segment : uniqueSegments) {
+                        if(addSegment.isEqualTo(segment)){
+                            wasInList=true;
+                            uniqueSegments.remove(segment);
+                            break;
+                        }
+                    }
+                    if(!wasInList){
+                        uniqueSegments.add(addSegment);
+                    }
+                }
+            }
+        }
+        return uniqueSegments;
+    }
 }
