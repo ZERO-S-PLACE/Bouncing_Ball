@@ -14,6 +14,7 @@ import org.zeros.bouncy_balls.Animation.InputOnRun.InputOnRun;
 import org.zeros.bouncy_balls.Animation.InputOnRun.InputOnRunMovingObject;
 import org.zeros.bouncy_balls.Animation.InputOnRun.InputOnRunObstacle;
 import org.zeros.bouncy_balls.Level.Level;
+import org.zeros.bouncy_balls.Model.Properties;
 import org.zeros.bouncy_balls.Objects.Area.Area;
 import org.zeros.bouncy_balls.Objects.Area.OvalArea;
 import org.zeros.bouncy_balls.Objects.Area.RectangleArea;
@@ -34,7 +35,7 @@ public class GamePanelController implements Initializable {
     }
 
     private void setUp() {
-        loadLevel("program_data/user_levels/try9.ser");
+        loadLevel("program_data/user_levels/try11.ser");
         animation.getLevel().PROPERTIES().setFRICTION(0.01);
         for (int i = 0; i < 20; i++) {
             for (int j = 0; j < 3; j++) {
@@ -44,7 +45,7 @@ public class GamePanelController implements Initializable {
                 animation.getLevel().addMovingObject(ball);
             }
         }
-        animation.getLevel().PROPERTIES().setTIME(60);
+        animation.getLevel().PROPERTIES().setTIME(600);
         animation.getLevel().addMovingObjectToAdd(new Ball(5, animation));
         animation.getLevel().getMovingObjects().getLast().setInitialVelocity(new Point2D(300, 300));
         animation.getLevel().addMovingObjectToAdd(new Ball(15, animation));
@@ -78,8 +79,8 @@ public class GamePanelController implements Initializable {
     }
 
     private synchronized double getScaleFactor() {
-        double factor1 = gameBackground.getScene().getHeight() / animation.getLevel().PROPERTIES().getHEIGHT();
-        double factor2 = gameBackground.getScene().getWidth() / animation.getLevel().PROPERTIES().getWIDTH();
+        double factor1 = gameBackground.getScene().getHeight() / animation.getLevel().PROPERTIES().getHEIGHT()* Properties.SIZE_FACTOR();
+        double factor2 = gameBackground.getScene().getWidth() / animation.getLevel().PROPERTIES().getWIDTH()* Properties.SIZE_FACTOR();
         return Math.min(factor1, factor2);
     }
 
@@ -124,10 +125,10 @@ public class GamePanelController implements Initializable {
     }
 
     private void setBackground() {
-        gameBackground.setMinHeight(animation.getPROPERTIES().getHEIGHT());
-        gameBackground.setMaxHeight(animation.getPROPERTIES().getHEIGHT());
-        gameBackground.setMinWidth(animation.getPROPERTIES().getWIDTH());
-        gameBackground.setMaxWidth(animation.getPROPERTIES().getWIDTH());
+        gameBackground.setMinHeight(animation.getPROPERTIES().getHEIGHT()/ Properties.SIZE_FACTOR());
+        gameBackground.setMaxHeight(animation.getPROPERTIES().getHEIGHT()/ Properties.SIZE_FACTOR());
+        gameBackground.setMinWidth(animation.getPROPERTIES().getWIDTH()/ Properties.SIZE_FACTOR());
+        gameBackground.setMaxWidth(animation.getPROPERTIES().getWIDTH()/ Properties.SIZE_FACTOR());
         gameBackground.backgroundProperty().setValue(new Background(new BackgroundFill(Color.rgb(249, 211, 165), new CornerRadii(0), new Insets(0))));
     }
 

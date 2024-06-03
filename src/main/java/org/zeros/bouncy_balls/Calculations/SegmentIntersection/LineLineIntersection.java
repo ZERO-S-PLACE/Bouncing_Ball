@@ -5,7 +5,7 @@ import org.zeros.bouncy_balls.Calculations.BindsCheck;
 import org.zeros.bouncy_balls.Calculations.VectorMath;
 import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.LineSegment;
 
-public class LineLineIntersection extends SegmentIntersection{
+/*public class LineLineIntersection extends SegmentIntersection{
     public LineLineIntersection(LineSegment segment1, LineSegment segment2) {
         super(segment1,segment2);
         Point2D intersection=segment1.getEquation().intersection(segment2.getEquation());
@@ -23,4 +23,4 @@ public class LineLineIntersection extends SegmentIntersection{
         secondSegmentSubsegments.add(segment2);
 
     }
-}
+}*/

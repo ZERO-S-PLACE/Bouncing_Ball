@@ -181,17 +181,20 @@ public class LevelCreator {
     }
 
     private void addComplexAreaPreview(ComplexArea complexArea) {
+        Random random=new Random();
+        Color color=new Color(random.nextDouble(),random.nextDouble(),random.nextDouble(),1);
         for (Area area : complexArea.includedAreas()) {
-            area.getPath().setFill(Color.RED);
-            try {
-                Thread.sleep(700);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            area.getPath().setFill(color);
+
             Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().add(area.getPath()));
         }
         for (Area area : complexArea.excludedAreas()) {
             Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().add(area.getPath()));
+        }
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -206,8 +209,8 @@ public class LevelCreator {
 
     private AnimationProperties getAnimationProperties() {
 
-        int HEIGHT = Math.abs((int) getNumber("Animation height:(px) "));
-        int WIDTH = Math.abs((int) getNumber("Animation width (px): "));
+        int HEIGHT = (int) Math.abs((int) getNumber("Animation height:(px) ")* Properties.SIZE_FACTOR());
+        int WIDTH = (int) Math.abs((int) getNumber("Animation width (px): ")* Properties.SIZE_FACTOR());
 
         AnimationProperties properties = new AnimationProperties(HEIGHT, WIDTH);
 
@@ -285,9 +288,9 @@ public class LevelCreator {
     }
 
     private void updateBallVelocityShadow(Ball ball, Circle velocityShadow) {
-        velocityShadow.setRadius(ball.getRadius());
-        velocityShadow.setCenterX(ball.center().add(ball.velocity()).getX());
-        velocityShadow.setCenterY(ball.center().add(ball.velocity()).getY());
+        velocityShadow.setRadius(ball.getRadius()/Properties.SIZE_FACTOR());
+        velocityShadow.setCenterX(ball.center().add(ball.velocity()).getX()/Properties.SIZE_FACTOR());
+        velocityShadow.setCenterY(ball.center().add(ball.velocity()).getY()/Properties.SIZE_FACTOR());
     }
 
     private void modifyBall(Ball ball, Circle velocityShadow) {
@@ -335,7 +338,7 @@ public class LevelCreator {
         }
     }
 
-    private void checkingAreaBoolean() {
+/*private void checkingAreaBoolean() {
         if (level.getObstacles().size() >= 2) {
 
 
@@ -369,20 +372,22 @@ public class LevelCreator {
 
 
         }
-    }
-    /*private void checkingAreaBoolean() {
+    }*/
+    private void checkingAreaBoolean() {
         if (level.getObstacles().size() >= 2) {
             SimpleAreaBoolean simpleAreaBoolean = new SimpleAreaBoolean(level.getObstacles().getLast(), level.getObstacles().get(
                     level.getObstacles().size() - 2));
-            //ComplexArea sum = simpleAreaBoolean.sum();
+            ComplexArea sum = simpleAreaBoolean.sum();
             ComplexArea intersection = simpleAreaBoolean.intersection();
-            //ComplexArea difference1 = simpleAreaBoolean.subtractAfromB();
-            //ComplexArea difference2 = simpleAreaBoolean.subtractBfromA();
-
+            ComplexArea difference1 = simpleAreaBoolean.subtractAfromB();
+            ComplexArea difference2 = simpleAreaBoolean.subtractBfromA();
+            addComplexAreaPreview(sum);
             addComplexAreaPreview(intersection);
+            addComplexAreaPreview(difference1);
+            addComplexAreaPreview(difference2);
 
         }
-    }*/
+    }
 
     private Area createNewArea() {
         Area area = null;
@@ -564,10 +569,10 @@ public class LevelCreator {
     private double getGravity() {
 
         double value = getNumber("Gravity strength 0-1000");
-        if (value > 0 && value < 1000) {
+        if (value >= 0 && value < 1000) {
             return value;
         } else {
-            return getGravity();
+            return getGravity()*Properties.SIZE_FACTOR();
         }
 
     }
@@ -646,8 +651,8 @@ public class LevelCreator {
     }
 
     private void setPreviewBoundaries(int HEIGHT, int WIDTH) {
-        Model.getInstance().getLevelCreatorController().preview.setMinSize(WIDTH, HEIGHT);
-        Model.getInstance().getLevelCreatorController().preview.setMaxSize(WIDTH, HEIGHT);
+        Model.getInstance().getLevelCreatorController().preview.setMinSize(WIDTH/ Properties.SIZE_FACTOR(), HEIGHT/ Properties.SIZE_FACTOR());
+        Model.getInstance().getLevelCreatorController().preview.setMaxSize(WIDTH/ Properties.SIZE_FACTOR(), HEIGHT/ Properties.SIZE_FACTOR());
         Model.getInstance().getLevelCreatorController().preview.backgroundProperty().set(Background.fill(Color.BEIGE));
     }
 

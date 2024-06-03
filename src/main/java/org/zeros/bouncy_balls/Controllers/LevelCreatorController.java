@@ -14,6 +14,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import org.zeros.bouncy_balls.Model.Properties;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -69,7 +70,7 @@ public class LevelCreatorController implements Initializable {
     }
 
     private void pointPicked(MouseEvent mouseEvent) {
-        Point2D newPoint= new Point2D(mouseEvent.getX(),mouseEvent.getY());
+        Point2D newPoint= new Point2D(mouseEvent.getX()*Properties.SIZE_FACTOR(),mouseEvent.getY()* Properties.SIZE_FACTOR());
         lastEvent=mouseEvent;
         if(selectedPoint!=null) {
             pickedDistance = newPoint.distance(selectedPoint);
@@ -92,8 +93,8 @@ public class LevelCreatorController implements Initializable {
     public void setSelectedPoint(Point2D selectedPoint) {
         this.selectedPoint = selectedPoint;
         if(selectedPoint!=null) {
-            pickedPointSign.setCenterX(selectedPoint.getX());
-            pickedPointSign.setCenterY(selectedPoint.getY());
+            pickedPointSign.setCenterX(selectedPoint.getX()/ Properties.SIZE_FACTOR());
+            pickedPointSign.setCenterY(selectedPoint.getY()/ Properties.SIZE_FACTOR());
         }else {
             Platform.runLater(()->preview.getChildren().remove(pickedPointSign));
         }

@@ -8,7 +8,7 @@ import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.SegmentType;
 
 import java.util.ArrayList;
 
-public abstract class SegmentIntersection {
+/*public abstract class SegmentIntersection {
 
 
     protected ArrayList<Segment> firstSegmentSubsegments=new ArrayList<>();
@@ -50,4 +50,4 @@ public abstract class SegmentIntersection {
     public  ArrayList<Segment> getSubsegmentsOfSecondSegment(){
         return secondSegmentSubsegments;
     }
-}
+}*/

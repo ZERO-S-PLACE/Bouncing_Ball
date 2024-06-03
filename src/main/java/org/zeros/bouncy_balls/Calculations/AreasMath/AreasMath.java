@@ -29,14 +29,13 @@ public class AreasMath {
     }
 
     public static boolean isInsideArea(Area area, Area insideArea) {
+        //does not support tangent Areas
         for (Point2D point : insideArea.getCorners()) {
             if (!isInsideArea(area, point)) return false;
         }
         for (Segment segment1 : area.getSegments()) {
             for (Segment segment2 : insideArea.getSegments()) {
-                if(!segment1.overlapsWith(segment2)) {
                     if (!segment1.getIntersectionsWith(segment2).isEmpty()) return false;
-                }
             }
         }
         return true;
@@ -50,7 +49,7 @@ public class AreasMath {
             if (segment.isOnBoundary(point)) return true;
             ArrayList<Point2D> intersections = segment.getIntersectionsWith(ray);
             for (Point2D intersection : intersections) {
-                if (intersection.equals(segment.getPoints().getLast()) || intersection.equals(segment.getPoints().getFirst())) {
+                if (intersection.distance(segment.getPoints().getLast())<=Properties.ACCURACY() || intersection.distance(segment.getPoints().getFirst())<=Properties.ACCURACY() ) {
                     intersectionsCount = intersectionsCount + 0.5;
                 } else intersectionsCount++;
             }
@@ -61,7 +60,7 @@ public class AreasMath {
         return isInsideArea(area.getSegments(),point);
     }
 
-    public static ArrayList<Area> areaSplit(Area area1, Area area2) {
+    public static ArrayList<Area> areaSplit(Area area1, Area area2) throws IllegalArgumentException {
         //My algorithm.
         //Areas should be not self intersecting to perform this operation
         //Finds subAreas of two areas intersections. Set also contains inner areas
@@ -95,8 +94,11 @@ public class AreasMath {
 
                         if (!VectorMath.containsPoint(intersection, intersections)) {
                             intersections.add(intersection);
-                            area1segments.addAll(segment1.splitAtPoint(intersection));
-                            area2segments.addAll(segment2.splitAtPoint(intersection));
+
+                                area1segments.addAll(segment1.splitAtPoint(intersection));
+                                area2segments.addAll(segment2.splitAtPoint(intersection));
+
+
                             area1segments.remove(segment1);
                             area2segments.remove(segment2);
                             newIntersectionsOccurred = true;
@@ -137,20 +139,23 @@ public class AreasMath {
                 subAreaSegments.removeLast();
                 Area newArea= new PolylineArea(subAreaSegments);
                if (isAtomicArea(newArea, subAreas)) {
-                 subAreas.removeIf(area -> AreasMath.isInsideArea(area, newArea.getPointInside()));
-                    subAreas.add(newArea);
+                 subAreas.removeIf(area -> AreasMath.isInsideArea(area, newArea.getPointInside())
+                         &&AreasMath.isInsideArea(area,newArea.getCorners().getFirst()));
+                 subAreas.add(newArea);
                }
             }
 
         }
-System.out.println(subAreas.size());
+System.out.println("Sub areas count: "+subAreas.size());
         return subAreas;
     }
 
     private static boolean isAtomicArea(Area newArea, ArrayList<Area> subAreas) {
         for (Area area : subAreas) {
             if (AreasMath.isInsideArea(newArea,area.getPointInside())){
-                if(newArea.getSegments().size()>area.getSegments().size())return false;
+                if (AreasMath.isInsideArea(newArea,area.getCorners().getFirst())) {
+                    return false;
+                }
             }
         }
         return true;

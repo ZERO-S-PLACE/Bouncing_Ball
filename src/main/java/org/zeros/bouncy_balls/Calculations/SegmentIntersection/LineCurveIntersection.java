@@ -7,7 +7,7 @@ import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.CurveSegment;
 import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.LineSegment;
 import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.Segment;
 
-public class LineCurveIntersection extends SegmentIntersection {
+/*public class LineCurveIntersection extends SegmentIntersection {
 
     public LineCurveIntersection(LineSegment line, CurveSegment curve) {
         super(line,curve);
@@ -34,3 +34,4 @@ public class LineCurveIntersection extends SegmentIntersection {
         }
     }
 }
+*/

@@ -13,12 +13,18 @@ public class SimpleAreaBoolean {
 
     private  Area areaA;
     private  Area areaB;
-    private final ArrayList<Area> subAreas;
+    private  ArrayList<Area> subAreas=new ArrayList<>();
 
     public SimpleAreaBoolean(Area areaA,Area areaB){
         this.areaA=areaA;
         this.areaB=areaB;
-        subAreas=AreasMath.areaSplit(areaA,areaB);
+        try {
+            subAreas=AreasMath.areaSplit(areaA,areaB);
+        }catch (IllegalArgumentException e){
+
+            subAreas.add(areaA);
+            subAreas.add(areaB);
+        }
     }
     public  ComplexArea sum() {
 
@@ -43,7 +49,6 @@ public class SimpleAreaBoolean {
                     areasToExclude.add(subArea);
                 }
             }
-            addPreview(areasToInclude);
             simplifyConnectedAreas(areasToInclude);
 
 
@@ -52,7 +57,7 @@ public class SimpleAreaBoolean {
     return new ComplexArea(areasToInclude,areasToExclude);
     }
 
-    private void addPreview(ArrayList<Area> areasToInclude) {
+    /*private void addPreview(ArrayList<Area> areasToInclude) {
         for (Area area:areasToInclude){
             area.getPath().setFill(Color.ALICEBLUE);
             area.getPath().setStrokeWidth(3);
@@ -68,14 +73,13 @@ public class SimpleAreaBoolean {
             }
         }
 
-    }
+    }*/
 
 
     public ComplexArea intersection() {
         ArrayList<Area> areasToInclude=new ArrayList<>();
         ArrayList<Area> areasToExclude=new ArrayList<>();
         if(AreasMath.areasIntersect(areaA,areaB)) {
-
             if (AreasMath.isInsideArea(areaA, areaB)) {
                 areasToInclude.add(areaB);
             } else if (AreasMath.isInsideArea(areaB, areaA)) {
@@ -91,7 +95,7 @@ public class SimpleAreaBoolean {
 
             }
         }
-        addPreview(areasToInclude);
+
         return new ComplexArea(areasToInclude,areasToExclude);
     }
     public  ComplexArea subtractBfromA() {
@@ -114,7 +118,6 @@ public class SimpleAreaBoolean {
             }
 
         }
-        addPreview(areasToInclude);
         return new ComplexArea(areasToInclude,areasToExclude);
     }
     public  ComplexArea subtractAfromB() {
@@ -131,7 +134,7 @@ public class SimpleAreaBoolean {
     }
 
 
-    private ArrayList<Area> simplifyConnectedAreas(ArrayList<Area> tanAreas) {
+    private void simplifyConnectedAreas(ArrayList<Area> tanAreas) {
         System.out.println("Areas before simplify: "+tanAreas.size());
         boolean objectWasSimplified=true;
         while (objectWasSimplified){
@@ -157,7 +160,7 @@ public class SimpleAreaBoolean {
             }
         }
         System.out.println("Areas afrer simplify: "+tanAreas.size());
-        return tanAreas;
+
     }
 
 

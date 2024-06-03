@@ -9,15 +9,18 @@ import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.Segment;
 
 import java.util.ArrayList;
 
-public class CurveCurveIntersection extends SegmentIntersection{
+/*public class CurveCurveIntersection extends SegmentIntersection{
     public CurveCurveIntersection(CurveSegment segment1, CurveSegment segment2) {
         super(segment1,segment2);
         intersectionPoints.addAll(segment1.getIntersectionsWith(segment2));
         intersectionPoints.removeIf(intersection -> VectorMath.containsPoint(intersection, endPoints));
         if(!intersectionPoints.isEmpty()) {
+            try {
+                firstSegmentSubsegments=segment1.splitAtPoint(intersectionPoints.getFirst());
+                secondSegmentSubsegments=segment1.splitAtPoint(intersectionPoints.getFirst());
+            }
 
-           firstSegmentSubsegments=segment1.splitAtPoint(intersectionPoints.getFirst());
-           secondSegmentSubsegments=segment1.splitAtPoint(intersectionPoints.getFirst());
+
            for (int i=1;i<intersectionPoints.size();i++){
                Point2D intersection=intersectionPoints.get(i);
                Segment segment1t= Segment.getSegmentWithPoint(firstSegmentSubsegments,intersection);
@@ -35,3 +38,4 @@ public class CurveCurveIntersection extends SegmentIntersection{
         }
     }
 }
+*/

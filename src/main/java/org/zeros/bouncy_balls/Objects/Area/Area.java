@@ -6,6 +6,7 @@ import javafx.scene.shape.*;
 import org.zeros.bouncy_balls.Calculations.AreasMath.AreasMath;
 import org.zeros.bouncy_balls.Calculations.Equations.Equation;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
+import org.zeros.bouncy_balls.Model.Properties;
 import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.CurveSegment;
 import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.LineSegment;
 import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.Segment;
@@ -65,14 +66,14 @@ public class Area implements Cloneable {
     }
 
     protected void addStartPoint(Point2D point) {
-        path.getElements().add(new MoveTo(point.getX(), point.getY()));
+        path.getElements().add(new MoveTo(point.getX()/ Properties.SIZE_FACTOR(), point.getY()/ Properties.SIZE_FACTOR()));
         cornerPoints.add(point);
     }
 
 
 
     protected void addStraightLineTo(Point2D point) {
-        path.getElements().add(new LineTo(point.getX(), point.getY()));
+        path.getElements().add(new LineTo(point.getX()/Properties.SIZE_FACTOR(), point.getY()/Properties.SIZE_FACTOR()));
         ArrayList<Point2D> temp = new ArrayList<>();
         temp.add(cornerPoints.getLast());
         temp.add(point);
@@ -83,7 +84,8 @@ public class Area implements Cloneable {
 
 
     protected void addQuadCurveTo(Point2D controlPoint, Point2D point) {
-        path.getElements().add(new QuadCurveTo(controlPoint.getX(), controlPoint.getY(), point.getX(), point.getY()));
+        path.getElements().add(new QuadCurveTo(controlPoint.getX()/Properties.SIZE_FACTOR(),
+                controlPoint.getY()/Properties.SIZE_FACTOR(), point.getX()/Properties.SIZE_FACTOR(), point.getY()/Properties.SIZE_FACTOR()));
 
         ArrayList<Point2D> temp = new ArrayList<>();
         temp.add(cornerPoints.getLast());
@@ -95,7 +97,9 @@ public class Area implements Cloneable {
     }
 
     protected void addCubicCurveTo(Point2D controlPoint1, Point2D controlPoint2, Point2D point) {
-        path.getElements().add(new CubicCurveTo(controlPoint1.getX(), controlPoint1.getY(), controlPoint2.getX(), controlPoint2.getY(), point.getX(), point.getY()));
+        path.getElements().add(new CubicCurveTo(controlPoint1.getX()/Properties.SIZE_FACTOR(),
+                controlPoint1.getY()/Properties.SIZE_FACTOR(), controlPoint2.getX()/Properties.SIZE_FACTOR()
+                , controlPoint2.getY()/Properties.SIZE_FACTOR(), point.getX()/Properties.SIZE_FACTOR(), point.getY()/Properties.SIZE_FACTOR()));
 
         ArrayList<Point2D> temp = new ArrayList<>();
         temp.add(cornerPoints.getLast());
@@ -105,8 +109,8 @@ public class Area implements Cloneable {
         segmentPoints.add(temp);
         cornerPoints.add(point);
         segments.add(new CurveSegment(temp));
-
     }
+
 
     protected void calculateRoughBinds() {
         roughMin = new Point2D(Double.MAX_VALUE, Double.MAX_VALUE);
@@ -143,8 +147,8 @@ public class Area implements Cloneable {
             points.replaceAll(point2D -> point2D.add(vector));
         }
         cornerPoints.replaceAll(point2D -> point2D.add(vector));
-        path.setTranslateX(path.getTranslateX() + vector.getX());
-        path.setTranslateY(path.getTranslateY() + vector.getY());
+        path.setTranslateX(path.getTranslateX() + vector.getX()/Properties.SIZE_FACTOR());
+        path.setTranslateY(path.getTranslateY() + vector.getY()/Properties.SIZE_FACTOR());
         calculateBoundaryLines();
         calculateRoughBinds();
     }
@@ -314,7 +318,7 @@ public class Area implements Cloneable {
         Random random=new Random();
         while (true){
             Point2D point=new Point2D(random.nextDouble(roughMin.getX(),roughMax.getX()),random.nextDouble(roughMin.getY(),roughMax.getY()));
-            if(AreasMath.isInsideArea(this,point))return massCenter;
+            if(AreasMath.isInsideArea(this,point))return point;
         }
     }
 

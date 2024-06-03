@@ -17,11 +17,21 @@ public class Properties {
         return ACCURACY;
     }
 
+    public static double SIZE_FACTOR=Math.pow(10,5);
+
+    public static double SIZE_FACTOR() {
+        return SIZE_FACTOR;
+    }
+
+    public static void setSizeFactor(double sizeFactor) {
+        SIZE_FACTOR = sizeFactor;
+    }
+
     public static void setACCURACY(double ACCURACY) {
         Properties.ACCURACY = ACCURACY;
     }
 
-    private static  double ACCURACY =0.000001;
+    private static  double ACCURACY =Math.pow(0.1,5);
 
 
 }
