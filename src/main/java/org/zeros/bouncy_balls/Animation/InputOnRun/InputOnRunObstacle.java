@@ -10,7 +10,7 @@ import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
 import org.zeros.bouncy_balls.Calculations.VectorMath;
 import org.zeros.bouncy_balls.Model.Model;
 import org.zeros.bouncy_balls.Model.Properties;
-import org.zeros.bouncy_balls.Objects.Area.SimpleArea.Area;
+import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.Area;
 
 public class InputOnRunObstacle extends InputOnRun {
     private final Area obstacle;

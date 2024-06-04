@@ -5,9 +5,9 @@ import org.zeros.bouncy_balls.Animation.Animation.Animation;
 import org.zeros.bouncy_balls.Animation.Animation.AnimationProperties;
 import org.zeros.bouncy_balls.Calculations.Bounce;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
-import org.zeros.bouncy_balls.Objects.Area.SimpleArea.Area;
-import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.LineSegment;
-import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.Segment;
+import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.Area;
+import org.zeros.bouncy_balls.Objects.VectorArea.PolyLineSegment.LineSegment;
+import org.zeros.bouncy_balls.Objects.VectorArea.PolyLineSegment.Segment;
 import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObject;
 

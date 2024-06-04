@@ -15,9 +15,9 @@ import org.zeros.bouncy_balls.Animation.InputOnRun.InputOnRunMovingObject;
 import org.zeros.bouncy_balls.Animation.InputOnRun.InputOnRunObstacle;
 import org.zeros.bouncy_balls.Level.Level;
 import org.zeros.bouncy_balls.Model.Properties;
-import org.zeros.bouncy_balls.Objects.Area.SimpleArea.Area;
-import org.zeros.bouncy_balls.Objects.Area.SimpleArea.OvalArea;
-import org.zeros.bouncy_balls.Objects.Area.SimpleArea.RectangleArea;
+import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.Area;
+import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.OvalArea;
+import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.RectangleArea;
 import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObject;
 

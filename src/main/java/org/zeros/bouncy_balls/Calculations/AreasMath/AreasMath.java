@@ -3,10 +3,10 @@ package org.zeros.bouncy_balls.Calculations.AreasMath;
 import javafx.geometry.Point2D;
 import org.zeros.bouncy_balls.Calculations.VectorMath;
 import org.zeros.bouncy_balls.Model.Properties;
-import org.zeros.bouncy_balls.Objects.Area.SimpleArea.Area;
-import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.LineSegment;
-import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.Segment;
-import org.zeros.bouncy_balls.Objects.Area.SimpleArea.PolylineArea;
+import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.Area;
+import org.zeros.bouncy_balls.Objects.VectorArea.PolyLineSegment.LineSegment;
+import org.zeros.bouncy_balls.Objects.VectorArea.PolyLineSegment.Segment;
+import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.PolylineArea;
 
 import java.util.ArrayList;
 

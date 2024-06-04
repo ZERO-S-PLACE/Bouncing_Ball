@@ -1,12 +1,5 @@
 package org.zeros.bouncy_balls.Calculations.SegmentIntersection;
 
-import javafx.geometry.Point2D;
-import org.zeros.bouncy_balls.Calculations.Equations.BezierCurve;
-import org.zeros.bouncy_balls.Calculations.VectorMath;
-import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.CurveSegment;
-import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.LineSegment;
-import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.Segment;
-
 /*public class LineCurveIntersection extends SegmentIntersection {
 
     public LineCurveIntersection(LineSegment line, CurveSegment curve) {

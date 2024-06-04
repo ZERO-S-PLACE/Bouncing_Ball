@@ -3,7 +3,7 @@ package org.zeros.bouncy_balls.Objects.SerializableObjects;
 import org.zeros.bouncy_balls.Animation.Animation.Animation;
 import org.zeros.bouncy_balls.Animation.Animation.AnimationProperties;
 import org.zeros.bouncy_balls.Level.Level;
-import org.zeros.bouncy_balls.Objects.Area.SimpleArea.Area;
+import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.Area;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObject;
 
 import java.io.Serializable;

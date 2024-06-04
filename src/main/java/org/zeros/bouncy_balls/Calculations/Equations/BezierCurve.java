@@ -8,7 +8,7 @@ import org.zeros.bouncy_balls.Calculations.BindsCheck;
 import org.zeros.bouncy_balls.Calculations.VectorMath;
 import org.zeros.bouncy_balls.Exceptions.WrongValueException;
 import org.zeros.bouncy_balls.Model.Properties;
-import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.LineSegment;
+import org.zeros.bouncy_balls.Objects.VectorArea.PolyLineSegment.LineSegment;
 
 import java.util.ArrayList;
 import java.util.Arrays;

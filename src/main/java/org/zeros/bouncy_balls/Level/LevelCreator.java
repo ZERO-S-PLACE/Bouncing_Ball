@@ -18,12 +18,12 @@ import org.zeros.bouncy_balls.Calculations.AreasMath.SimpleSimpleAreaBoolean;
 import org.zeros.bouncy_balls.Controllers.LevelCreatorController;
 import org.zeros.bouncy_balls.Model.Model;
 import org.zeros.bouncy_balls.Model.Properties;
-import org.zeros.bouncy_balls.Objects.Area.ComplexArea.ComplexArea;
-import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.Segment;
-import org.zeros.bouncy_balls.Objects.Area.SimpleArea.Area;
-import org.zeros.bouncy_balls.Objects.Area.SimpleArea.OvalArea;
-import org.zeros.bouncy_balls.Objects.Area.SimpleArea.PolylineArea;
-import org.zeros.bouncy_balls.Objects.Area.SimpleArea.RectangleArea;
+import org.zeros.bouncy_balls.Objects.VectorArea.ComplexArea.ComplexArea;
+import org.zeros.bouncy_balls.Objects.VectorArea.PolyLineSegment.Segment;
+import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.Area;
+import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.OvalArea;
+import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.PolylineArea;
+import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.RectangleArea;
 import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObject;
 import org.zeros.bouncy_balls.Objects.SerializableObjects.LevelSerializable;
@@ -154,8 +154,9 @@ public class LevelCreator {
         else complexArea.setColor(new Color(0.5, 0, 0, 0.5));
         while (true) {
             System.out.println("__________");
-            System.out.println("Included areas: "+ complexArea.includedAreas().size());
-            System.out.println("Excluded areas: "+ complexArea.excludedAreas().size());
+            System.out.println("Sub areas: "+ complexArea.partAreas().size());
+            System.out.println("Included areas: "+ complexArea.getAllIncludedAreas().size());
+            System.out.println("Excluded areas: "+ complexArea.getAllExcludedAreas().size());
 
             switch ((int) getNumber("0-dismiss 1-include area, 2 exclude area ,3 intersection ,4 exclude currentArea from new 5- save")) {
                 case 0 -> {
@@ -164,6 +165,7 @@ public class LevelCreator {
                 }
                 case 1 -> {
                     Area areaToAdd = createNewArea();
+                    removeObstaclePreview(areaToAdd);
                     removeComplexAreaPreview(complexArea);
                     SimpleComplexAreaBoolean boolMath=new SimpleComplexAreaBoolean(areaToAdd,complexArea);
                     complexArea=boolMath.sum();
@@ -171,6 +173,7 @@ public class LevelCreator {
                 }
                 case 2 -> {
                     Area areaToExclude = createNewArea();
+                    removeObstaclePreview(areaToExclude);
 
                     removeComplexAreaPreview(complexArea);
                     SimpleComplexAreaBoolean boolMath=new SimpleComplexAreaBoolean(areaToExclude,complexArea);
@@ -179,6 +182,7 @@ public class LevelCreator {
                 }
                 case 3 -> {
                     Area areaToExclude = createNewArea();
+                    removeObstaclePreview(areaToExclude);
 
                     removeComplexAreaPreview(complexArea);
                     SimpleComplexAreaBoolean boolMath=new SimpleComplexAreaBoolean(areaToExclude,complexArea);
@@ -187,6 +191,7 @@ public class LevelCreator {
                 }
                 case 4 -> {
                     Area areaToExclude = createNewArea();
+                    removeObstaclePreview(areaToExclude);
                     removeComplexAreaPreview(complexArea);
                     SimpleComplexAreaBoolean boolMath=new SimpleComplexAreaBoolean(areaToExclude,complexArea);
                     complexArea=boolMath.subtractBfromA();
@@ -210,12 +215,12 @@ public class LevelCreator {
         Color color=new Color(random.nextDouble(),random.nextDouble(),random.nextDouble(),1);
 
 
-        for (Area area : complexArea.includedAreas()) {
+        for (Area area : complexArea.getAllIncludedAreas()) {
             area.getPath().setFill(color);
             if( !Model.getInstance().getLevelCreatorController().preview.getChildren().contains(area.getPath())) {
                 Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().add(area.getPath()));
             }}
-        for (Area area : complexArea.excludedAreas()) {
+        for (Area area : complexArea.getAllExcludedAreas()) {
             if( !Model.getInstance().getLevelCreatorController().preview.getChildren().contains(area.getPath())) {
                 Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().add(area.getPath()));
             }
@@ -223,10 +228,10 @@ public class LevelCreator {
     }
 
     private void removeComplexAreaPreview(ComplexArea complexArea) {
-        for (Area area : complexArea.includedAreas()) {
+        for (Area area : complexArea.getAllIncludedAreas()) {
             Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().remove(area.getPath()));
         }
-        for (Area area : complexArea.excludedAreas()) {
+        for (Area area : complexArea.getAllExcludedAreas()) {
             Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().remove(area.getPath()));
         }
     }

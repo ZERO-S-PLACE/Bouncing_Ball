@@ -3,8 +3,8 @@ package org.zeros.bouncy_balls.Calculations.AreasMath;
 import javafx.application.Platform;
 import javafx.scene.paint.Color;
 import org.zeros.bouncy_balls.Model.Model;
-import org.zeros.bouncy_balls.Objects.Area.SimpleArea.Area;
-import org.zeros.bouncy_balls.Objects.Area.ComplexArea.ComplexArea;
+import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.Area;
+import org.zeros.bouncy_balls.Objects.VectorArea.ComplexArea.ComplexArea;
 
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -16,8 +16,8 @@ public class SimpleSimpleAreaBoolean extends AreaBoolean {
     private final CopyOnWriteArrayList<Area> subAreas=new CopyOnWriteArrayList<>();
 
     public SimpleSimpleAreaBoolean(Area areaA, Area areaB){
-        this.areaA=areaA;
-        this.areaB=areaB;
+        this.areaA=areaA.clone();
+        this.areaB=areaB.clone();
         try {
             subAreas.addAll(AreasMath.areaSplit(areaA,areaB));
         }catch (IllegalArgumentException e){
@@ -49,7 +49,7 @@ public class SimpleSimpleAreaBoolean extends AreaBoolean {
                     areasToExclude.add(subArea);
                 }
             }
-            addPreview(areasToInclude);
+
             simplifyConnectedAreas(areasToInclude);
             areasToInclude.removeIf(area->AreasMath.containsArea(area,areasToExclude));
 
@@ -58,7 +58,7 @@ public class SimpleSimpleAreaBoolean extends AreaBoolean {
     return new ComplexArea(areasToInclude,areasToExclude);
     }
 
-    private void addPreview(ArrayList<Area> areasToInclude) {
+   /* private void addPreview(ArrayList<Area> areasToInclude) {
         for (Area area:areasToInclude){
             area.getPath().setFill(Color.ALICEBLUE);
             area.getPath().setStrokeWidth(3);
@@ -74,7 +74,7 @@ public class SimpleSimpleAreaBoolean extends AreaBoolean {
             }
         }
 
-    }
+    }*/
 
 
     public ComplexArea intersection() {

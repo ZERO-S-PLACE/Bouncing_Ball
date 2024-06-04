@@ -2,7 +2,7 @@ package org.zeros.bouncy_balls.Calculations.ConvexHull;
 
 import javafx.geometry.Point2D;
 import org.zeros.bouncy_balls.Calculations.BindsCheck;
-import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.LineSegment;
+import org.zeros.bouncy_balls.Objects.VectorArea.PolyLineSegment.LineSegment;
 
 import java.util.ArrayList;
 import java.util.Collections;

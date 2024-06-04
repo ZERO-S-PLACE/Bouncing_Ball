@@ -1,4 +1,4 @@
-package org.zeros.bouncy_balls.Objects.Area.PolyLineSegment;
+package org.zeros.bouncy_balls.Objects.VectorArea.PolyLineSegment;
 
 import javafx.application.Platform;
 import javafx.geometry.Point2D;

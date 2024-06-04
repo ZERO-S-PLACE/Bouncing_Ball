@@ -1,6 +1,6 @@
 package org.zeros.bouncy_balls.Calculations.AreasMath;
 
-import org.zeros.bouncy_balls.Objects.Area.ComplexArea.ComplexArea;
+import org.zeros.bouncy_balls.Objects.VectorArea.ComplexArea.ComplexArea;
 
 public class ComplexComplexAreaBoolean extends AreaBoolean{
     //Not completed class
