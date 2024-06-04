@@ -19,6 +19,7 @@ import org.zeros.bouncy_balls.Controllers.LevelCreatorController;
 import org.zeros.bouncy_balls.Model.Model;
 import org.zeros.bouncy_balls.Model.Properties;
 import org.zeros.bouncy_balls.Objects.VectorArea.ComplexArea.ComplexArea;
+import org.zeros.bouncy_balls.Objects.VectorArea.ComplexArea.ComplexAreaPart;
 import org.zeros.bouncy_balls.Objects.VectorArea.PolyLineSegment.Segment;
 import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.Area;
 import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.OvalArea;
@@ -213,17 +214,33 @@ public class LevelCreator {
     private void addComplexAreaPreview(ComplexArea complexArea) {
         Random random=new Random();
         Color color=new Color(random.nextDouble(),random.nextDouble(),random.nextDouble(),1);
+        ArrayList<ComplexAreaPart> included=complexArea.partAreas();
+        addAreaLayer(included, color);
 
+    }
 
-        for (Area area : complexArea.getAllIncludedAreas()) {
-            area.getPath().setFill(color);
-            if( !Model.getInstance().getLevelCreatorController().preview.getChildren().contains(area.getPath())) {
-                Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().add(area.getPath()));
-            }}
-        for (Area area : complexArea.getAllExcludedAreas()) {
-            if( !Model.getInstance().getLevelCreatorController().preview.getChildren().contains(area.getPath())) {
-                Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().add(area.getPath()));
+    private static void addAreaLayer(ArrayList<ComplexAreaPart> included, Color color) {
+        ArrayList<ComplexAreaPart> excluded=new ArrayList<>();
+
+        for (ComplexAreaPart part : included) {
+            part.area().getPath().setFill(color);
+            excluded.addAll(part.excluded());
+            if( !Model.getInstance().getLevelCreatorController().preview.getChildren().contains(part.area().getPath())) {
+                Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().remove(part.area().getPath()));
             }
+            Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().add(part.area().getPath()));
+        }
+        ArrayList<ComplexAreaPart> included2 =new ArrayList<>();
+        for (ComplexAreaPart part : excluded) {
+            part.area().getPath().setFill(Color.WHITE);
+            included2.addAll(part.excluded());
+            if( !Model.getInstance().getLevelCreatorController().preview.getChildren().contains(part.area().getPath())) {
+                Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().remove(part.area().getPath()));
+            }
+            Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().add(part.area().getPath()));
+        }
+        if(!included2.isEmpty()) {
+            addAreaLayer(included2, color);
         }
     }
 

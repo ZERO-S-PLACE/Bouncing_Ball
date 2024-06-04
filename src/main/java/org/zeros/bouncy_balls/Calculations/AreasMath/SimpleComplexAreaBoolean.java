@@ -22,7 +22,6 @@ public class SimpleComplexAreaBoolean extends AreaBoolean {
         partsToJoin.addFirst(areaA);
         ComplexAreaPart.joinIntersectingAreas(partsToJoin);
         return new ComplexArea(partsToJoin);
-
     }
 
     @Override

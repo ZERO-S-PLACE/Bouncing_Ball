@@ -8,9 +8,9 @@ import org.zeros.bouncy_balls.Objects.VectorArea.VectorArea;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class ComplexAreaPart extends VectorArea {
-    private final Area area;
-    private final ArrayList<ComplexAreaPart> excludedAreas;
+public class ComplexAreaPart extends VectorArea implements Cloneable{
+    private Area area;
+    private ArrayList<ComplexAreaPart> excludedAreas;
 
     public ComplexAreaPart(Area area, ArrayList<ComplexAreaPart> excludedAreas) {
         this.area = area;
@@ -27,8 +27,10 @@ public class ComplexAreaPart extends VectorArea {
         for (ComplexAreaPart partExcluded : areasToSubtract) {
             ArrayList<ComplexAreaPart> changedAreas = new ArrayList<>();
             for (ComplexAreaPart subtractionPart : newAreas) {
-                changedAreas.addAll(subtractionPart.subtract(partExcluded));
-                newAreas.set(newAreas.indexOf(subtractionPart), null);
+                if(AreasMath.areasIntersect(subtractionPart.area, partExcluded.area)) {
+                    changedAreas.addAll(subtractionPart.subtract(partExcluded));
+                    newAreas.set(newAreas.indexOf(subtractionPart), null);
+                }
             }
             newAreas.removeIf(Objects::isNull);
             newAreas.addAll(changedAreas);
@@ -36,12 +38,7 @@ public class ComplexAreaPart extends VectorArea {
     }
 
     public static void joinIntersectingAreas(ArrayList<ComplexAreaPart> parts) {
-        boolean newJoinOccured = true;
-        int i=0;
-        while (newJoinOccured&&i<1000) {
-            i++;
-            newJoinOccured = false;
-            out:
+
             for (ComplexAreaPart part1 : parts) {
                 for (ComplexAreaPart part2 : parts) {
                     if (!part1.area.isEqualTo(part2.area)) {
@@ -49,15 +46,14 @@ public class ComplexAreaPart extends VectorArea {
                             parts.addAll(part1.join(part2));
                             parts.remove(part1);
                             parts.remove(part2);
-                            newJoinOccured = true;
-                            break out;
+                            joinIntersectingAreas(parts);
+                            return;
                         }
                     }
 
                 }
             }
 
-        }
     }
 
     public Area area() {
@@ -69,7 +65,8 @@ public class ComplexAreaPart extends VectorArea {
     }
 
     public void excludeArea(Area insideArea) throws IllegalArgumentException {
-        if (AreasMath.isInsideArea(area, insideArea)) {
+
+        if (AreasMath.isInsideArea(area, insideArea)&&!insideArea.isEqualTo(area)) {
             excludedAreas.add(new ComplexAreaPart(insideArea));
             joinIntersectingAreas(excludedAreas);
             return;
@@ -88,9 +85,10 @@ public class ComplexAreaPart extends VectorArea {
         ArrayList<ComplexAreaPart> result = new ArrayList<>();
         if (AreasMath.areasIntersect(area, part2.area())) {
             if (AreasMath.isInsideArea(area, part2.area())) {
-                excludedAreas.add(part2);
-                joinIntersectingAreas(excludedAreas);
-                result.add(this);
+                ComplexAreaPart part=this.clone();
+                part.excludedAreas.add(part2);
+                joinIntersectingAreas(part.excludedAreas);
+                result.add(part);
             } else if (AreasMath.isInsideArea(part2.area(), area)) {
                 for (ComplexAreaPart partExcluded : part2.excludedAreas) {
                     result.addAll(commonPartWith(partExcluded));
@@ -100,7 +98,8 @@ public class ComplexAreaPart extends VectorArea {
             }
 
         } else {
-            result.add(this);
+            ComplexAreaPart part=this.clone();
+            result.add(part);
         }
         return result;
 
@@ -121,16 +120,25 @@ public class ComplexAreaPart extends VectorArea {
         ArrayList<ComplexAreaPart> result = new ArrayList<>();
         if (AreasMath.areasIntersect(area, part2.area())) {
             if (AreasMath.isInsideArea(area, part2.area())) {
-                result.add(this);
-                subtractAll(part2.excludedAreas, result);
+                ComplexAreaPart part=this.clone();
+
+                ArrayList<ComplexAreaPart> temp=new ArrayList<>();
+                temp.add(part2);
+                subtractAll(temp,part.excludedAreas);
+                result.add(part);
             } else if (AreasMath.isInsideArea(part2.area(), area)) {
+
+                ComplexAreaPart part=this.clone();
+                ArrayList<ComplexAreaPart> temp=new ArrayList<>();
+                temp.add(part);
+                subtractAll(temp,part2.excludedAreas);
                 result.add(part2);
-                subtractAll(excludedAreas, result);
             } else {
                 result.addAll(intersectingPartSum(part2));
             }
         } else {
-            result.add(this);
+            ComplexAreaPart part=this.clone();
+            result.add(part);
             result.add(part2);
         }
         return result;
@@ -139,9 +147,19 @@ public class ComplexAreaPart extends VectorArea {
     private ArrayList<ComplexAreaPart> intersectingPartSum(ComplexAreaPart part2) {
         SimpleSimpleAreaBoolean areaBool = new SimpleSimpleAreaBoolean(area, part2.area);
         ArrayList<ComplexAreaPart> newAreas = areaBool.sum().partAreas();
-        ArrayList<ComplexAreaPart> areasToSubtract = new ArrayList<>(excludedAreas);
-        areasToSubtract.addAll(part2.excludedAreas);
-        subtractAll(areasToSubtract, newAreas);
+        ArrayList<ComplexAreaPart> areasToSubtract1 = new ArrayList<>(excludedAreas);
+        ArrayList<ComplexAreaPart> first=new ArrayList<>();
+        first.add(part2);
+        subtractAll(first,areasToSubtract1);
+
+        ArrayList<ComplexAreaPart> areasToSubtract2 = new ArrayList<>(part2.excludedAreas);
+        ArrayList<ComplexAreaPart> second=new ArrayList<>();
+        second.add(this);
+        subtractAll(second,areasToSubtract2);
+
+
+        areasToSubtract1.addAll(areasToSubtract2);
+        subtractAll(areasToSubtract1, newAreas);
         return newAreas;
     }
 
@@ -150,7 +168,7 @@ public class ComplexAreaPart extends VectorArea {
         if (AreasMath.areasIntersect(area, part2.area())) {
             SimpleSimpleAreaBoolean areaBool = new SimpleSimpleAreaBoolean(area, part2.area);
             newAreas = areaBool.intersection().partAreas();
-            ArrayList<ComplexAreaPart> areasToSubtract = excludedAreas;
+            ArrayList<ComplexAreaPart> areasToSubtract = new ArrayList<>(excludedAreas);
             areasToSubtract.addAll(part2.excludedAreas);
             subtractAll(areasToSubtract, newAreas);
         }
@@ -183,5 +201,19 @@ public class ComplexAreaPart extends VectorArea {
 
     public boolean isSolid() {
         return excludedAreas.isEmpty();
+    }
+
+    @Override
+    public ComplexAreaPart clone() {
+        ComplexAreaPart part = null;
+        try {
+            part = (ComplexAreaPart) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+        part.area=area;
+        part.excludedAreas=excludedAreas;
+        return part;
+
     }
 }
