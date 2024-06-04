@@ -2,13 +2,11 @@ package org.zeros.bouncy_balls.Calculations.AreasMath;
 
 import javafx.geometry.Point2D;
 import org.zeros.bouncy_balls.Calculations.VectorMath;
-import org.zeros.bouncy_balls.Exceptions.WrongValueException;
 import org.zeros.bouncy_balls.Model.Properties;
-import org.zeros.bouncy_balls.Objects.Area.Area;
-import org.zeros.bouncy_balls.Objects.Area.ComplexArea;
+import org.zeros.bouncy_balls.Objects.Area.SimpleArea.Area;
 import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.LineSegment;
 import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.Segment;
-import org.zeros.bouncy_balls.Objects.Area.PolylineArea;
+import org.zeros.bouncy_balls.Objects.Area.SimpleArea.PolylineArea;
 
 import java.util.ArrayList;
 
@@ -28,12 +26,12 @@ public class AreasMath {
         return false;
     }
 
-    public static boolean isInsideArea(Area area, Area insideArea) {
+    public static boolean isInsideArea(Area outerArea, Area insideArea) {
         //does not support tangent Areas
         for (Point2D point : insideArea.getCorners()) {
-            if (!isInsideArea(area, point)) return false;
+            if (!isInsideArea(outerArea, point)) return false;
         }
-        for (Segment segment1 : area.getSegments()) {
+        for (Segment segment1 : outerArea.getSegments()) {
             for (Segment segment2 : insideArea.getSegments()) {
                     if (!segment1.getIntersectionsWith(segment2).isEmpty()) return false;
             }
@@ -215,7 +213,7 @@ System.out.println("Sub areas count: "+subAreas.size());
 
         }
 
-    private static Area combineAreaFromSegments(ArrayList<Segment> segmentsToCombine) {
+    private static Area combineAreaFromSegments(ArrayList<Segment> segmentsToCombine) throws IllegalArgumentException {
         ArrayList<Segment>areaSegments=new ArrayList<>();
         areaSegments.add(segmentsToCombine.getFirst());
         segmentsToCombine.removeFirst();
@@ -254,5 +252,12 @@ System.out.println("Sub areas count: "+subAreas.size());
             }
         }
         return uniqueSegments;
+    }
+
+    public static boolean containsArea(Area area, ArrayList<Area> areas) {
+        for (Area area1:areas){
+            if(area.isEqualTo(area1))return true;
+        }
+        return false;
     }
 }

@@ -2,24 +2,24 @@ package org.zeros.bouncy_balls.Calculations.AreasMath;
 
 import javafx.application.Platform;
 import javafx.scene.paint.Color;
-import org.controlsfx.control.PropertySheet;
 import org.zeros.bouncy_balls.Model.Model;
-import org.zeros.bouncy_balls.Objects.Area.Area;
-import org.zeros.bouncy_balls.Objects.Area.ComplexArea;
+import org.zeros.bouncy_balls.Objects.Area.SimpleArea.Area;
+import org.zeros.bouncy_balls.Objects.Area.ComplexArea.ComplexArea;
 
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-public class SimpleAreaBoolean {
+public class SimpleSimpleAreaBoolean extends AreaBoolean {
 
     private  Area areaA;
     private  Area areaB;
-    private  ArrayList<Area> subAreas=new ArrayList<>();
+    private final CopyOnWriteArrayList<Area> subAreas=new CopyOnWriteArrayList<>();
 
-    public SimpleAreaBoolean(Area areaA,Area areaB){
+    public SimpleSimpleAreaBoolean(Area areaA, Area areaB){
         this.areaA=areaA;
         this.areaB=areaB;
         try {
-            subAreas=AreasMath.areaSplit(areaA,areaB);
+            subAreas.addAll(AreasMath.areaSplit(areaA,areaB));
         }catch (IllegalArgumentException e){
 
             subAreas.add(areaA);
@@ -49,15 +49,16 @@ public class SimpleAreaBoolean {
                     areasToExclude.add(subArea);
                 }
             }
+            addPreview(areasToInclude);
             simplifyConnectedAreas(areasToInclude);
+            areasToInclude.removeIf(area->AreasMath.containsArea(area,areasToExclude));
 
 
         }
-
     return new ComplexArea(areasToInclude,areasToExclude);
     }
 
-    /*private void addPreview(ArrayList<Area> areasToInclude) {
+    private void addPreview(ArrayList<Area> areasToInclude) {
         for (Area area:areasToInclude){
             area.getPath().setFill(Color.ALICEBLUE);
             area.getPath().setStrokeWidth(3);
@@ -67,13 +68,13 @@ public class SimpleAreaBoolean {
                         .getLevelCreatorController().preview.getChildren().add(area.getPath()));
             }
             try {
-                Thread.sleep(700);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
         }
 
-    }*/
+    }
 
 
     public ComplexArea intersection() {
@@ -134,7 +135,7 @@ public class SimpleAreaBoolean {
     }
 
 
-    private void simplifyConnectedAreas(ArrayList<Area> tanAreas) {
+    private void simplifyConnectedAreas(ArrayList<Area> tanAreas)throws IllegalArgumentException {
         System.out.println("Areas before simplify: "+tanAreas.size());
         boolean objectWasSimplified=true;
         while (objectWasSimplified){
@@ -147,10 +148,10 @@ public class SimpleAreaBoolean {
                             temp.add(subArea1);
                             temp.add(subArea2);
                          ArrayList<Area> combined=AreasMath.combineTangentAreas(temp);
-                         if(combined.size()>1)throw new IllegalArgumentException("areas were not tangent");
+                         if(combined.isEmpty())throw new IllegalArgumentException("Error combining areas");
                          tanAreas.remove(subArea1);
                          tanAreas.remove(subArea2);
-                         tanAreas.add(combined.getFirst());
+                         tanAreas.addAll(combined);
                          objectWasSimplified=true;
                          break out;
                         }
@@ -159,7 +160,7 @@ public class SimpleAreaBoolean {
                 }
             }
         }
-        System.out.println("Areas afrer simplify: "+tanAreas.size());
+        System.out.println("Areas after simplify: "+tanAreas.size());
 
     }
 

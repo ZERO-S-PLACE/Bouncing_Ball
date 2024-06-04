@@ -1,7 +1,7 @@
 package org.zeros.bouncy_balls.Objects.SerializableObjects;
 
-import org.zeros.bouncy_balls.Objects.Area.Area;
-import org.zeros.bouncy_balls.Objects.Area.ComplexArea;
+import org.zeros.bouncy_balls.Objects.Area.SimpleArea.Area;
+import org.zeros.bouncy_balls.Objects.Area.ComplexArea.ComplexArea;
 
 import java.io.Serializable;
 import java.util.ArrayList;

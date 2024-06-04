@@ -5,28 +5,27 @@ import org.zeros.bouncy_balls.Animation.Borders.BordersType;
 import java.io.Serializable;
 
 public class AnimationProperties implements Serializable {
-    private   AnimationType TYPE;
-    private   int HEIGHT;
-    private   int WIDTH;
-    private   double GRAVITY;
-    private   double FRAME_RATE;
+    private AnimationType TYPE;
+    private int HEIGHT;
+    private int WIDTH;
+    private double GRAVITY;
+    private double FRAME_RATE;
     private BordersType BOUNDARIES;
-    private   int MAX_EVALUATIONS;
-    private   double FRICTION;
+    private int MAX_EVALUATIONS;
+    private double FRICTION;
     private double TIME;
 
 
-
     public AnimationProperties(int HEIGHT, int WIDTH) {
-        this.TYPE=AnimationType.GAME;
+        this.TYPE = AnimationType.GAME;
         this.HEIGHT = HEIGHT;
         this.WIDTH = WIDTH;
         this.GRAVITY = 0;
         this.FRAME_RATE = 120;
         this.BOUNDARIES = BordersType.BOUNCING;
         this.MAX_EVALUATIONS = 150;
-        this.TIME =240;
-        this.FRICTION=0;
+        this.TIME = 240;
+        this.FRICTION = 0;
     }
 
     public AnimationType getTYPE() {
@@ -92,6 +91,7 @@ public class AnimationProperties implements Serializable {
     public void setFRICTION(double FRICTION) {
         this.FRICTION = FRICTION;
     }
+
     public double getTIME() {
         return TIME;
     }
@@ -99,9 +99,6 @@ public class AnimationProperties implements Serializable {
     public void setTIME(double TIME) {
         this.TIME = TIME;
     }
-
-
-
 
 
 }

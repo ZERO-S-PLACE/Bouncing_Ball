@@ -28,5 +28,8 @@ module org.zeros.bouncy_balls {
     exports org.zeros.bouncy_balls.Calculations.AreasMath;
     exports org.zeros.bouncy_balls.Objects.Area.PolyLineSegment;
     exports org.zeros.bouncy_balls.Exceptions;
+    exports org.zeros.bouncy_balls.Calculations.ConvexHull;
+    exports org.zeros.bouncy_balls.Objects.Area.SimpleArea;
+    exports org.zeros.bouncy_balls.Objects.Area.ComplexArea;
 
 }

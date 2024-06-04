@@ -1,7 +1,8 @@
-package org.zeros.bouncy_balls.Objects.Area;
+package org.zeros.bouncy_balls.Objects.Area.SimpleArea;
 
 import javafx.geometry.Point2D;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
+import org.zeros.bouncy_balls.Objects.Area.SimpleArea.Area;
 
 public class RectangleArea extends Area {
 

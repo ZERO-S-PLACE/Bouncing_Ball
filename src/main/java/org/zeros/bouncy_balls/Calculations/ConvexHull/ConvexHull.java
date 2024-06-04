@@ -1,4 +1,4 @@
-package org.zeros.bouncy_balls.Calculations.AreasMath;
+package org.zeros.bouncy_balls.Calculations.ConvexHull;
 
 import javafx.geometry.Point2D;
 import org.zeros.bouncy_balls.Calculations.BindsCheck;

@@ -12,14 +12,18 @@ import org.zeros.bouncy_balls.Animation.Animation.Animation;
 import org.zeros.bouncy_balls.Animation.Animation.AnimationProperties;
 import org.zeros.bouncy_balls.Animation.Animation.AnimationType;
 import org.zeros.bouncy_balls.Animation.Borders.BordersType;
-import org.zeros.bouncy_balls.Calculations.AreasMath.AreasMath;
-import org.zeros.bouncy_balls.Calculations.AreasMath.ConvexHull;
-import org.zeros.bouncy_balls.Calculations.AreasMath.SimpleAreaBoolean;
+import org.zeros.bouncy_balls.Calculations.AreasMath.SimpleComplexAreaBoolean;
+import org.zeros.bouncy_balls.Calculations.ConvexHull.ConvexHull;
+import org.zeros.bouncy_balls.Calculations.AreasMath.SimpleSimpleAreaBoolean;
 import org.zeros.bouncy_balls.Controllers.LevelCreatorController;
 import org.zeros.bouncy_balls.Model.Model;
 import org.zeros.bouncy_balls.Model.Properties;
-import org.zeros.bouncy_balls.Objects.Area.*;
+import org.zeros.bouncy_balls.Objects.Area.ComplexArea.ComplexArea;
 import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.Segment;
+import org.zeros.bouncy_balls.Objects.Area.SimpleArea.Area;
+import org.zeros.bouncy_balls.Objects.Area.SimpleArea.OvalArea;
+import org.zeros.bouncy_balls.Objects.Area.SimpleArea.PolylineArea;
+import org.zeros.bouncy_balls.Objects.Area.SimpleArea.RectangleArea;
 import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObject;
 import org.zeros.bouncy_balls.Objects.SerializableObjects.LevelSerializable;
@@ -72,7 +76,7 @@ public class LevelCreator {
         Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().removeAll(Model.getInstance().getLevelCreatorController().preview.getChildren()));
         level = new Level(getAnimationProperties());
         animation = new Animation(level);
-        addObstacles();
+        addComplexArea(true);
         addElements();
         simulateAnimation();
         if (agreeTo("Save level ? Y/N")) {
@@ -149,23 +153,46 @@ public class LevelCreator {
         if (isTargetArea) complexArea.setColor(new Color(0.5, 0.5, 0.5, 0.5));
         else complexArea.setColor(new Color(0.5, 0, 0, 0.5));
         while (true) {
-            Area areaToAdd = null;
-            Area areaToExclude = null;
-            addComplexAreaPreview(complexArea);
-            switch ((int) getNumber("0-dismiss 1-include area, 2 exclude area 3- save")) {
+            System.out.println("__________");
+            System.out.println("Included areas: "+ complexArea.includedAreas().size());
+            System.out.println("Excluded areas: "+ complexArea.excludedAreas().size());
+
+            switch ((int) getNumber("0-dismiss 1-include area, 2 exclude area ,3 intersection ,4 exclude currentArea from new 5- save")) {
                 case 0 -> {
                     removeComplexAreaPreview(complexArea);
                     return;
                 }
                 case 1 -> {
-                    areaToAdd = createNewArea();
-                    removeObstaclePreview(areaToAdd);
+                    Area areaToAdd = createNewArea();
+                    removeComplexAreaPreview(complexArea);
+                    SimpleComplexAreaBoolean boolMath=new SimpleComplexAreaBoolean(areaToAdd,complexArea);
+                    complexArea=boolMath.sum();
+                    addComplexAreaPreview(complexArea);
                 }
                 case 2 -> {
-                    areaToExclude = createNewArea();
-                    removeObstaclePreview(areaToExclude);
+                    Area areaToExclude = createNewArea();
+
+                    removeComplexAreaPreview(complexArea);
+                    SimpleComplexAreaBoolean boolMath=new SimpleComplexAreaBoolean(areaToExclude,complexArea);
+                    complexArea=boolMath.subtractAfromB();
+                    addComplexAreaPreview(complexArea);
                 }
                 case 3 -> {
+                    Area areaToExclude = createNewArea();
+
+                    removeComplexAreaPreview(complexArea);
+                    SimpleComplexAreaBoolean boolMath=new SimpleComplexAreaBoolean(areaToExclude,complexArea);
+                    complexArea=boolMath.intersection();
+                    addComplexAreaPreview(complexArea);
+                }
+                case 4 -> {
+                    Area areaToExclude = createNewArea();
+                    removeComplexAreaPreview(complexArea);
+                    SimpleComplexAreaBoolean boolMath=new SimpleComplexAreaBoolean(areaToExclude,complexArea);
+                    complexArea=boolMath.subtractBfromA();
+                    addComplexAreaPreview(complexArea);
+                }
+                case 5 -> {
                     if (isTargetArea) {
                         level.setTargetArea(complexArea);
                     } else {
@@ -174,27 +201,24 @@ public class LevelCreator {
                     return;
                 }
             }
-            removeComplexAreaPreview(complexArea);
-            complexArea.includeArea(areaToAdd);
-            complexArea.excludeArea(areaToExclude);
+
         }
     }
 
     private void addComplexAreaPreview(ComplexArea complexArea) {
         Random random=new Random();
         Color color=new Color(random.nextDouble(),random.nextDouble(),random.nextDouble(),1);
+
+
         for (Area area : complexArea.includedAreas()) {
             area.getPath().setFill(color);
-
-            Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().add(area.getPath()));
-        }
+            if( !Model.getInstance().getLevelCreatorController().preview.getChildren().contains(area.getPath())) {
+                Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().add(area.getPath()));
+            }}
         for (Area area : complexArea.excludedAreas()) {
-            Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().add(area.getPath()));
-        }
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            if( !Model.getInstance().getLevelCreatorController().preview.getChildren().contains(area.getPath())) {
+                Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().add(area.getPath()));
+            }
         }
     }
 
@@ -326,7 +350,7 @@ public class LevelCreator {
                     if (agreeTo("Save?")) {//&&animation.hasFreePlace(obstacle)) {
                         saveObstacle(obstacle);
                         checkIntersections();
-                        checkingAreaBoolean();
+                        //checkingAreaBoolean();
                     } else {
                         removeObstaclePreview(obstacle);
                     }
@@ -375,16 +399,18 @@ public class LevelCreator {
     }*/
     private void checkingAreaBoolean() {
         if (level.getObstacles().size() >= 2) {
-            SimpleAreaBoolean simpleAreaBoolean = new SimpleAreaBoolean(level.getObstacles().getLast(), level.getObstacles().get(
+            SimpleSimpleAreaBoolean simpleAreaBoolean = new SimpleSimpleAreaBoolean(level.getObstacles().getLast(), level.getObstacles().get(
                     level.getObstacles().size() - 2));
             ComplexArea sum = simpleAreaBoolean.sum();
             ComplexArea intersection = simpleAreaBoolean.intersection();
-            ComplexArea difference1 = simpleAreaBoolean.subtractAfromB();
-            ComplexArea difference2 = simpleAreaBoolean.subtractBfromA();
-            addComplexAreaPreview(sum);
+            //ComplexArea difference1 = simpleAreaBoolean.subtractAfromB();
+            //ComplexArea difference2 = simpleAreaBoolean.subtractBfromA();
+
             addComplexAreaPreview(intersection);
-            addComplexAreaPreview(difference1);
-            addComplexAreaPreview(difference2);
+            addComplexAreaPreview(sum);
+
+           // addComplexAreaPreview(difference1);
+            //addComplexAreaPreview(difference2);
 
         }
     }

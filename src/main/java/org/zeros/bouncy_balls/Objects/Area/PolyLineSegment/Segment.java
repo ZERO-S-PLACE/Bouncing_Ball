@@ -1,8 +1,6 @@
 package org.zeros.bouncy_balls.Objects.Area.PolyLineSegment;
 
 import javafx.geometry.Point2D;
-import org.zeros.bouncy_balls.Calculations.AreasMath.AreasMath;
-import org.zeros.bouncy_balls.Calculations.AreasMath.ConvexHull;
 import org.zeros.bouncy_balls.Calculations.BindsCheck;
 import org.zeros.bouncy_balls.Calculations.Equations.BezierCurve;
 import org.zeros.bouncy_balls.Calculations.Equations.Equation;

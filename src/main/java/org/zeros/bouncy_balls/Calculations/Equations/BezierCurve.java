@@ -3,7 +3,7 @@ package org.zeros.bouncy_balls.Calculations.Equations;
 import javafx.geometry.Point2D;
 import org.apache.commons.math3.analysis.polynomials.PolynomialFunction;
 import org.apache.commons.math3.analysis.solvers.BrentSolver;
-import org.zeros.bouncy_balls.Calculations.AreasMath.ConvexHull;
+import org.zeros.bouncy_balls.Calculations.ConvexHull.ConvexHull;
 import org.zeros.bouncy_balls.Calculations.BindsCheck;
 import org.zeros.bouncy_balls.Calculations.VectorMath;
 import org.zeros.bouncy_balls.Exceptions.WrongValueException;

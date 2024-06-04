@@ -1,4 +1,4 @@
-package org.zeros.bouncy_balls.Objects.Area;
+package org.zeros.bouncy_balls.Objects.Area.SimpleArea;
 
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
@@ -10,12 +10,13 @@ import org.zeros.bouncy_balls.Model.Properties;
 import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.CurveSegment;
 import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.LineSegment;
 import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.Segment;
+import org.zeros.bouncy_balls.Objects.Area.VectorArea;
 import org.zeros.bouncy_balls.Objects.SerializableObjects.AreaSerializable;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Area implements Cloneable {
+public class Area extends VectorArea implements Cloneable {
 
     protected Path path = new Path();
     protected Point2D roughMin;

@@ -9,7 +9,7 @@ import org.zeros.bouncy_balls.Calculations.BindsCheck;
 import org.zeros.bouncy_balls.Calculations.Bounce;
 import org.zeros.bouncy_balls.Level.Level;
 import org.zeros.bouncy_balls.Model.Model;
-import org.zeros.bouncy_balls.Objects.Area.Area;
+import org.zeros.bouncy_balls.Objects.Area.SimpleArea.Area;
 import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObject;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObjectType;
@@ -33,6 +33,7 @@ public class Animation {
             object.setAnimation(this);
         }
     }
+
     private final AnimationTimer timer = new AnimationTimer() {
         @Override
         public void handle(long now) {
@@ -197,10 +198,11 @@ public class Animation {
             return true;
         }
     }
+
     public boolean hasFreePlace(Area obstacle) {
 
         if (!borders.isInside(obstacle)) return false;
-        else if(intersectsWithBall(obstacle))return false;
+        else if (intersectsWithBall(obstacle)) return false;
         else {
             for (Area obstacle2 : level.getObstacles()) {
                 if (AreasMath.areasIntersect(obstacle, obstacle2)) {
@@ -208,8 +210,9 @@ public class Animation {
                 }
             }
         }
-            return true;
+        return true;
     }
+
     public boolean intersectsWithBall(Area obstacle) {
         boolean intersectsWithBall = false;
         for (MovingObject object : this.getLevel().getMovingObjects()) {
@@ -248,8 +251,6 @@ public class Animation {
             this.name = name;
         }
     }
-
-
 
 
 }

@@ -1,10 +1,11 @@
-package org.zeros.bouncy_balls.Objects.Area;
+package org.zeros.bouncy_balls.Objects.Area.SimpleArea;
 
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Path;
 import org.zeros.bouncy_balls.Model.Properties;
 import org.zeros.bouncy_balls.Objects.Area.PolyLineSegment.Segment;
+import org.zeros.bouncy_balls.Objects.Area.SimpleArea.Area;
 
 import java.util.ArrayList;
 
