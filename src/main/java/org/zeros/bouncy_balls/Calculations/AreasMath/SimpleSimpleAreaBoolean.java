@@ -50,7 +50,7 @@ public class SimpleSimpleAreaBoolean extends AreaBoolean {
                 boolean inA=AreasMath.isInsideArea(areaA, subArea.getPointInside());
                 boolean inB=AreasMath.isInsideArea(areaB, subArea.getPointInside());
                 if ( inA|| inB) {
-                        areasToInclude.add(subArea);
+                    areasToInclude.add(subArea);
                 }else {
                     areasToExclude.add(subArea);
                 }
@@ -64,7 +64,7 @@ public class SimpleSimpleAreaBoolean extends AreaBoolean {
                     area.getPath().setStrokeWidth(2);
                     area.getPath().setStroke(Color.BLACK);
                     Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().add(
-                    area.getPath()
+                            area.getPath()
                     ));
                 }
 
@@ -73,7 +73,7 @@ public class SimpleSimpleAreaBoolean extends AreaBoolean {
 
 
         }
-    return new ComplexArea(areasToInclude,areasToExclude);
+        return new ComplexArea(areasToInclude,areasToExclude);
     }
 
    /* private void addPreview(ArrayList<Area> areasToInclude) {
@@ -117,7 +117,7 @@ public class SimpleSimpleAreaBoolean extends AreaBoolean {
 
         return new ComplexArea(areasToInclude,areasToExclude);
     }
-    public  ComplexArea subtractBfromA() {
+    public  ComplexArea subtractBFromA() {
         ArrayList<Area> areasToInclude=new ArrayList<>();
         ArrayList<Area> areasToExclude=new ArrayList<>();
         if(!AreasMath.areasIntersect(areaA,areaB)){
@@ -139,9 +139,9 @@ public class SimpleSimpleAreaBoolean extends AreaBoolean {
         }
         return new ComplexArea(areasToInclude,areasToExclude);
     }
-    public  ComplexArea subtractAfromB() {
+    public  ComplexArea subtractAFromB() {
         reverseAreasOrder();
-        ComplexArea difference=subtractBfromA();
+        ComplexArea difference=subtractBFromA();
         reverseAreasOrder();
         return difference;
     }
@@ -156,25 +156,25 @@ public class SimpleSimpleAreaBoolean extends AreaBoolean {
     private void simplifyConnectedAreas(ArrayList<Area> tanAreas)throws IllegalArgumentException {
         System.out.println("Areas before simplify: "+tanAreas.size());
 
-            for (Area subArea1:tanAreas){
-                for (Area subArea2:tanAreas){
-                    if(!subArea1.equals(subArea2)){
-                        if(haveCommonEdge(subArea1,subArea2)){
-                            ArrayList<Area> temp=new ArrayList<>();
-                            temp.add(subArea1);
-                            temp.add(subArea2);
-                         ArrayList<Area> combined=combineTangentAreas(temp);
-                         if(combined.isEmpty())throw new IllegalArgumentException("Error combining areas");
-                         tanAreas.remove(subArea1);
-                         tanAreas.remove(subArea2);
-                         tanAreas.addAll(combined);
-                         simplifyConnectedAreas(tanAreas);
-                         return;
-                        }
+        for (Area subArea1:tanAreas){
+            for (Area subArea2:tanAreas){
+                if(!subArea1.equals(subArea2)){
+                    if(haveCommonEdge(subArea1,subArea2)){
+                        ArrayList<Area> temp=new ArrayList<>();
+                        temp.add(subArea1);
+                        temp.add(subArea2);
+                        ArrayList<Area> combined=combineTangentAreas(temp);
+                        if(combined.isEmpty())throw new IllegalArgumentException("Error combining areas");
+                        tanAreas.remove(subArea1);
+                        tanAreas.remove(subArea2);
+                        tanAreas.addAll(combined);
+                        simplifyConnectedAreas(tanAreas);
+                        return;
                     }
-
                 }
+
             }
+        }
 
         System.out.println("Areas after simplify: "+tanAreas.size());
 

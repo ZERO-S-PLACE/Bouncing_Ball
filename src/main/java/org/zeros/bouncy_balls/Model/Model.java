@@ -8,11 +8,11 @@ import org.zeros.bouncy_balls.Views.ViewFactory;
 import java.util.ArrayList;
 
 public class Model {
+    private static Model model;
     private final ViewFactory viewFactory;
+    private final ArrayList<Animation> runningAnimations = new ArrayList<>();
     private GamePanelController gamePanelController;
     private LevelCreatorController levelCreatorController;
-    private final ArrayList<Animation> runningAnimations=new ArrayList<>();
-    private static Model model;
 
     private Model() {
         this.viewFactory = new ViewFactory();
@@ -24,12 +24,13 @@ public class Model {
         }
         return model;
     }
+
     public ViewFactory getViewFactory() {
         return viewFactory;
     }
 
     public GamePanelController getGamePanelController() {
-        if(this.gamePanelController==null){
+        if (this.gamePanelController == null) {
             this.gamePanelController = new GamePanelController();
         }
         return gamePanelController;
@@ -39,11 +40,12 @@ public class Model {
         return runningAnimations;
     }
 
-    public void addAnimation(Animation animation){
+    public void addAnimation(Animation animation) {
         runningAnimations.add(animation);
     }
+
     public LevelCreatorController getLevelCreatorController() {
-        if(this.levelCreatorController==null){
+        if (this.levelCreatorController == null) {
             this.levelCreatorController = new LevelCreatorController();
         }
         return levelCreatorController;
@@ -51,8 +53,8 @@ public class Model {
 
 
     public Animation getRunningAnimation(String animationName) {
-        for (Animation animation:runningAnimations){
-            if(animation.getName().equals(animationName))return animation;
+        for (Animation animation : runningAnimations) {
+            if (animation.getName().equals(animationName)) return animation;
         }
         return null;
     }

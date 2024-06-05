@@ -68,12 +68,11 @@ public class LineSegment extends Segment {
             return split;
         }
         if (equation.distance(point) <= Properties.ACCURACY() && BindsCheck.isBetweenPoints(point, point1, point2)) {
-
-            split.add(new LineSegment(point1, point));
-            split.add(new LineSegment(point, point2));
+            Point2D intersection = equation.intersection(equation.perpendicularTroughPoint(point));
+            split.add(new LineSegment(point1, intersection));
+            split.add(new LineSegment(intersection, point2));
             return split;
         }
-
         throw new IllegalArgumentException("Point " + point + " does not lay on the line");
     }
 
@@ -101,10 +100,7 @@ public class LineSegment extends Segment {
     public boolean overlapsWith(Segment segment2) {
         if (segment2.getType().equals(SegmentType.LINE)) {
             if (equation.getDirection().equals(((LineSegment) segment2).getEquation().getDirection())) {
-                return BindsCheck.isBetweenPoints(point1, ((LineSegment) segment2).point1, ((LineSegment) segment2).point2)
-                        || BindsCheck.isBetweenPoints(point2, ((LineSegment) segment2).point1, ((LineSegment) segment2).point2)
-                        || BindsCheck.isBetweenPoints(((LineSegment) segment2).point1, point1, point2)
-                        || BindsCheck.isBetweenPoints(((LineSegment) segment2).point2, point1, point2);
+                return BindsCheck.isBetweenPoints(point1, ((LineSegment) segment2).point1, ((LineSegment) segment2).point2) || BindsCheck.isBetweenPoints(point2, ((LineSegment) segment2).point1, ((LineSegment) segment2).point2) || BindsCheck.isBetweenPoints(((LineSegment) segment2).point1, point1, point2) || BindsCheck.isBetweenPoints(((LineSegment) segment2).point2, point1, point2);
             }
         }
 

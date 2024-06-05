@@ -5,7 +5,7 @@ import org.zeros.bouncy_balls.Calculations.BindsCheck;
 
 import static java.lang.Float.NaN;
 
-public class LinearEquation extends Equation{
+public class LinearEquation extends Equation {
     private boolean vertical = false;
     private double a;
     private double b;
@@ -16,7 +16,6 @@ public class LinearEquation extends Equation{
         if (Double.isNaN(b)) {
             this.vertical = true;
         }
-        //System.out.println("Equation "+a +"X+"+b +"=y , Vertical :"+vertical);
     }
 
     public LinearEquation(Point2D c, Point2D d) {
@@ -29,7 +28,6 @@ public class LinearEquation extends Equation{
                 this.b = Double.NaN;
                 vertical = true;
             }
-            //System.out.println("Equation "+a +"X+"+b +"=y , Vertical :"+vertical);
         }
     }
 
@@ -64,15 +62,6 @@ public class LinearEquation extends Equation{
 
     public Point2D getPoint(double x) {
         return new Point2D(x, getValue(x));
-    }
-
-    public double getArgument(double y) {
-        if (a != 0) {
-            return (y - b) / a;
-        } else {
-            return NaN;
-        }
-
     }
 
     public LinearEquation perpendicularTroughPoint(Point2D e) {
@@ -147,8 +136,6 @@ public class LinearEquation extends Equation{
             return second.intersection(perpendicular);
         }
         return perpendicular.intersection(this.offsetLine(-offset));
-
-
     }
 
     public LinearEquation parallelTroughPoint(Point2D point) {
@@ -156,11 +143,6 @@ public class LinearEquation extends Equation{
             return new LinearEquation(a, point.getY() - a * point.getX());
         }
         return new LinearEquation(point.getX(), b);
-
-    }
-
-    public double pointDistance(Point2D point) {
-        return this.perpendicularTroughPoint(point).intersection(this).distance(point);
 
     }
 
@@ -172,8 +154,6 @@ public class LinearEquation extends Equation{
     }
 
     public double distance(Point2D point) {
-
-
         return Math.abs(this.perpendicularTroughPoint(point).intersection(this).distance(point));
     }
 

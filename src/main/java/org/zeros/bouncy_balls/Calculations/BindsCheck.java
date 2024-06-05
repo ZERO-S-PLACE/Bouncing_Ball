@@ -4,10 +4,10 @@ import javafx.geometry.Point2D;
 import org.zeros.bouncy_balls.Calculations.Equations.BezierCurve;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
 import org.zeros.bouncy_balls.Model.Properties;
-import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.Area;
-import org.zeros.bouncy_balls.Objects.VectorArea.PolyLineSegment.LineSegment;
 import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObject;
+import org.zeros.bouncy_balls.Objects.VectorArea.PolyLineSegment.LineSegment;
+import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.Area;
 
 import java.util.ArrayList;
 
@@ -21,18 +21,16 @@ public class BindsCheck {
     }
 
     public static boolean isBetweenPoints(Point2D point, Point2D border1, Point2D border2) {
-        return     point.getX() >= Math.min(border1.getX(), border2.getX())-Properties.ACCURACY()
-                && point.getX() <= Math.max(border1.getX(), border2.getX())+Properties.ACCURACY()
-                && point.getY() >= Math.min(border1.getY(), border2.getY())-Properties.ACCURACY()
-                && point.getY() <= Math.max(border1.getY(), border2.getY())+Properties.ACCURACY();
+        return point.getX() >= Math.min(border1.getX(), border2.getX()) - Properties.ACCURACY() && point.getX() <= Math.max(border1.getX(), border2.getX()) + Properties.ACCURACY() && point.getY() >= Math.min(border1.getY(), border2.getY()) - Properties.ACCURACY() && point.getY() <= Math.max(border1.getY(), border2.getY()) + Properties.ACCURACY();
     }
+
     public static boolean isOnLine(Point2D point, LineSegment lineSegment) {
-        return  isBetweenPoints(point, lineSegment.getPoint1(), lineSegment.getPoint2())&&
-                lineSegment.getEquation().distance(point)<= Properties.ACCURACY();
+        return isBetweenPoints(point, lineSegment.getPoint1(), lineSegment.getPoint2()) && lineSegment.getEquation().distance(point) <= Properties.ACCURACY();
     }
+
     public static boolean linesIntersect(LineSegment line1, LineSegment lineSegment2) {
-        Point2D intersection=line1.getEquation().intersection(lineSegment2.getEquation());
-        if(intersection!=null) {
+        Point2D intersection = line1.getEquation().intersection(lineSegment2.getEquation());
+        if (intersection != null) {
             return isBetweenPoints(intersection, line1.getPoint1(), line1.getPoint2()) && isBetweenPoints(intersection, lineSegment2.getPoint1(), lineSegment2.getPoint2());
         }
         return false;
@@ -57,7 +55,7 @@ public class BindsCheck {
             ArrayList<Point2D> points = obstacle.getSegmentPoints(i);
             if (points.size() > 2) {
                 if (intersectWithCurveBoundary(ball, obstacle.getSegmentLines(i), points)) {
-                    if (checkSimplifiedIntersection(ball, obstacle,i)) return true;
+                    if (checkSimplifiedIntersection(ball, obstacle, i)) return true;
                 }
             }
         }
@@ -65,13 +63,13 @@ public class BindsCheck {
     }
 
     private static boolean checkSimplifiedIntersection(Ball ball, Area obstacle, int segment) {
-        int divisions=0;
-        ArrayList<Point2D> segmentPoints =obstacle.getSegmentPoints(segment);
-        for (int i=0;i<segmentPoints.size()-1;i++){
-            divisions=divisions+(int)segmentPoints.get(i).subtract(segmentPoints.get(i+1)).magnitude();
+        int divisions = 0;
+        ArrayList<Point2D> segmentPoints = obstacle.getSegmentPoints(segment);
+        for (int i = 0; i < segmentPoints.size() - 1; i++) {
+            divisions = divisions + (int) segmentPoints.get(i).subtract(segmentPoints.get(i + 1)).magnitude();
         }
-        divisions=(int) Math.sqrt(divisions);
-        BezierCurve curve = (BezierCurve)obstacle.getSegmentEquation(segment);
+        divisions = (int) Math.sqrt(divisions);
+        BezierCurve curve = (BezierCurve) obstacle.getSegmentEquation(segment);
         ArrayList<Point2D> simplifiedCurvePoints = new ArrayList<>();
         ArrayList<LinearEquation> simplifiedCurveLines = new ArrayList<>();
         Point2D first = segmentPoints.getFirst();
