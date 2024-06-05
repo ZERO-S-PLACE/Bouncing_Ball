@@ -18,10 +18,18 @@ module org.zeros.bouncy_balls {
     exports org.zeros.bouncy_balls.Controllers;
     exports org.zeros.bouncy_balls.Views;
     exports org.zeros.bouncy_balls.Objects.MovingObjects;
-    exports org.zeros.bouncy_balls.Objects.Area;
+    exports org.zeros.bouncy_balls.Objects.VectorArea;
     exports org.zeros.bouncy_balls.Level;
     exports org.zeros.bouncy_balls.Animation.InputOnRun;
     exports org.zeros.bouncy_balls.Animation.Borders;
     exports org.zeros.bouncy_balls.Animation.Animation;
+
+    opens org.zeros.bouncy_balls.Level to javafx.fxml;
+    exports org.zeros.bouncy_balls.Calculations.AreasMath;
+    exports org.zeros.bouncy_balls.Objects.VectorArea.PolyLineSegment;
+    exports org.zeros.bouncy_balls.Exceptions;
+    exports org.zeros.bouncy_balls.Calculations.ConvexHull;
+    exports org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea;
+    exports org.zeros.bouncy_balls.Objects.VectorArea.ComplexArea;
 
 }

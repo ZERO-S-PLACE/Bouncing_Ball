@@ -3,8 +3,8 @@ package org.zeros.bouncy_balls.Objects.SerializableObjects;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Paint;
 import org.zeros.bouncy_balls.Calculations.VectorMath;
-import org.zeros.bouncy_balls.Objects.Area.Area;
-import org.zeros.bouncy_balls.Objects.Area.PolylineArea;
+import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.Area;
+import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.PolylineArea;
 
 import java.io.Serializable;
 import java.util.ArrayList;

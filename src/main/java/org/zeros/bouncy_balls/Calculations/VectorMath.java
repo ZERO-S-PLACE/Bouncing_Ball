@@ -1,6 +1,7 @@
 package org.zeros.bouncy_balls.Calculations;
 
 import javafx.geometry.Point2D;
+import org.zeros.bouncy_balls.Model.Properties;
 
 import java.util.ArrayList;
 
@@ -63,8 +64,21 @@ public class VectorMath {
         }
         return array;
     }
+    public static double counterClockWiseAngle(Point2D reference,Point2D vector){
+        double angle=reference.angle(vector);
+        if(reference.crossProduct(vector).getZ()>0)return 360-angle;
+        return angle;
+    }
 
 
+    public static boolean containsPoint(Point2D point, ArrayList<Point2D> points) {
+        for (Point2D point2:points){
+            if(point2.distance(point)<=Properties.ACCURACY()/10){
+                return true;
+            }
+        }
+        return false;
+    }
 }
 
 

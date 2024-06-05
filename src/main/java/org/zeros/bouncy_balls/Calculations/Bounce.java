@@ -4,10 +4,8 @@ import javafx.geometry.Point2D;
 import org.zeros.bouncy_balls.Calculations.Equations.BezierCurve;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
 import org.zeros.bouncy_balls.Calculations.Equations.QuadraticEquation;
-import org.zeros.bouncy_balls.Objects.Area.Area;
+import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.Area;
 import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;
-
-import java.util.ArrayList;
 
 public class Bounce {
     public static boolean twoBalls(Ball ball1, Ball ball2) {
@@ -164,14 +162,14 @@ public class Bounce {
                     }
                 }
             }
-            return checkExactBezierIntersection(ball, obstacle.getSegmentPoints(segment), result);
+            return checkExactBezierIntersection(ball, (BezierCurve) obstacle.getSegmentEquation(segment), result);
         }
         return result;
     }
 
-    private static ResultBouncingSet checkExactBezierIntersection(Ball ball, ArrayList<Point2D> curvePoints, ResultBouncingSet result) {
+    private static ResultBouncingSet checkExactBezierIntersection(Ball ball, BezierCurve bezierCurve, ResultBouncingSet result) {
 
-        BezierCurve bezierCurve = new BezierCurve(curvePoints);
+
         Point2D tBouncePointAtLine = findBouncePointOnCurve(bezierCurve, ball);
         if (tBouncePointAtLine != null) {
             double offset = Math.sqrt(Math.pow(ball.getRadius(), 2) - Math.pow(ball.trajectory().distance(tBouncePointAtLine), 2));

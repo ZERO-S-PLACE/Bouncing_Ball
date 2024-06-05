@@ -1,4 +1,4 @@
-package org.zeros.bouncy_balls.Objects.Area;
+package org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea;
 
 import javafx.geometry.Point2D;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;

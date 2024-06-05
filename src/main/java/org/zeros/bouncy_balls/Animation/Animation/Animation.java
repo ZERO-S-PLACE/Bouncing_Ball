@@ -4,11 +4,12 @@ import javafx.animation.AnimationTimer;
 import javafx.geometry.Point2D;
 import org.zeros.bouncy_balls.Animation.Borders.Borders;
 import org.zeros.bouncy_balls.Animation.Borders.BordersType;
+import org.zeros.bouncy_balls.Calculations.AreasMath.AreasMath;
 import org.zeros.bouncy_balls.Calculations.BindsCheck;
 import org.zeros.bouncy_balls.Calculations.Bounce;
 import org.zeros.bouncy_balls.Level.Level;
 import org.zeros.bouncy_balls.Model.Model;
-import org.zeros.bouncy_balls.Objects.Area.Area;
+import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.Area;
 import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObject;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObjectType;
@@ -32,6 +33,7 @@ public class Animation {
             object.setAnimation(this);
         }
     }
+
     private final AnimationTimer timer = new AnimationTimer() {
         @Override
         public void handle(long now) {
@@ -197,6 +199,32 @@ public class Animation {
         }
     }
 
+    public boolean hasFreePlace(Area obstacle) {
+
+        if (!borders.isInside(obstacle)) return false;
+        else if (intersectsWithBall(obstacle)) return false;
+        else {
+            for (Area obstacle2 : level.getObstacles()) {
+                if (AreasMath.areasIntersect(obstacle, obstacle2)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public boolean intersectsWithBall(Area obstacle) {
+        boolean intersectsWithBall = false;
+        for (MovingObject object : this.getLevel().getMovingObjects()) {
+            if (object.getType().equals(MovingObjectType.BALL)) {
+                if (BindsCheck.intersectsWithObstacleExact((Ball) object, obstacle)) {
+                    intersectsWithBall = true;
+                }
+            }
+        }
+        return intersectsWithBall;
+    }
+
     public AnimationProperties getPROPERTIES() {
         return level.PROPERTIES();
     }
@@ -223,8 +251,6 @@ public class Animation {
             this.name = name;
         }
     }
-
-
 
 
 }

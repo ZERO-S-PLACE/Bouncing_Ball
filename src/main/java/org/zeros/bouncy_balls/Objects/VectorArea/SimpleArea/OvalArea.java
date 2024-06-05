@@ -1,4 +1,4 @@
-package org.zeros.bouncy_balls.Objects.Area;
+package org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea;
 
 import javafx.geometry.Point2D;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
@@ -14,6 +14,7 @@ public class OvalArea extends Area {
         this.radiusX = radiusX;
         this.radiusY = radiusY;
         calculateOval(center, radiusX, radiusY, rotation);
+        calculateBoundaryLines();
         calculateRoughBinds();
         setRotation(rotation);
     }
