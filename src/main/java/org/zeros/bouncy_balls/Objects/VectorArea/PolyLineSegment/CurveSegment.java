@@ -1,16 +1,11 @@
 package org.zeros.bouncy_balls.Objects.VectorArea.PolyLineSegment;
 
-import javafx.application.Platform;
 import javafx.geometry.Point2D;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import org.zeros.bouncy_balls.Calculations.Equations.BezierCurve;
 import org.zeros.bouncy_balls.Calculations.VectorMath;
-import org.zeros.bouncy_balls.Model.Model;
 import org.zeros.bouncy_balls.Model.Properties;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class CurveSegment extends Segment {
 
@@ -65,48 +60,16 @@ public class CurveSegment extends Segment {
     }
 
     @Override
-    public ArrayList<Segment> splitAtPoint(Point2D point) throws IllegalArgumentException {
-        ArrayList<Double> brakePoints = equation.getParameterAtPoint(point);
-        //I know that it is not an elegant way to do so
-        // but it was so  annoying when point is just a little not on curve
-        if (brakePoints.isEmpty()) {
-            Random random = new Random();
-            for (int i = 0; i < 10000; i++) {
-                Point2D searchPoint = point.add(new Point2D(random.nextDouble() * Properties.ACCURACY() * 20, random.nextDouble() * Properties.ACCURACY() * 20));
-                brakePoints = equation.getParameterAtPoint(searchPoint);
-                if (!brakePoints.isEmpty()) break;
-                searchPoint = point.subtract(new Point2D(random.nextDouble() * Properties.ACCURACY() * 20, random.nextDouble() * Properties.ACCURACY() * 20));
-                brakePoints = equation.getParameterAtPoint(searchPoint);
-                if (!brakePoints.isEmpty()) break;
+    public ArrayList<Segment> splitAtPoint(Point2D point) {
 
-            }
+        ArrayList<Segment> splitSegments = new ArrayList<>();
+        ArrayList<BezierCurve> splitCurves = equation.getSubCurves(point);
+        for (BezierCurve curve : splitCurves) {
+            splitSegments.add(new CurveSegment(curve));
         }
-        /*
 
-            Point2D unit=new Point2D(Properties.ACCURACY()*10,Properties.ACCURACY()*10);
-            LineSegment helpLine=new LineSegment(point.subtract(unit),point.add(unit));
-            ArrayList<Point2D> nearIntersections = new ArrayList<>(BezierCurve.getIntersections(equation, helpLine));
-             unit=new Point2D(-Properties.ACCURACY()*10,Properties.ACCURACY()*10);
-             helpLine=new LineSegment(point.subtract(unit),point.add(unit));
-            nearIntersections.addAll(BezierCurve.getIntersections(equation,helpLine));
-            for (Point2D nearPoint:nearIntersections) {
-               brakePoints.addAll(equation.getParameterAtPoint(nearPoint));
-            }
-            brakePoints.removeIf(brakePoint->equation.getPointAt(brakePoint).distance(point)>Properties.ACCURACY());
-        }*/
-        brakePoints.removeIf(brakePoint -> equation.getPointAt(brakePoint).distance(point) > Properties.ACCURACY());
+        return splitSegments;
 
-        if (!brakePoints.isEmpty()) {
-            ArrayList<Segment> splitSegments = new ArrayList<>();
-            ArrayList<BezierCurve> splitCurves = equation.getSubCurves(brakePoints.getFirst());
-            for (BezierCurve curve : splitCurves) {
-                splitSegments.add(new CurveSegment(curve));
-            }
-
-            return splitSegments;
-        }
-        Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().add(new Circle(point.getX() / Properties.SIZE_FACTOR(), point.getY() / Properties.SIZE_FACTOR(), 4, Color.RED)));
-        throw new IllegalArgumentException(" point does not lay on line " + point + " " + getPoints());
 
     }
 
