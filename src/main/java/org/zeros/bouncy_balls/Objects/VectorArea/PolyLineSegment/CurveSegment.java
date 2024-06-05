@@ -59,7 +59,7 @@ public class CurveSegment extends Segment {
 
     }
 
-    @Override
+
     public ArrayList<Segment> splitAtPoint(Point2D point) {
 
         ArrayList<Segment> splitSegments = new ArrayList<>();
@@ -69,11 +69,9 @@ public class CurveSegment extends Segment {
         }
 
         return splitSegments;
-
-
     }
+ 
 
-    @Override
     public Point2D getTangentVectorPointingEnd(Point2D nextPoint) {
         if (nextPoint.distance(getPoints().getFirst()) <= Properties.ACCURACY()) {
             return getPoints().getFirst().subtract(getPoints().get(1));
