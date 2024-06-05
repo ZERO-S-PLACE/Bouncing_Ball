@@ -8,6 +8,7 @@ import org.zeros.bouncy_balls.Animation.Animation.Animation;
 public abstract class InputOnRun {
     protected final AnchorPane panel;
     protected final EventHandler<MouseEvent> mouseInputHandler = this::onMouseClicked;
+
     protected final Animation animation;
     protected final EventHandler<MouseEvent> mouseMovedHandler = this::onMouseMoved;
     protected boolean centerPicked = false;

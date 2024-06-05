@@ -3,7 +3,9 @@ package org.zeros.bouncy_balls.Model;
 import javafx.scene.paint.Color;
 
 public class Properties {
-    private static  Color BACKGROUND_COLOR= Color.BEIGE;
+    public static double SIZE_FACTOR = Math.pow(10, 5);
+    private static Color BACKGROUND_COLOR = Color.BEIGE;
+    private static double ACCURACY = Math.pow(0.1, 5);
 
     public static Color BACKGROUND_COLOR() {
         return BACKGROUND_COLOR;
@@ -17,8 +19,6 @@ public class Properties {
         return ACCURACY;
     }
 
-    public static double SIZE_FACTOR=Math.pow(10,5);
-
     public static double SIZE_FACTOR() {
         return SIZE_FACTOR;
     }
@@ -30,8 +30,6 @@ public class Properties {
     public static void setACCURACY(double ACCURACY) {
         Properties.ACCURACY = ACCURACY;
     }
-
-    private static  double ACCURACY =Math.pow(0.1,5);
 
 
 }

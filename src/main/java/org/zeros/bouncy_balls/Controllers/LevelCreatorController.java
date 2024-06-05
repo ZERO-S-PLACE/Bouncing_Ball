@@ -3,7 +3,6 @@ package org.zeros.bouncy_balls.Controllers;
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Label;
@@ -20,29 +19,25 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class LevelCreatorController implements Initializable {
-    public static Object getLock() {
-        return lock;
-    }
-    private static final Object lock=new Object();
-    private Point2D selectedPoint;
-    private double pickedDistance;
-    private Event lastEvent;
-
-
-
-    private String textEntered;
-    private final Circle pickedPointSign=new Circle();
+    private static final Object lock = new Object();
+    private final Circle pickedPointSign = new Circle();
     public AnchorPane preview;
     public Label messageLabel;
     public TextField inputLabel;
-    private final EventHandler<KeyEvent> confirmHandler = this::confirmTextInput;
+    private Point2D selectedPoint;
+    private double pickedDistance;
+    private Event lastEvent;
     private final EventHandler<MouseEvent> pointPickedHandler = this::pointPicked;
+    private String textEntered;
+    private final EventHandler<KeyEvent> confirmHandler = this::confirmTextInput;
 
-
+    public static Object getLock() {
+        return lock;
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        inputLabel.addEventHandler(KeyEvent.KEY_PRESSED,confirmHandler);
+        inputLabel.addEventHandler(KeyEvent.KEY_PRESSED, confirmHandler);
         preview.setOnMouseClicked(pointPickedHandler);
         setPickPointSign();
 
@@ -56,12 +51,12 @@ public class LevelCreatorController implements Initializable {
     }
 
     private void confirmTextInput(KeyEvent event) {
-        textEntered= inputLabel.textProperty().getValue();
-        lastEvent=event;
-        if(event.getCode().equals(KeyCode.ENTER)){
-           synchronized (lock){
-               lock.notifyAll();
-           }
+        textEntered = inputLabel.textProperty().getValue();
+        lastEvent = event;
+        if (event.getCode().equals(KeyCode.ENTER)) {
+            synchronized (lock) {
+                lock.notifyAll();
+            }
         }
     }
 
@@ -70,18 +65,18 @@ public class LevelCreatorController implements Initializable {
     }
 
     private void pointPicked(MouseEvent mouseEvent) {
-        Point2D newPoint= new Point2D(mouseEvent.getX()*Properties.SIZE_FACTOR(),mouseEvent.getY()* Properties.SIZE_FACTOR());
-        lastEvent=mouseEvent;
-        if(selectedPoint!=null) {
+        Point2D newPoint = new Point2D(mouseEvent.getX() * Properties.SIZE_FACTOR(), mouseEvent.getY() * Properties.SIZE_FACTOR());
+        lastEvent = mouseEvent;
+        if (selectedPoint != null) {
             pickedDistance = newPoint.distance(selectedPoint);
-        }else {
-            if(!preview.getChildren().contains(pickedPointSign)) {
+        } else {
+            if (!preview.getChildren().contains(pickedPointSign)) {
                 preview.getChildren().add(pickedPointSign);
             }
         }
         setSelectedPoint(newPoint);
-        selectedPoint=newPoint;
-        synchronized (lock){
+        selectedPoint = newPoint;
+        synchronized (lock) {
             lock.notifyAll();
         }
     }
@@ -92,17 +87,18 @@ public class LevelCreatorController implements Initializable {
 
     public void setSelectedPoint(Point2D selectedPoint) {
         this.selectedPoint = selectedPoint;
-        if(selectedPoint!=null) {
-            pickedPointSign.setCenterX(selectedPoint.getX()/ Properties.SIZE_FACTOR());
-            pickedPointSign.setCenterY(selectedPoint.getY()/ Properties.SIZE_FACTOR());
-        }else {
-            Platform.runLater(()->preview.getChildren().remove(pickedPointSign));
+        if (selectedPoint != null) {
+            pickedPointSign.setCenterX(selectedPoint.getX() / Properties.SIZE_FACTOR());
+            pickedPointSign.setCenterY(selectedPoint.getY() / Properties.SIZE_FACTOR());
+        } else {
+            Platform.runLater(() -> preview.getChildren().remove(pickedPointSign));
         }
     }
 
     public double getPickedDistance() {
         return pickedDistance;
     }
+
     public String getTextEntered() {
         return textEntered;
     }

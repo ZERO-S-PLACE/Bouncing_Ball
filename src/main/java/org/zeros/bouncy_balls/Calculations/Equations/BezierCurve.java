@@ -353,53 +353,53 @@ public class BezierCurve extends Equation {
     }
     protected ArrayList<Double> getParameterAtPoint(Point2D point,double startParameter,double endParameter) {
 
-         ArrayList<Double> solutions=new ArrayList<>();
-         Point2D start=getPointAt(startParameter);
-         Point2D end=getPointAt(endParameter);
+        ArrayList<Double> solutions=new ArrayList<>();
+        Point2D start=getPointAt(startParameter);
+        Point2D end=getPointAt(endParameter);
 
         if (point.distance(start) <= Properties.ACCURACY()/2 )
         {solutions.add(startParameter);
-        return solutions;}
-         if (point.distance(end) <= Properties.ACCURACY()/2 )
+            return solutions;}
+        if (point.distance(end) <= Properties.ACCURACY()/2 )
         { solutions.add(endParameter);
-        return solutions;}
-         if (getSubCurveRough(startParameter,endParameter).couldBeSimplified()&&start.distance(end)<10*Properties.ACCURACY()) {
-                    LinearEquation line=new LinearEquation(start,end);
-                    Point2D intersection=line.intersection(line.perpendicularTroughPoint(point));
-                    double parameter=startParameter+(endParameter-startParameter)*start.distance(intersection)/start.distance(end);
-                    if(BindsCheck.isBetweenPoints(intersection,start,end)&&parameter>=0&&parameter<=1){
-                        if(point.distance(getPointAt(parameter))<=Properties.ACCURACY()) {
-                            solutions.add(parameter);
-                            return solutions;
-                        }
+            return solutions;}
+        if (getSubCurveRough(startParameter,endParameter).couldBeSimplified()&&start.distance(end)<10*Properties.ACCURACY()) {
+            LinearEquation line=new LinearEquation(start,end);
+            Point2D intersection=line.intersection(line.perpendicularTroughPoint(point));
+            double parameter=startParameter+(endParameter-startParameter)*start.distance(intersection)/start.distance(end);
+            if(BindsCheck.isBetweenPoints(intersection,start,end)&&parameter>=0&&parameter<=1){
+                if(point.distance(getPointAt(parameter))<=Properties.ACCURACY()) {
+                    solutions.add(parameter);
+                    return solutions;
+                }
+            }
+        }else {
+
+            double midParameter = (startParameter + endParameter) / 2;
+            if (endParameter - startParameter > (double) 1 / degree) {
+
+                if (ConvexHull.isInside(this.getSubCurveRough(startParameter, midParameter).convexHull, point)) {
+                    solutions.addAll(getParameterAtPoint(point, startParameter, midParameter));
+                }
+                if (ConvexHull.isInside(this.getSubCurveRough(midParameter, endParameter).convexHull, point)) {
+                    solutions.addAll(getParameterAtPoint(point, midParameter, endParameter));
+                }
+            } else {
+                Point2D midpoint = getPointAt(midParameter);
+                if (BindsCheck.isBetweenPoints(point, start, midpoint)) {
+                    solutions.addAll(getParameterAtPoint(point, startParameter, midParameter));
+                }
+                if (BindsCheck.isBetweenPoints(point, midpoint, end)) {
+                    solutions.addAll(getParameterAtPoint(point, midParameter, endParameter));
+                }
+            }
         }
-         }else {
-
-             double midParameter = (startParameter + endParameter) / 2;
-             if (endParameter - startParameter > (double) 1 / degree) {
-
-                 if (ConvexHull.isInside(this.getSubCurveRough(startParameter, midParameter).convexHull, point)) {
-                     solutions.addAll(getParameterAtPoint(point, startParameter, midParameter));
-                 }
-                 if (ConvexHull.isInside(this.getSubCurveRough(midParameter, endParameter).convexHull, point)) {
-                     solutions.addAll(getParameterAtPoint(point, midParameter, endParameter));
-                 }
-             } else {
-                 Point2D midpoint = getPointAt(midParameter);
-                 if (BindsCheck.isBetweenPoints(point, start, midpoint)) {
-                     solutions.addAll(getParameterAtPoint(point, startParameter, midParameter));
-                 }
-                 if (BindsCheck.isBetweenPoints(point, midpoint, end)) {
-                     solutions.addAll(getParameterAtPoint(point, midParameter, endParameter));
-                 }
-             }
-         }
 
 
         solutions.replaceAll(this::getParameterValue);
-         if(solutions.size()>1) {
-             removeRepeatingValues(solutions);
-         }
+        if(solutions.size()>1) {
+            removeRepeatingValues(solutions);
+        }
 
        /* System.out.println(solutions);
         if (!solutions.isEmpty()) {
@@ -425,7 +425,7 @@ public class BezierCurve extends Equation {
             for (int j=i+1;i<solutions.size();i++){
                 if(solutions.get(i)>=solutions.get(j)-Math.pow(Properties.ACCURACY(),2)&&
                         solutions.get(i)<=solutions.get(j)+Math.pow(Properties.ACCURACY(),2)){
-                        solutions.remove(j);
+                    solutions.remove(j);
                 }
             }
         }

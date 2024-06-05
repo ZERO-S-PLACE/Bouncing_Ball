@@ -5,7 +5,6 @@ import org.zeros.bouncy_balls.Objects.VectorArea.ComplexArea.ComplexAreaPart;
 import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.Area;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class SimpleComplexAreaBoolean extends AreaBoolean {
     private final ComplexAreaPart areaA;
@@ -18,7 +17,7 @@ public class SimpleComplexAreaBoolean extends AreaBoolean {
 
     @Override
     public ComplexArea sum() {
-        ArrayList<ComplexAreaPart> partsToJoin=new ArrayList<>(areaB.partAreas());
+        ArrayList<ComplexAreaPart> partsToJoin = new ArrayList<>(areaB.partAreas());
         partsToJoin.addFirst(areaA);
         ComplexAreaPart.joinIntersectingAreas(partsToJoin);
         return new ComplexArea(partsToJoin);
@@ -26,27 +25,27 @@ public class SimpleComplexAreaBoolean extends AreaBoolean {
 
     @Override
     public ComplexArea intersection() {
-        ArrayList<ComplexAreaPart> partsIntersection=new ArrayList<>();
-        for (ComplexAreaPart part:areaB.partAreas()){
+        ArrayList<ComplexAreaPart> partsIntersection = new ArrayList<>();
+        for (ComplexAreaPart part : areaB.partAreas()) {
             partsIntersection.addAll(areaA.commonPartWith(part));
         }
         return new ComplexArea(partsIntersection);
     }
 
     @Override
-    public ComplexArea subtractBfromA() {
-        ArrayList<ComplexAreaPart> partsDifference=new ArrayList<>();
+    public ComplexArea subtractBFromA() {
+        ArrayList<ComplexAreaPart> partsDifference = new ArrayList<>();
         partsDifference.add(areaA);
-        ComplexAreaPart.subtractAll(areaB.partAreas(),partsDifference);
+        ComplexAreaPart.subtractAll(areaB.partAreas(), partsDifference);
         return new ComplexArea(partsDifference);
     }
 
     @Override
-    public ComplexArea subtractAfromB() {
-        ArrayList<ComplexAreaPart> partsDifference=new ArrayList<>(areaB.partAreas());
-        ArrayList<ComplexAreaPart> partsToSubtract=new ArrayList<>();
+    public ComplexArea subtractAFromB() {
+        ArrayList<ComplexAreaPart> partsDifference = new ArrayList<>(areaB.partAreas());
+        ArrayList<ComplexAreaPart> partsToSubtract = new ArrayList<>();
         partsToSubtract.add(areaA);
-        ComplexAreaPart.subtractAll(partsToSubtract,partsDifference);
+        ComplexAreaPart.subtractAll(partsToSubtract, partsDifference);
         return new ComplexArea(partsDifference);
     }
 }

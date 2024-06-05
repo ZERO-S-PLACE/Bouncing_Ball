@@ -3,10 +3,10 @@ package org.zeros.bouncy_balls.Level;
 import javafx.geometry.Point2D;
 import org.zeros.bouncy_balls.Animation.Animation.AnimationProperties;
 import org.zeros.bouncy_balls.Animation.Animation.AnimationType;
-import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.Area;
-import org.zeros.bouncy_balls.Objects.VectorArea.ComplexArea.ComplexArea;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObject;
 import org.zeros.bouncy_balls.Objects.SerializableObjects.LevelSerializable;
+import org.zeros.bouncy_balls.Objects.VectorArea.ComplexArea.ComplexArea;
+import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.Area;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -23,16 +23,20 @@ public class Level implements Serializable {
     private final List<MovingObject> movingObjects = new CopyOnWriteArrayList<>();
     private final List<Area> obstacles = new CopyOnWriteArrayList<>();
     private final List<MovingObject> movingObjectsToAdd = new CopyOnWriteArrayList<>();
+    private final List<MovingObject> movingObjectsHaveToEnter = new CopyOnWriteArrayList<>();
+    private final List<MovingObject> movingObjectsCannotEnter = new CopyOnWriteArrayList<>();
     private final List<Area> obstaclesToAdd = new CopyOnWriteArrayList<>();
-    private String NAME = "New_Level";
-    private ComplexArea inputArea;
-    private ComplexArea targetArea;
     private final Lock movingObjectsLock = new ReentrantLock();
     private final Lock movingObjectsToAddLock = new ReentrantLock();
     private final Lock obstaclesLock = new ReentrantLock();
     private final Lock obstaclesToAddLock = new ReentrantLock();
     private final Lock inputAreaLock = new ReentrantLock();
     private final Lock targetAreaLock = new ReentrantLock();
+    private final Lock movingObjectsHaveToEnterLock = new ReentrantLock();
+    private final Lock movingObjectsCannotEnterLock = new ReentrantLock();
+    private String NAME = "New_Level";
+    private ComplexArea inputArea;
+    private ComplexArea targetArea;
 
     public Level(AnimationProperties properties) {
         PROPERTIES = properties;
@@ -100,7 +104,7 @@ public class Level implements Serializable {
         try {
             return inputArea;
 
-        }finally {
+        } finally {
             inputAreaLock.unlock();
         }
     }
@@ -111,7 +115,7 @@ public class Level implements Serializable {
             if (PROPERTIES.getTYPE().equals(AnimationType.GAME)) {
                 this.inputArea = inputArea;
             }
-        }finally {
+        } finally {
             inputAreaLock.unlock();
         }
     }
@@ -119,9 +123,9 @@ public class Level implements Serializable {
     public ComplexArea getTargetArea() {
         targetAreaLock.lock();
         try {
-                return targetArea;
+            return targetArea;
 
-        }finally {
+        } finally {
             targetAreaLock.unlock();
         }
     }
@@ -132,7 +136,7 @@ public class Level implements Serializable {
             if (PROPERTIES.getTYPE().equals(AnimationType.GAME)) {
                 this.targetArea = targetArea;
             }
-        }finally {
+        } finally {
             targetAreaLock.unlock();
         }
     }
@@ -163,8 +167,9 @@ public class Level implements Serializable {
             movingObjectsLock.unlock();
         }
     }
+
     public void removeMovingObjectToAdd(MovingObject obj) {
-        obj.updateCenter(new Point2D(-10000,-10000));
+        obj.updateCenter(new Point2D(-10000, -10000));
         movingObjectsToAddLock.lock();
         try {
             movingObjectsToAdd.remove(obj);
@@ -181,6 +186,7 @@ public class Level implements Serializable {
             movingObjectsToAddLock.unlock();
         }
     }
+
     public List<MovingObject> getMovingObjectsToAdd() {
         movingObjectsToAddLock.lock();
         try {
@@ -189,6 +195,7 @@ public class Level implements Serializable {
             movingObjectsToAddLock.unlock();
         }
     }
+
     public void addObstacle(Area obs) {
         obstaclesLock.lock();
         try {
@@ -215,8 +222,9 @@ public class Level implements Serializable {
             obstaclesLock.unlock();
         }
     }
+
     public void addObstacleToAdd(Area obs) {
-        obs.move(new Point2D(-10000,-10000));
+        obs.move(new Point2D(-10000, -10000));
         obstaclesToAddLock.lock();
         try {
             obstaclesToAdd.add(obs);
@@ -244,6 +252,59 @@ public class Level implements Serializable {
         }
     }
 
+    public void addMovingObjectHaveToEnter(MovingObject obj) {
+        movingObjectsHaveToEnterLock.lock();
+        try {
+            movingObjectsHaveToEnter.add(obj);
+        } finally {
+            movingObjectsHaveToEnterLock.unlock();
+        }
+    }
+
+    public void removeMovingObjectHaveToEnter(MovingObject obj) {
+        movingObjectsHaveToEnterLock.lock();
+        try {
+            movingObjectsHaveToEnter.remove(obj);
+        } finally {
+            movingObjectsHaveToEnterLock.unlock();
+        }
+    }
+
+    public List<MovingObject> getMovingObjectsHaveToEnter() {
+        movingObjectsHaveToEnterLock.lock();
+        try {
+            return movingObjectsHaveToEnter;
+        } finally {
+            movingObjectsHaveToEnterLock.unlock();
+        }
+    }
+
+    public void addMovingObjectCannotEnter(MovingObject obj) {
+        movingObjectsCannotEnterLock.lock();
+        try {
+            movingObjectsCannotEnter.add(obj);
+        } finally {
+            movingObjectsCannotEnterLock.unlock();
+        }
+    }
+
+    public void removeMovingObjectCannotEnter(MovingObject obj) {
+        movingObjectsCannotEnterLock.lock();
+        try {
+            movingObjectsCannotEnter.remove(obj);
+        } finally {
+            movingObjectsCannotEnterLock.unlock();
+        }
+    }
+
+    public List<MovingObject> getMovingObjectsCannotEnter() {
+        movingObjectsCannotEnterLock.lock();
+        try {
+            return movingObjectsCannotEnter;
+        } finally {
+            movingObjectsCannotEnterLock.unlock();
+        }
+    }
 
 
 }
