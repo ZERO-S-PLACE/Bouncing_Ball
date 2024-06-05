@@ -6,6 +6,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Path;
 import org.zeros.bouncy_balls.Animation.Animation.Animation;
+import org.zeros.bouncy_balls.Calculations.AreasMath.AreasMath;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
 import org.zeros.bouncy_balls.Calculations.VectorMath;
 import org.zeros.bouncy_balls.Model.Model;
@@ -29,11 +30,11 @@ public class InputOnRunObstacle extends InputOnRun {
 
     @Override
     protected void onMouseMoved(MouseEvent mouseEvent) {
-        Point2D pickedPoint = new Point2D(mouseEvent.getX()*Properties.SIZE_FACTOR(), mouseEvent.getY()*Properties.SIZE_FACTOR());
+        Point2D pickedPoint = new Point2D(mouseEvent.getX() * Properties.SIZE_FACTOR(), mouseEvent.getY() * Properties.SIZE_FACTOR());
         if (!centerPicked) {
             obstacle.move(pickedPoint);
         } else {
-           rotateInput(pickedPoint);
+            rotateInput(pickedPoint);
         }
     }
 
@@ -49,24 +50,26 @@ public class InputOnRunObstacle extends InputOnRun {
 
         obstacle.setRotation(rotation);
 
-            Platform.runLater(() -> {
-                panel.getChildren().remove(path);
-                if (!panel.getChildren().contains(obstacle.getPath())) {
-                    panel.getChildren().add(obstacle.getPath());
-                    obstacle.getPath().setOpacity(0.3);
-                }
+        Platform.runLater(() -> {
+            panel.getChildren().remove(path);
+            if (!panel.getChildren().contains(obstacle.getPath())) {
+                panel.getChildren().add(obstacle.getPath());
+                obstacle.getPath().setOpacity(0.3);
+            }
 
-            });
+        });
 
     }
 
     @Override
     protected void onMouseClicked(MouseEvent mouseEvent) {
+        Point2D pickedPoint = new Point2D(mouseEvent.getX() * Properties.SIZE_FACTOR(), mouseEvent.getY() * Properties.SIZE_FACTOR());
+        if (!AreasMath.isInsideArea(animation.getLevel().getInputArea(), pickedPoint) && !centerPicked) return;
         if (!centerPicked) {
-            obstacle.move(new Point2D(mouseEvent.getX()* Properties.SIZE_FACTOR(), mouseEvent.getY()*Properties.SIZE_FACTOR()));
+            obstacle.move(new Point2D(mouseEvent.getX() * Properties.SIZE_FACTOR(), mouseEvent.getY() * Properties.SIZE_FACTOR()));
             centerPicked = true;
         } else {
-            rotateInput(new Point2D(mouseEvent.getX()*Properties.SIZE_FACTOR(), mouseEvent.getY()*Properties.SIZE_FACTOR()));
+            rotateInput(new Point2D(mouseEvent.getX() * Properties.SIZE_FACTOR(), mouseEvent.getY() * Properties.SIZE_FACTOR()));
             dismiss();
             new Thread(this::animateObjectArrival).start();
         }
@@ -94,7 +97,6 @@ public class InputOnRunObstacle extends InputOnRun {
 
 
     }
-
 
 
     private void decreaseOpacity() {

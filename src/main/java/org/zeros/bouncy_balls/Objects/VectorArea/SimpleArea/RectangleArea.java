@@ -4,8 +4,6 @@ import javafx.geometry.Point2D;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
 
 public class RectangleArea extends Area {
-
-
     public RectangleArea(Point2D corner1, Point2D corner3, double rotation) {
         super();
         calculateRectanglePointPointRotation(corner1, corner3, rotation);
@@ -13,7 +11,6 @@ public class RectangleArea extends Area {
         calculateRoughBinds();
         this.massCenter = corner1.add(corner3.subtract(corner1).multiply(0.5));
     }
-
     private void calculateRectanglePointPointRotation(Point2D corner1, Point2D corner3, double rotation) {
         Point2D corner4;
         Point2D corner2;
@@ -30,13 +27,11 @@ public class RectangleArea extends Area {
             corner2 = new Point2D(corner3.getX(), corner1.getY());
             corner4 = new Point2D(corner1.getX(), corner3.getY());
         }
-
         addStartPoint(corner1);
         addStraightLineTo(corner2);
         addStraightLineTo(corner3);
         addStraightLineTo(corner4);
         addStraightLineTo(corner1);
-
     }
 
 

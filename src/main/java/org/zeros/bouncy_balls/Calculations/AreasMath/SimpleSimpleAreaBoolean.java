@@ -52,7 +52,7 @@ public class SimpleSimpleAreaBoolean extends AreaBoolean {
                 if ( inA|| inB) {
                         areasToInclude.add(subArea);
                 }else {
-                    areasToExclude.add(subArea);
+                        areasToExclude.add(subArea);
                 }
             }
 
@@ -60,6 +60,7 @@ public class SimpleSimpleAreaBoolean extends AreaBoolean {
             areasToInclude.removeIf(area->AreasMath.containsArea(area,areasToExclude));
             if(areasToInclude.size()>1){
                 for (Area area:areasToInclude) {
+                    System.out.println("segments"+area.getSegments().size());
                     area.getPath().setFill(Color.RED);
                     area.getPath().setStrokeWidth(2);
                     area.getPath().setStroke(Color.BLACK);
@@ -67,7 +68,6 @@ public class SimpleSimpleAreaBoolean extends AreaBoolean {
                     area.getPath()
                     ));
                 }
-
                 throw new IllegalArgumentException("Areas simplified not properly");}
 
 
@@ -117,7 +117,7 @@ public class SimpleSimpleAreaBoolean extends AreaBoolean {
 
         return new ComplexArea(areasToInclude,areasToExclude);
     }
-    public  ComplexArea subtractBfromA() {
+    public  ComplexArea subtractBFromA() {
         ArrayList<Area> areasToInclude=new ArrayList<>();
         ArrayList<Area> areasToExclude=new ArrayList<>();
         if(!AreasMath.areasIntersect(areaA,areaB)){
@@ -139,9 +139,9 @@ public class SimpleSimpleAreaBoolean extends AreaBoolean {
         }
         return new ComplexArea(areasToInclude,areasToExclude);
     }
-    public  ComplexArea subtractAfromB() {
+    public  ComplexArea subtractAFromB() {
         reverseAreasOrder();
-        ComplexArea difference=subtractBfromA();
+        ComplexArea difference= subtractBFromA();
         reverseAreasOrder();
         return difference;
     }
@@ -179,24 +179,26 @@ public class SimpleSimpleAreaBoolean extends AreaBoolean {
         System.out.println("Areas after simplify: "+tanAreas.size());
 
     }
-    private ArrayList<Point2D> intersections = new ArrayList<>();
+    private ArrayList<Point2D> intersections;
     public  ArrayList<Area> areaSplit(Area area1, Area area2) throws IllegalArgumentException {
+        intersections=new ArrayList<>();
         //My algorithm.
         //Areas should be not self intersecting to perform this operation
         //Finds subAreas of two areas intersections. Set also contains inner areas
         // which didn't belong to any of areas before intersections.
         ArrayList<Area> subAreas = new ArrayList<>();
+        ArrayList<Segment> area1segments = new ArrayList<>(area1.getSegments());
+        area1segments.replaceAll(Segment::clone);
+        ArrayList<Segment> area2segments = new ArrayList<>(area2.getSegments());
+        area2segments.replaceAll(Segment::clone);
 
-        ArrayList<Segment> allSegments = getSegments(area1, area2);
+        ArrayList<Segment> allSegments = getSegments(area1segments, area2segments);
 
         if (intersections.isEmpty()) {
             subAreas.add(area1);
             subAreas.add(area2);
             return subAreas;
         }
-
-
-
 
         for (Point2D intersection : intersections) {
             ArrayList<Segment> segmentsAtIntersection = findSegmentsConnectedAtPoint(intersection, allSegments);
@@ -228,16 +230,8 @@ public class SimpleSimpleAreaBoolean extends AreaBoolean {
         return subAreas;
     }
 
-    private ArrayList<Segment> getSegments(Area area1, Area area2) {
-        ArrayList<Segment> area1segments = new ArrayList<>(area1.getSegments());
-        area1segments.replaceAll(Segment::clone);
-        ArrayList<Segment> area2segments = new ArrayList<>(area2.getSegments());
-        area2segments.replaceAll(Segment::clone);
+    private ArrayList<Segment> getSegments(ArrayList<Segment> area1segments,ArrayList<Segment> area2segments) {
 
-        boolean newIntersectionsOccurred = true;
-        while (newIntersectionsOccurred) {
-            newIntersectionsOccurred = false;
-            out:
             for (Segment segment1 : area1segments) {
                 for (Segment segment2 : area2segments) {
                     ArrayList<Point2D> tempIntersections = segment1.getIntersectionsWith(segment2);
@@ -245,25 +239,22 @@ public class SimpleSimpleAreaBoolean extends AreaBoolean {
 
                         if (!VectorMath.containsPoint(intersection, intersections)) {
                             intersections.add(intersection);
-
                             area1segments.addAll(segment1.splitAtPoint(intersection));
                             area2segments.addAll(segment2.splitAtPoint(intersection));
-
-
                             area1segments.remove(segment1);
                             area2segments.remove(segment2);
-                            newIntersectionsOccurred = true;
-                            break out;
+                            return getSegments(area1segments,area2segments);
                         }
 
                     }
                 }
 
+
             }
-        }
-        ArrayList<Segment> allSegments = area1segments;
-        allSegments.addAll(area2segments);
-        return allSegments;
+        area1segments.addAll(area2segments);
+        return area1segments;
+
+
     }
 
     private static boolean isAtomicArea(Area newArea, ArrayList<Area> subAreas) {
@@ -374,83 +365,3 @@ public class SimpleSimpleAreaBoolean extends AreaBoolean {
 
 
 }
-/* private ArrayList<Point2D> intersections = new ArrayList<>();
-    public  ArrayList<Area> areaSplit(Area area1, Area area2) throws IllegalArgumentException {
-        intersections=new ArrayList<>();
-        //My algorithm.
-        //Areas should be not self intersecting to perform this operation
-        //Finds subAreas of two areas intersections. Set also contains inner areas
-        // which didn't belong to any of areas before intersections.
-        ArrayList<Area> subAreas = new ArrayList<>();
-        ArrayList<Segment> area1Segments=area1.getSegments();
-        area1Segments.replaceAll(Segment::clone);
-        ArrayList<Segment> area2Segments=area1.getSegments();
-        area2Segments.replaceAll(Segment::clone);
-
-        ArrayList<Segment> allSegments = getSubSegmentsAndIntersections(area1Segments, area2Segments);
-
-        if (intersections.isEmpty()) {
-            subAreas.add(area1);
-            subAreas.add(area2);
-            return subAreas;
-        }
-
-
-
-
-        for (Point2D intersection : intersections) {
-            ArrayList<Segment> segmentsAtIntersection = findSegmentsConnectedAtPoint(intersection, allSegments);
-            for (Segment startSegment : segmentsAtIntersection) {
-                ArrayList<Segment> otherSegments = new ArrayList<>(segmentsAtIntersection);
-                otherSegments.remove(startSegment);
-                ArrayList<Segment> subAreaSegments = new ArrayList<>();
-                subAreaSegments.add(startSegment);
-                subAreaSegments.add(rightMostSegment(intersection, subAreaSegments.getLast(), otherSegments));
-
-                Point2D nextPoint = subAreaSegments.getLast().getOtherEnd(intersection);
-                while (!subAreaSegments.getFirst().equals(subAreaSegments.getLast())) {
-                    ArrayList<Segment> segmentsAtNextPoint = findSegmentsConnectedAtPoint(nextPoint, allSegments);
-                    segmentsAtNextPoint.remove(subAreaSegments.getLast());
-                    subAreaSegments.add(rightMostSegment(nextPoint, subAreaSegments.getLast(), segmentsAtNextPoint));
-                    nextPoint = subAreaSegments.getLast().getOtherEnd(nextPoint);
-                }
-                subAreaSegments.removeLast();
-                Area newArea= new PolylineArea(subAreaSegments);
-                if (isAtomicArea(newArea, subAreas)) {
-                    subAreas.removeIf(area -> AreasMath.isInsideArea(area, newArea.getPointInside())
-                            &&AreasMath.isInsideArea(area,newArea.getCorners().getFirst()));
-                    subAreas.add(newArea);
-                }
-            }
-
-        }
-        System.out.println("Sub areas count: "+subAreas.size());
-        return subAreas;
-    }
-
-
-    private ArrayList<Segment> getSubSegmentsAndIntersections(ArrayList<Segment> area1segments, ArrayList<Segment> area2segments) {
-            for (Segment segment1 : area1segments) {
-                for (Segment segment2 : area2segments) {
-                    ArrayList<Point2D> tempIntersections = segment1.getIntersectionsWith(segment2);
-                    for (Point2D intersection : tempIntersections) {
-
-                        if (!VectorMath.containsPoint(intersection, intersections)) {
-                            intersections.add(intersection);
-                            area1segments.addAll(segment1.splitAtPoint(intersection));
-                            area2segments.addAll(segment2.splitAtPoint(intersection));
-                            area1segments.remove(segment1);
-                            area2segments.remove(segment2);
-                            return getSubSegmentsAndIntersections(area1segments,area2segments);
-
-                        }
-
-                    }
-
-
-                }
-            }
-        area1segments.addAll(area2segments);
-        return area1segments;
-    }
-*/

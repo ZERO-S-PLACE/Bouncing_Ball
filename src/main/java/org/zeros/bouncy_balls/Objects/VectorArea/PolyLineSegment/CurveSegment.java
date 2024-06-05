@@ -65,11 +65,11 @@ public class CurveSegment extends Segment {
     }
 
     @Override
-    public ArrayList<Segment> splitAtPoint(Point2D point) throws IllegalArgumentException{
+    public ArrayList<Segment> splitAtPoint(Point2D point) throws IllegalArgumentException {
         ArrayList<Double> brakePoints = equation.getParameterAtPoint(point);
         //I know that it is not an elegant way to do so
         // but it was so  annoying when point is just a little not on curve
-        if(brakePoints.isEmpty()) {
+        if (brakePoints.isEmpty()) {
             Random random = new Random();
             for (int i = 0; i < 10000; i++) {
                 Point2D searchPoint = point.add(new Point2D(random.nextDouble() * Properties.ACCURACY() * 20, random.nextDouble() * Properties.ACCURACY() * 20));
@@ -94,6 +94,7 @@ public class CurveSegment extends Segment {
             }
             brakePoints.removeIf(brakePoint->equation.getPointAt(brakePoint).distance(point)>Properties.ACCURACY());
         }*/
+        brakePoints.removeIf(brakePoint -> equation.getPointAt(brakePoint).distance(point) > Properties.ACCURACY());
 
         if (!brakePoints.isEmpty()) {
             ArrayList<Segment> splitSegments = new ArrayList<>();
@@ -104,7 +105,7 @@ public class CurveSegment extends Segment {
 
             return splitSegments;
         }
-        Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().add(new Circle(point.getX()/Properties.SIZE_FACTOR(), point.getY()/Properties.SIZE_FACTOR(), 4, Color.RED)));
+        Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().add(new Circle(point.getX() / Properties.SIZE_FACTOR(), point.getY() / Properties.SIZE_FACTOR(), 4, Color.RED)));
         throw new IllegalArgumentException(" point does not lay on line " + point + " " + getPoints());
 
     }
@@ -138,39 +139,37 @@ public class CurveSegment extends Segment {
     @Override
     public boolean overlapsWith(Segment segment) {
         if (segment.getType().equals(SegmentType.CURVE)) {
-            CurveSegment segment2=(CurveSegment)segment;
+            CurveSegment segment2 = (CurveSegment) segment;
             ArrayList<Point2D> commonEnds = new ArrayList<>();
 
             if (!equation.getParameterAtPoint(segment2.getPoints().getFirst()).isEmpty()) {
-                if(!VectorMath.containsPoint(segment2.getPoints().getFirst(),commonEnds)) {
+                if (!VectorMath.containsPoint(segment2.getPoints().getFirst(), commonEnds)) {
                     commonEnds.add(segment2.getPoints().getFirst());
                 }
             }
             if (!equation.getParameterAtPoint(segment2.getPoints().getLast()).isEmpty()) {
-                if(!VectorMath.containsPoint(segment2.getPoints().getLast(),commonEnds)) {
+                if (!VectorMath.containsPoint(segment2.getPoints().getLast(), commonEnds)) {
                     commonEnds.add(segment2.getPoints().getLast());
                 }
             }
             if (!segment2.getEquation().getParameterAtPoint(getPoints().getFirst()).isEmpty()) {
-                if(!VectorMath.containsPoint(getPoints().getFirst(),commonEnds)) {
+                if (!VectorMath.containsPoint(getPoints().getFirst(), commonEnds)) {
                     commonEnds.add(getPoints().getFirst());
                 }
             }
             if (!segment2.getEquation().getParameterAtPoint(getPoints().getLast()).isEmpty()) {
-                if(!VectorMath.containsPoint(getPoints().getLast(),commonEnds)) {
+                if (!VectorMath.containsPoint(getPoints().getLast(), commonEnds)) {
                     commonEnds.add(getPoints().getLast());
                 }
             }
-            System.out.println("connected ends: "+commonEnds.size());
+            System.out.println("connected ends: " + commonEnds.size());
 
-            switch (commonEnds.size()){
-                case 0,1 -> {
+            switch (commonEnds.size()) {
+                case 0, 1 -> {
                     return false;
                 }
                 case 2 -> {
-                    return equation.getSubCurveExact(equation.getParameterAtPoint(commonEnds.getFirst()).getFirst(),equation.getParameterAtPoint(commonEnds.getLast()).getFirst()).isEqualTo(
-                            segment2.getEquation().getSubCurveExact(
-                                    segment2.getEquation().getParameterAtPoint(commonEnds.getFirst()).getFirst(),segment2.getEquation().getParameterAtPoint(commonEnds.getLast()).getFirst()));
+                    return equation.getSubCurveExact(equation.getParameterAtPoint(commonEnds.getFirst()).getFirst(), equation.getParameterAtPoint(commonEnds.getLast()).getFirst()).isEqualTo(segment2.getEquation().getSubCurveExact(segment2.getEquation().getParameterAtPoint(commonEnds.getFirst()).getFirst(), segment2.getEquation().getParameterAtPoint(commonEnds.getLast()).getFirst()));
                 }
                 default -> {
                     return true;

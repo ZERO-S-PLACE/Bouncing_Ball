@@ -4,8 +4,8 @@ import javafx.geometry.Point2D;
 import org.zeros.bouncy_balls.Calculations.Equations.BezierCurve;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
 import org.zeros.bouncy_balls.Calculations.Equations.QuadraticEquation;
-import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.Area;
 import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;
+import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.Area;
 
 public class Bounce {
     public static boolean twoBalls(Ball ball1, Ball ball2) {

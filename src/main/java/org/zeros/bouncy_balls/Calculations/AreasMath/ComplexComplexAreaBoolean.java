@@ -2,8 +2,8 @@ package org.zeros.bouncy_balls.Calculations.AreasMath;
 
 import org.zeros.bouncy_balls.Objects.VectorArea.ComplexArea.ComplexArea;
 
-public class ComplexComplexAreaBoolean extends AreaBoolean{
-    //Not completed class
+public class ComplexComplexAreaBoolean extends AreaBoolean {
+    //Work in progress
     ComplexArea areaA;
     ComplexArea areaB;
 
@@ -23,12 +23,12 @@ public class ComplexComplexAreaBoolean extends AreaBoolean{
     }
 
     @Override
-    public ComplexArea subtractBfromA() {
+    public ComplexArea subtractBFromA() {
         return null;
     }
 
     @Override
-    public ComplexArea subtractAfromB() {
+    public ComplexArea subtractAFromB() {
         return null;
     }
 }

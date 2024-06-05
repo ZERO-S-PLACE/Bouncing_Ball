@@ -11,12 +11,30 @@ import java.util.ArrayList;
 public abstract class Segment implements Cloneable {
     private final SegmentType type;
 
-    public SegmentType getType() {
-        return type;
-    }
-
     public Segment(SegmentType type) {
         this.type = type;
+    }
+
+    public static Segment getSegmentWithPoint(ArrayList<Segment> segments, Point2D point) {
+        for (Segment segment : segments) {
+            if (segment.getType().equals(SegmentType.LINE)) {
+                if (BindsCheck.isOnLine(point, (LineSegment) segment)) {
+                    return segment;
+
+                }
+            } else if (segment.getType().equals(SegmentType.CURVE)) {
+                if (!((BezierCurve) segment.getEquation()).getParameterAtPoint(point).isEmpty()) {
+                    return segment;
+                }
+            }
+
+        }
+        return null;
+
+    }
+
+    public SegmentType getType() {
+        return type;
     }
 
     public abstract ArrayList<Point2D> getPoints();
@@ -31,16 +49,16 @@ public abstract class Segment implements Cloneable {
         if (this.getPoints().size() != segment.getPoints().size()) return false;
         int incrementFactor;
         int start;
-        if (this.getPoints().getFirst().distance(segment.getPoints().getFirst())<=Properties.ACCURACY()) {
+        if (this.getPoints().getFirst().distance(segment.getPoints().getFirst()) <= Properties.ACCURACY() * 10) {
             incrementFactor = 1;
             start = 0;
-        } else if (this.getPoints().getFirst().distance(segment.getPoints().getLast())<=Properties.ACCURACY()) {
+        } else if (this.getPoints().getFirst().distance(segment.getPoints().getLast()) <= Properties.ACCURACY() * 10) {
             incrementFactor = -1;
             start = this.getPoints().size() - 1;
         } else return false;
 
         for (int i = 1; i < this.getPoints().size(); i++) {
-            if (this.getPoints().get(i).distance(segment.getPoints().get(start + incrementFactor * i))>=Properties.ACCURACY()) {
+            if (this.getPoints().get(i).distance(segment.getPoints().get(start + incrementFactor * i)) >= Properties.ACCURACY() * 10) {
                 return false;
             }
         }
@@ -78,22 +96,4 @@ public abstract class Segment implements Cloneable {
     }
 
     protected abstract Segment copyValuesTo();
-
-    public static Segment getSegmentWithPoint(ArrayList<Segment> segments, Point2D point) {
-        for (Segment segment : segments) {
-            if (segment.getType().equals(SegmentType.LINE)) {
-                if (BindsCheck.isOnLine(point, (LineSegment) segment)) {
-                    return segment;
-
-                }
-            }else  if (segment.getType().equals(SegmentType.CURVE)) {
-                if (!((BezierCurve)segment.getEquation()).getParameterAtPoint(point).isEmpty()) {
-                    return segment;
-                }
-            }
-
-        }
-        return null;
-
-    }
 }
