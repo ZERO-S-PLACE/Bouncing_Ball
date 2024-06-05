@@ -226,30 +226,32 @@ public class BezierCurve extends Equation {
     }
     public ArrayList<BezierCurve> getSubCurves(Point2D point) {
         //calculates sub curves of curve broken in point of given parameter by Casteliau subdivision
-        double brakeParameter=getParameterAtPoint(point).getFirst();
         ArrayList<BezierCurve> subCurves = new ArrayList<>();
-        if (brakeParameter < 1 && brakeParameter > 0) {
+        ArrayList<Double> parameters=getParameterAtPoint(point);
+        if(!parameters.isEmpty()) {
+            double brakeParameter = getParameterAtPoint(point).getFirst();
 
-            Point2D[][] coefficients = getCasteljauTree(brakeParameter);
+            if (brakeParameter < 1 && brakeParameter > 0) {
 
-            ArrayList<Point2D> firstCurvePoints = new ArrayList<>();
-            ArrayList<Point2D> secondCurvePoints = new ArrayList<>();
-            for (int i = 0; i < degree + 1; i++) {
-                firstCurvePoints.add(coefficients[i][0]);
-                secondCurvePoints.add(coefficients[coefficients.length-1-i][coefficients[coefficients.length-1-i].length - 1]);
+                Point2D[][] coefficients = getCasteljauTree(brakeParameter);
+
+                ArrayList<Point2D> firstCurvePoints = new ArrayList<>();
+                ArrayList<Point2D> secondCurvePoints = new ArrayList<>();
+                for (int i = 0; i < degree + 1; i++) {
+                    firstCurvePoints.add(coefficients[i][0]);
+                    secondCurvePoints.add(coefficients[coefficients.length - 1 - i][coefficients[coefficients.length - 1 - i].length - 1]);
+                }
+                firstCurvePoints.removeLast();
+                firstCurvePoints.add(point);
+                secondCurvePoints.removeFirst();
+                secondCurvePoints.addFirst(point);
+
+                subCurves.add(new BezierCurve(firstCurvePoints));
+                subCurves.add(new BezierCurve(secondCurvePoints));
+
+            } else if (brakeParameter == 0 || brakeParameter == 1) {
+                subCurves.add(this);
             }
-            firstCurvePoints.removeLast();
-            firstCurvePoints.add(point);
-            secondCurvePoints.removeFirst();
-            secondCurvePoints.addFirst(point);
-
-            subCurves.add(new BezierCurve(firstCurvePoints));
-            subCurves.add(new BezierCurve(secondCurvePoints));
-
-        } else if (brakeParameter == 0 || brakeParameter == 1) {
-            subCurves.add(this);
-        }else {
-            throw new IllegalArgumentException("Brake parameter is out of bounds");
         }
         return subCurves;
     }
