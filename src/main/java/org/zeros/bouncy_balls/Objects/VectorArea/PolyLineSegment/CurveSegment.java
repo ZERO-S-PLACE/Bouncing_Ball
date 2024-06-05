@@ -66,7 +66,7 @@ public class CurveSegment extends Segment {
 
     @Override
     public ArrayList<Segment> splitAtPoint(Point2D point) throws IllegalArgumentException{
-        ArrayList<Double> brakePoints = equation.getParameterAtPoint(point);
+        /*ArrayList<Double> brakePoints = equation.getParameterAtPoint(point);
         //I know that it is not an elegant way to do so
         // but it was so  annoying when point is just a little not on curve
         if(brakePoints.isEmpty()) {
@@ -80,7 +80,7 @@ public class CurveSegment extends Segment {
                 if (!brakePoints.isEmpty()) break;
 
             }
-        }
+        }*/
         /*
 
             Point2D unit=new Point2D(Properties.ACCURACY()*10,Properties.ACCURACY()*10);
@@ -95,17 +95,16 @@ public class CurveSegment extends Segment {
             brakePoints.removeIf(brakePoint->equation.getPointAt(brakePoint).distance(point)>Properties.ACCURACY());
         }*/
 
-        if (!brakePoints.isEmpty()) {
+
             ArrayList<Segment> splitSegments = new ArrayList<>();
-            ArrayList<BezierCurve> splitCurves = equation.getSubCurves(brakePoints.getFirst());
+            ArrayList<BezierCurve> splitCurves = equation.getSubCurves(point);
             for (BezierCurve curve : splitCurves) {
                 splitSegments.add(new CurveSegment(curve));
             }
 
             return splitSegments;
-        }
-        Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().add(new Circle(point.getX()/Properties.SIZE_FACTOR(), point.getY()/Properties.SIZE_FACTOR(), 4, Color.RED)));
-        throw new IllegalArgumentException(" point does not lay on line " + point + " " + getPoints());
+
+
 
     }
 
