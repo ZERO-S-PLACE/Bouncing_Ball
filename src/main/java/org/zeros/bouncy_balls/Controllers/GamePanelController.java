@@ -38,11 +38,12 @@ public class GamePanelController implements Initializable {
     }
 
     private void setUp() {
-        loadLevel("program_data/user_levels/try16.ser");
+        loadLevel("program_data/user_levels/try21.ser");
         animation.getLevel().getMovingObjectsHaveToEnter().removeAll(animation.getLevel().getMovingObjectsHaveToEnter());
 
         animation.getLevel().addMovingObjectCannotEnter(animation.getLevel().getMovingObjects().getLast());
         animation.getLevel().addMovingObjectHaveToEnter(animation.getLevel().getMovingObjects().getFirst());
+        animation.getLevel().PROPERTIES().setGRAVITY(1000*Properties.SIZE_FACTOR);
         animation.getLevel().PROPERTIES().setFRICTION(0.0001);
         animation.getLevel().PROPERTIES().setTIME(600);
         animation.getLevel().addMovingObjectToAdd(new Ball(5 * Properties.SIZE_FACTOR, animation));

@@ -58,7 +58,7 @@ public class SimpleSimpleAreaBoolean extends AreaBoolean {
 
             simplifyConnectedAreas(areasToInclude);
             areasToInclude.removeIf(area->AreasMath.containsArea(area,areasToExclude));
-            if(areasToInclude.size()>1){
+            if(areasToInclude.size()>1&&AreasMath.areasIntersect(areasToInclude.getFirst(),areasToInclude.getLast())){
                 for (Area area:areasToInclude) {
                     area.getPath().setFill(Color.RED);
                     area.getPath().setStrokeWidth(2);

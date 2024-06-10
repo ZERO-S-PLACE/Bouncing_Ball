@@ -87,8 +87,6 @@ public class Animation {
             if (temp == level.getMovingObjectsHaveToEnter().size()) {
                 System.out.println("Game Won");
                 return true;
-            } else {
-                System.out.println("Inside " + temp + " total " + level.getMovingObjectsHaveToEnter().size());
             }
         }
         return false;
