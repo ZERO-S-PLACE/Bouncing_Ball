@@ -1,4 +1,4 @@
-package org.zeros.bouncy_balls.Controllers.Animation;
+package org.zeros.bouncy_balls.Controllers.P5_Animation;
 
 import javafx.application.Platform;
 import javafx.fxml.Initializable;

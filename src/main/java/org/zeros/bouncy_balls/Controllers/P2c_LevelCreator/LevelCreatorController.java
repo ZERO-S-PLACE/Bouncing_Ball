@@ -1,4 +1,4 @@
-package org.zeros.bouncy_balls.Controllers.LevelCreator;
+package org.zeros.bouncy_balls.Controllers.P2c_LevelCreator;
 
 import javafx.application.Platform;
 import javafx.event.Event;
