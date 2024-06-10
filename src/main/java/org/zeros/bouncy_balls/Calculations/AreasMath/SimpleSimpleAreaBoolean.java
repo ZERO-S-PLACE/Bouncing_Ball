@@ -63,7 +63,7 @@ public class SimpleSimpleAreaBoolean extends AreaBoolean {
                     area.getPath().setFill(Color.RED);
                     area.getPath().setStrokeWidth(2);
                     area.getPath().setStroke(Color.BLACK);
-                    Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().add(
+                    Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().add(
                             area.getPath()
                     ));
                 }

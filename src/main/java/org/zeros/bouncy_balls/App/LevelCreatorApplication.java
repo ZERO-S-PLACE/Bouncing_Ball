@@ -1,4 +1,4 @@
-package org.zeros.bouncy_balls;
+package org.zeros.bouncy_balls.App;
 
 import javafx.application.Application;
 import javafx.stage.Stage;

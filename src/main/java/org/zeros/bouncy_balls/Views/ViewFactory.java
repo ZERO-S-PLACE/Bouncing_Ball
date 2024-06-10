@@ -12,33 +12,36 @@ import java.io.IOException;
 public class ViewFactory {
 
     private AnchorPane gamePanel;
+    private AnchorPane welcomePanel;
 
     public void showMainWindow() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/MainWindow.fxml"));
         createStage(loader);
-
     }
 
     public void showLevelCreator() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/2c_LevelCreator/LevelCreator.fxml"));
-        loader.setController(Model.getInstance().getLevelCreatorController());
+        loader.setController(Model.getInstance().controllers().getLevelCreatorController());
         createStage(loader);
     }
 
-    public AnchorPane getGameView() {
-
+    public AnchorPane getGameView() throws IOException {
         if (gamePanel == null) {
-            try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/5_AnimationPanel/GamePanel.fxml"));
-                loader.setController(Model.getInstance().getGamePanelController());
+                loader.setController(Model.getInstance().controllers().getGamePanelController());
                 gamePanel = loader.load();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
         }
 
         return gamePanel;
+    }
+    public AnchorPane getWelcomePanel() throws IOException {
+        if (welcomePanel == null) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/1_WelcomePanel/WelcomePanel.fxml"));
+                loader.setController(Model.getInstance().controllers().getWelcomePanelController());
+                welcomePanel = loader.load();
+        }
+
+        return welcomePanel;
     }
 
 
