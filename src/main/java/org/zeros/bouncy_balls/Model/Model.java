@@ -1,8 +1,8 @@
 package org.zeros.bouncy_balls.Model;
 
 import org.zeros.bouncy_balls.Animation.Animation.Animation;
-import org.zeros.bouncy_balls.Controllers.GamePanelController;
-import org.zeros.bouncy_balls.Controllers.LevelCreatorController;
+import org.zeros.bouncy_balls.Controllers.Animation.GamePanelController;
+import org.zeros.bouncy_balls.Controllers.LevelCreator.LevelCreatorController;
 import org.zeros.bouncy_balls.Views.ViewFactory;
 
 import java.util.ArrayList;

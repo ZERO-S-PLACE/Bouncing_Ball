@@ -31,5 +31,7 @@ module org.zeros.bouncy_balls {
     exports org.zeros.bouncy_balls.Calculations.ConvexHull;
     exports org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea;
     exports org.zeros.bouncy_balls.Objects.VectorArea.ComplexArea;
+    exports org.zeros.bouncy_balls.Controllers.LevelCreator;
+    exports org.zeros.bouncy_balls.Controllers.Animation;
 
 }

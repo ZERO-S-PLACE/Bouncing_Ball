@@ -15,7 +15,7 @@ import org.zeros.bouncy_balls.Animation.Borders.BordersType;
 import org.zeros.bouncy_balls.Calculations.AreasMath.SimpleComplexAreaBoolean;
 import org.zeros.bouncy_balls.Calculations.AreasMath.SimpleSimpleAreaBoolean;
 import org.zeros.bouncy_balls.Calculations.ConvexHull.ConvexHull;
-import org.zeros.bouncy_balls.Controllers.LevelCreatorController;
+import org.zeros.bouncy_balls.Controllers.LevelCreator.LevelCreatorController;
 import org.zeros.bouncy_balls.Model.Model;
 import org.zeros.bouncy_balls.Model.Properties;
 import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;

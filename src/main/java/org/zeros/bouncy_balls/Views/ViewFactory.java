@@ -20,7 +20,7 @@ public class ViewFactory {
     }
 
     public void showLevelCreator() {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/LevelCreator.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/2c_LevelCreator/LevelCreator.fxml"));
         loader.setController(Model.getInstance().getLevelCreatorController());
         createStage(loader);
     }
@@ -29,7 +29,7 @@ public class ViewFactory {
 
         if (gamePanel == null) {
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/GamePanel.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/5_AnimationPanel/GamePanel.fxml"));
                 loader.setController(Model.getInstance().getGamePanelController());
                 gamePanel = loader.load();
             } catch (Exception e) {
