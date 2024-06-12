@@ -15,5 +15,7 @@ public class LevelCreatorApplication extends Application {
         Model.getInstance().getViewFactory().showLevelCreator();
         LevelCreator levelCreator=new LevelCreator();
         new Thread(levelCreator::create).start();
+
     }
+
 }

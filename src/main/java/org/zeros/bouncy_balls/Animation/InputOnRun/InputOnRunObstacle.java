@@ -84,7 +84,7 @@ public class InputOnRunObstacle extends InputOnRun {
             if (animation.hasFreePlace(obstacle)) {
                 obstacle.getPath().setOpacity(1);
                 animation.getLevel().addObstacle(obstacle);
-                Model.getInstance().controllers().getGamePanelController().addInputOnRun();
+                Model.getInstance().controllers().getGamePanelController().getAnimationPane().addInputOnRun();
                 return;
             }
             decreaseOpacity();
@@ -93,7 +93,7 @@ public class InputOnRunObstacle extends InputOnRun {
         Platform.runLater(() -> panel.getChildren().remove(obstacle.getPath()));
 
         animation.getLevel().addObstacleToAdd(obstacle);
-        Model.getInstance().controllers().getGamePanelController().addInputOnRun();
+        Model.getInstance().controllers().getGamePanelController().getAnimationPane().addInputOnRun();
 
 
     }

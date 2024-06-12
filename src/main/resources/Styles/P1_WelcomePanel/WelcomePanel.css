@@ -1,0 +1,36 @@
+.welcome-panel {
+    -fx-background-image: url(" ../../Icons/P1_WelcomePanel/WelcomePanel_background.png");
+    -fx-background-size:cover;
+}
+
+
+.welcome-panel-startButton {
+    -fx-background-image: url("../../Icons/P1_WelcomePanel/IconPlay.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+    -fx-background-color: transparent;
+}
+.welcome-panel-creatorButton {
+
+    -fx-background-image: url("../../Icons/P1_WelcomePanel/IconBuild.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+    -fx-background-color: transparent;
+
+}
+.welcome-panel-leaderboardButton {
+    -fx-background-image: url("../../Icons/P1_WelcomePanel/IconLeaderboard.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+    -fx-background-color: transparent;
+}
+.welcome-panel-settingsButton {
+    -fx-background-image: url("../../Icons/P1_WelcomePanel/IconSettings.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+    -fx-background-color: transparent;
+}

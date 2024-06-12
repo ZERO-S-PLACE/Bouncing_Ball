@@ -1,74 +1,47 @@
-package org.zeros.bouncy_balls.Controllers.P5_Animation;
+package org.zeros.bouncy_balls.Animation.Animation;
 
 import javafx.application.Platform;
-import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
-import javafx.geometry.Point2D;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
-import org.zeros.bouncy_balls.Animation.Animation.Animation;
 import org.zeros.bouncy_balls.Animation.InputOnRun.InputOnRun;
 import org.zeros.bouncy_balls.Animation.InputOnRun.InputOnRunMovingObject;
 import org.zeros.bouncy_balls.Animation.InputOnRun.InputOnRunObstacle;
 import org.zeros.bouncy_balls.Level.Level;
 import org.zeros.bouncy_balls.Model.Properties;
-import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObject;
 import org.zeros.bouncy_balls.Objects.VectorArea.ComplexArea.ComplexArea;
 import org.zeros.bouncy_balls.Objects.VectorArea.ComplexArea.ComplexAreaPart;
 import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.Area;
-import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.OvalArea;
-import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.RectangleArea;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public class GamePanelController implements Initializable {
-    public AnchorPane gameBackground;
+public class AnimationPane  {
+    public AnchorPane getAnimationPane() {
+        return gameBackground;
+    }
+
+    private AnchorPane gameBackground;
     private Animation animation;
     private InputOnRun input;
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        Platform.runLater(this::setUp);
+    public AnimationPane (String path){
+        gameBackground=new AnchorPane();
+        setUp(path);
     }
 
-    private void setUp() {
-        loadLevel("program_data/user_levels/try21.ser");
-        animation.getLevel().getMovingObjectsHaveToEnter().removeAll(animation.getLevel().getMovingObjectsHaveToEnter());
-
-        animation.getLevel().addMovingObjectCannotEnter(animation.getLevel().getMovingObjects().getLast());
-        animation.getLevel().addMovingObjectHaveToEnter(animation.getLevel().getMovingObjects().getFirst());
-        animation.getLevel().PROPERTIES().setGRAVITY(1000*Properties.SIZE_FACTOR);
-        animation.getLevel().PROPERTIES().setFRICTION(0.0001);
-        animation.getLevel().PROPERTIES().setTIME(600);
-        animation.getLevel().addMovingObjectToAdd(new Ball(5 * Properties.SIZE_FACTOR, animation));
-        animation.getLevel().getMovingObjects().getLast().setInitialVelocity(new Point2D(300 * Properties.SIZE_FACTOR, 300 * Properties.SIZE_FACTOR));
-        animation.getLevel().addMovingObjectToAdd(new Ball(5 * Properties.SIZE_FACTOR, animation));
-        animation.getLevel().getMovingObjects().getLast().setInitialVelocity(new Point2D(90, 90));
-        animation.getLevel().addObstacleToAdd(new OvalArea(new Point2D(-10000 * Properties.SIZE_FACTOR, -10000 * Properties.SIZE_FACTOR), 30, 70, 0));
-        animation.getLevel().addObstacleToAdd(new RectangleArea(new Point2D(-20 * Properties.SIZE_FACTOR, -20 * Properties.SIZE_FACTOR), new Point2D(-30 * Properties.SIZE_FACTOR, -50 * Properties.SIZE_FACTOR), 0));
-        animation.getLevel().addObstacleToAdd(new OvalArea(new Point2D(-10000 * Properties.SIZE_FACTOR, -10000 * Properties.SIZE_FACTOR), 30 * Properties.SIZE_FACTOR, 50 * Properties.SIZE_FACTOR, 0));
-
-
-        addRescaleObserver();
-        new Thread(this::startGame).start();
-
-
-    }
-
-    private void startGame() {
-        try {
-            Thread.sleep(800);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+    private void setUp(String path) {
+        loadLevel(path);
+        reloadNodes();
+        if(animation.getLevel().PROPERTIES().getTYPE().equals(AnimationType.GAME)) {
+            Platform.runLater(this::addInputOnRun);
         }
 
-        Platform.runLater(this::addInputOnRun);
+
+    }
+    public void startGame() {
+        addRescaleObserver();
         new Thread(animation::animate).start();
     }
 
@@ -110,28 +83,29 @@ public class GamePanelController implements Initializable {
     }
 
     private synchronized void reloadNodes() {
-        if (getScaleFactor() != 1) {
+        try {
             animation.getLevel().rescale(getScaleFactor());
+        }catch (Exception ignored){}
             animation.reloadBorders();
             gameBackground.getChildren().removeAll(gameBackground.getChildren());
             setBackground();
-            addComplexAreaPreview(animation.getLevel().getInputArea(), Color.GOLD);
-            addComplexAreaPreview(animation.getLevel().getTargetArea(), Color.DARKGOLDENROD);
-            for (Area obstacle : animation.getLevel().getObstacles()) {
-                gameBackground.getChildren().add(obstacle.getPath());
-            }
-            for (MovingObject object : animation.getLevel().getMovingObjects()) {
-                object.getShape().setFill(Color.GRAY);
-                gameBackground.getChildren().add(object.getShape());
-            }
-            for (MovingObject object : animation.getLevel().getMovingObjectsHaveToEnter()) {
-                object.getShape().setFill(Color.RED);
-            }
-            for (MovingObject object : animation.getLevel().getMovingObjectsCannotEnter()) {
-                object.getShape().setFill(Color.BLACK);
-            }
-
+        addComplexAreaPreview(animation.getLevel().getInputArea(), Color.GOLD);
+        addComplexAreaPreview(animation.getLevel().getTargetArea(), Color.DARKGOLDENROD);
+        for (Area obstacle : animation.getLevel().getObstacles()) {
+            gameBackground.getChildren().add(obstacle.getPath());
         }
+        for (MovingObject object : animation.getLevel().getMovingObjects()) {
+            object.getShape().setFill(Color.GRAY);
+            gameBackground.getChildren().add(object.getShape());
+        }
+        for (MovingObject object : animation.getLevel().getMovingObjectsHaveToEnter()) {
+            object.getShape().setFill(Color.RED);
+        }
+        for (MovingObject object : animation.getLevel().getMovingObjectsCannotEnter()) {
+            object.getShape().setFill(Color.BLACK);
+        }
+
+
     }
 
     private void setBackground() {
@@ -139,13 +113,15 @@ public class GamePanelController implements Initializable {
         gameBackground.setMaxHeight(animation.getPROPERTIES().getHEIGHT() / Properties.SIZE_FACTOR());
         gameBackground.setMinWidth(animation.getPROPERTIES().getWIDTH() / Properties.SIZE_FACTOR());
         gameBackground.setMaxWidth(animation.getPROPERTIES().getWIDTH() / Properties.SIZE_FACTOR());
-        gameBackground.backgroundProperty().setValue(new Background(new BackgroundFill(Color.rgb(249, 211, 165), new CornerRadii(0), new Insets(0))));
+
     }
 
     private void addComplexAreaPreview(ComplexArea complexArea, Color color) {
+        if(complexArea!=null) {
 
-        ArrayList<ComplexAreaPart> included = complexArea.partAreas();
-        addAreaLayer(included, color);
+            ArrayList<ComplexAreaPart> included = complexArea.partAreas();
+            addAreaLayer(included, color);
+        }
 
     }
 
@@ -173,6 +149,7 @@ public class GamePanelController implements Initializable {
             addAreaLayer(included2, color);
         }
     }
+
 
 
 }
