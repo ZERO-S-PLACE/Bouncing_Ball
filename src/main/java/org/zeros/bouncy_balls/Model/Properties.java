@@ -4,7 +4,7 @@ import javafx.scene.paint.Color;
 
 public class Properties {
     public static double SIZE_FACTOR = Math.pow(10, 5);
-    private static Color BACKGROUND_COLOR = Color.BEIGE;
+    private static Color BACKGROUND_COLOR = Color.web("#243253");
     private static double ACCURACY = Math.pow(0.1, 3);
 
     public static Color BACKGROUND_COLOR() {

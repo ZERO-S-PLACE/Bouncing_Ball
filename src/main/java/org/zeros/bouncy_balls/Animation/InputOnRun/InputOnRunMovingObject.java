@@ -112,10 +112,7 @@ public class InputOnRunMovingObject extends InputOnRun {
             new Thread(this::animateObjectArrival).start();
 
         }
-
     }
-
-
     @Override
     protected void animateObjectArrival() {
         Platform.runLater(() -> panel.getChildren().add(object.getShape()));
@@ -124,7 +121,7 @@ public class InputOnRunMovingObject extends InputOnRun {
             increaseOpacity();
             if (animation.hasFreePlace((Ball) object)) {
                 animation.getLevel().addMovingObject(object);
-                Model.getInstance().controllers().getGamePanelController().addInputOnRun();
+                Model.getInstance().controllers().getGamePanelController().getAnimationPane().addInputOnRun();
                 return;
             }
             decreaseOpacity();
@@ -132,7 +129,7 @@ public class InputOnRunMovingObject extends InputOnRun {
         Platform.runLater(() -> panel.getChildren().remove(object.getShape()));
         object.updateCenter(new Point2D(-10000, -10000));
         animation.getLevel().addMovingObjectToAdd(object);
-        Model.getInstance().controllers().getGamePanelController().addInputOnRun();
+        Model.getInstance().controllers().getGamePanelController().getAnimationPane().addInputOnRun();
     }
 
     private void decreaseOpacity() {

@@ -1,8 +1,6 @@
 package org.zeros.bouncy_balls.Model;
 
 import org.zeros.bouncy_balls.Animation.Animation.Animation;
-import org.zeros.bouncy_balls.Controllers.P5_Animation.GamePanelController;
-import org.zeros.bouncy_balls.Controllers.P2c_LevelCreator.LevelCreatorController;
 import org.zeros.bouncy_balls.Views.ControllersBase;
 import org.zeros.bouncy_balls.Views.ViewFactory;
 

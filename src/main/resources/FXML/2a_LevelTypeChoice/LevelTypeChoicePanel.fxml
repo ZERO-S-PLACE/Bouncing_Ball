@@ -6,7 +6,16 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
+<BorderPane xmlns="http://javafx.com/javafx"
             prefHeight="400.0" prefWidth="600.0">
+    <BorderPane layoutX="793.0" layoutY="340.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="0.0">
+        <center>
+        <VBox  alignment="CENTER" styleClass="welcome-panel-button-container" BorderPane.alignment="CENTER">
+            <Button  alignment="CENTER" cacheShape="false" centerShape="false" mnemonicParsing="false" prefHeight="370.0" prefWidth="370.0" scaleShape="false" styleClass="welcome-panel-startButton" />
+            <Button  cacheShape="false" centerShape="false" mnemonicParsing="false" prefHeight="150.0" prefWidth="150.0" scaleShape="false" styleClass="welcome-panel-creatorButton" />
+            <Button  cacheShape="false" mnemonicParsing="false" prefHeight="150.0" prefWidth="150.0" styleClass="welcome-panel-leaderboardButton" />
+        </VBox>
+        </center>
+        </BorderPane>
 
-</AnchorPane>
+</BorderPane>

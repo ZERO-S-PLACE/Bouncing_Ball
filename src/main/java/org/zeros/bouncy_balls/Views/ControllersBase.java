@@ -1,5 +1,6 @@
 package org.zeros.bouncy_balls.Views;
 
+import org.zeros.bouncy_balls.Controllers.MainWindowController;
 import org.zeros.bouncy_balls.Controllers.P0_Login.LoginController;
 import org.zeros.bouncy_balls.Controllers.P1_WelcomePanel.WelcomePanelController;
 import org.zeros.bouncy_balls.Controllers.P2a_LevelTypeChoice.LevelTypeChoiceController;
@@ -8,7 +9,7 @@ import org.zeros.bouncy_balls.Controllers.P2c_LevelCreator.LevelCreatorControlle
 import org.zeros.bouncy_balls.Controllers.P3_LevelSubtypeChoice.LevelSubtypeChoiceController;
 import org.zeros.bouncy_balls.Controllers.P4_LevelSelection.LevelSelectionController;
 import org.zeros.bouncy_balls.Controllers.P5_Animation.GameEndController;
-import org.zeros.bouncy_balls.Controllers.P5_Animation.GamePanelController;
+import org.zeros.bouncy_balls.Controllers.P5_Animation.GameAnimationPanelController;
 import org.zeros.bouncy_balls.Controllers.P5_Animation.GamePausedController;
 
 public class ControllersBase {
@@ -22,8 +23,9 @@ public class ControllersBase {
     private LevelSubtypeChoiceController levelSubtypeChoiceController;
     private LevelSelectionController levelSelectionController;
     private GameEndController gameEndController;
-    private GamePanelController gamePanelController;
+    private GameAnimationPanelController gamePanelController;
     private GamePausedController gamePausedController;
+    private MainWindowController mainWindowController;
 
 
 
@@ -78,9 +80,9 @@ public class ControllersBase {
         }
         return gameEndController;
     }
-    public GamePanelController getGamePanelController() {
+    public GameAnimationPanelController getGamePanelController() {
         if (this.gamePanelController == null) {
-            this.gamePanelController = new GamePanelController();
+            this.gamePanelController = new GameAnimationPanelController();
         }
         return gamePanelController;
     }
@@ -92,7 +94,10 @@ public class ControllersBase {
     }
 
 
-
-
-
+    public MainWindowController getMainWindowController() {
+        if (this.mainWindowController == null) {
+            this.mainWindowController = new MainWindowController();
+        }
+        return mainWindowController;
+    }
 }
