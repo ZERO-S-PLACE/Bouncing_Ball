@@ -13,8 +13,11 @@ import org.zeros.bouncy_balls.Model.Model;
 import org.zeros.bouncy_balls.Model.Properties;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class ViewFactory {
+    private Stage stage;
+    private Scene scene;
 
     private AnchorPane gameAnimationPanel;
     private BorderPane welcomePanel;
@@ -28,6 +31,9 @@ public class ViewFactory {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/MainWindow.fxml"));
         loader.setController(Model.getInstance().controllers().getMainWindowController());
         createStage(loader);
+       scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/General/tooltip.css")).toExternalForm());
+
+
     }
 
     public void showLevelCreator() {
@@ -100,13 +106,13 @@ public class ViewFactory {
     }
 
     private void createStage(FXMLLoader loader) {
-        Scene scene;
+
         try {
             scene = new Scene(loader.load());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        Stage stage = new Stage();
+        stage = new Stage();
         stage.getIcons().add(new Image(String.valueOf(ViewFactory.class.getResource("/Icons/ProgramIcon.png"))));
         stage.setScene(scene);
         stage.setMaximized(true);

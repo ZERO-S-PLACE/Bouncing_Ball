@@ -5,6 +5,7 @@ import javafx.stage.Stage;
 import org.zeros.bouncy_balls.Model.Model;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class GameApplication extends Application {
     public static void main(String[] args) {

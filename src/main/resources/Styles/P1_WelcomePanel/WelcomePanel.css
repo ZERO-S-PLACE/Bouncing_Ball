@@ -1,6 +1,5 @@
-.welcome-panel {
-    -fx-background-image: url(" ../../Icons/P1_WelcomePanel/WelcomePanel_background.png");
-    -fx-background-size:cover;
+.welcome-panel-circle {
+    -fx-stroke-width:0;
 }
 
 

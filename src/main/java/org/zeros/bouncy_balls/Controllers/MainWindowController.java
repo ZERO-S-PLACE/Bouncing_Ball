@@ -52,12 +52,14 @@ public class MainWindowController implements Initializable {
             });
             new Thread(() -> {
                 try {
-                    animatePaneAppear(layer, wait / 2);
+                    animateLayerAppear(layer, wait / 2);
                 } catch (IOException | InterruptedException e) {
-                    showFilesDamagedLabel();
+                    showFilesDamagedLabel(topLayer);
                 }
             }).start();
         }).start();
+        pane.setPrefHeight(layer.getScene().getHeight());
+        pane.setPrefWidth(layer.getScene().getWidth());
 
     }
 
@@ -86,14 +88,14 @@ public class MainWindowController implements Initializable {
 
         new Thread(() -> {
             try {
-                animatePaneAppear(bottomLayer, 0.1);
+                animateLayerAppear(bottomLayer, 0.1);
             } catch (IOException | InterruptedException e) {
-                showFilesDamagedLabel();
+                showFilesDamagedLabel(topLayer);
             }
         }).start();
     }
 
-    private void animatePaneAppear(Pane pane, double wait) throws IOException, InterruptedException {
+    private void animateLayerAppear(Pane pane, double wait) throws IOException, InterruptedException {
         Thread.sleep((long) (wait * 1000));
         for (int i = 1; i <= 30; i++) {
             pane.setOpacity((double) i / 30);
@@ -114,9 +116,7 @@ public class MainWindowController implements Initializable {
 
     }
 
-    private void showFilesDamagedLabel() {
-        AnchorPane pane = new AnchorPane();
-        topLayer.setCenter(pane);
+    private void showFilesDamagedLabel(Pane pane) {
         pane.getChildren().add(new Label("ERROR 404 "));
         pane.getChildren().add(new Label("Files are damaged, please reinstall"));
     }

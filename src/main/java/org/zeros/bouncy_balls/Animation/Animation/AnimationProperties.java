@@ -9,12 +9,11 @@ public class AnimationProperties implements Serializable {
     private int HEIGHT;
     private int WIDTH;
     private double GRAVITY;
-    private double FRAME_RATE;
     private BordersType BOUNDARIES;
+    private double FRAME_RATE;
     private int MAX_EVALUATIONS;
     private double FRICTION;
     private double TIME;
-
 
     public AnimationProperties(int HEIGHT, int WIDTH) {
         this.TYPE = AnimationType.GAME;
