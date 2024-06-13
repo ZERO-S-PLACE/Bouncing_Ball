@@ -5,15 +5,19 @@ import javafx.scene.effect.ColorAdjust;
 
 public class NodeAnimations {
 
-    public static void increaseBrightness(Button playButton) {
+    public static void increaseBrightness(Button playButton, double value) {
         ColorAdjust colorAdjust=new ColorAdjust();
         playButton.setEffect(colorAdjust);
-        colorAdjust.setBrightness(0.25);
-        colorAdjust.setContrast(0.25);
-
+        colorAdjust.setBrightness(Math.abs(value));
+        colorAdjust.setContrast(Math.abs(value));
+    }
+    public static void decreaseBrightness(Button playButton,double value) {
+        ColorAdjust colorAdjust=new ColorAdjust();
+        playButton.setEffect(colorAdjust);
+        colorAdjust.setBrightness(-Math.abs(value));
+        colorAdjust.setContrast(-Math.abs(value));
     }
     public static void increaseBrightnessOnExit(Button playButton) {
-
         ColorAdjust colorAdjust = new ColorAdjust();
         playButton.setEffect(colorAdjust);
         new Thread(()-> {
@@ -38,7 +42,7 @@ public class NodeAnimations {
             }
         }).start();
     }
-    public static void decreaseBrightness(Button playButton) {
+    public static void resetBrightness(Button playButton) {
         playButton.setEffect(null);
     }
 

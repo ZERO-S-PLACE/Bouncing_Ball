@@ -6,6 +6,7 @@ import org.zeros.bouncy_balls.Animation.Animation.Animation;
 import org.zeros.bouncy_balls.Animation.Animation.AnimationProperties;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
 import org.zeros.bouncy_balls.Model.Model;
+import org.zeros.bouncy_balls.Model.Properties;
 
 public abstract class MovingObject implements Cloneable {
 
@@ -79,17 +80,14 @@ public abstract class MovingObject implements Cloneable {
     public Point2D velocity() {
         return velocity;
     }
-
     public Point2D acceleration() {
         return acceleration;
     }
-
     public Point2D frameVelocity() {
-        return velocity.multiply(1 / animationProperties.getFRAME_RATE());
+        return velocity.multiply(1 / Properties.FRAME_RATE());
     }
-
     public Point2D frameAcceleration() {
-        return acceleration.multiply(1 / animationProperties.getFRAME_RATE());
+        return acceleration.multiply(1 / Properties.FRAME_RATE());
     }
 
     public void updateAcceleration(Point2D acceleration) {

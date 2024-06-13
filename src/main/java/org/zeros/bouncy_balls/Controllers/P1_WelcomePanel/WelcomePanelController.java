@@ -101,20 +101,20 @@ public class WelcomePanelController implements Initializable {
 
     private void setEnterAnimation() {
 
-        playButton.setOnMouseEntered(event -> NodeAnimations.increaseBrightness(playButton));
-        playButton.setOnMouseExited(event -> NodeAnimations.decreaseBrightness(playButton));
-        creatorButton.setOnMouseEntered(event -> NodeAnimations.increaseBrightness(creatorButton));
-        creatorButton.setOnMouseExited(event -> NodeAnimations.decreaseBrightness(creatorButton));
+        playButton.setOnMouseEntered(event -> NodeAnimations.increaseBrightness(playButton,0.25));
+        playButton.setOnMouseExited(event -> NodeAnimations.resetBrightness(playButton));
+        creatorButton.setOnMouseEntered(event -> NodeAnimations.increaseBrightness(creatorButton,0.25));
+        creatorButton.setOnMouseExited(event -> NodeAnimations.resetBrightness(creatorButton));
         settingsButton.setOnMouseEntered(event -> {
-            NodeAnimations.increaseBrightness(settingsButton);
+            NodeAnimations.increaseBrightness(settingsButton,0.25);
             startRotationAnimation(settingsButton);
         });
         settingsButton.setOnMouseExited(event -> {
-            NodeAnimations.decreaseBrightness(settingsButton);
+            NodeAnimations.resetBrightness(settingsButton);
             stopRotationAnimation(settingsButton);
         });
-        leaderboardButton.setOnMouseEntered(event -> NodeAnimations.increaseBrightness(leaderboardButton));
-        leaderboardButton.setOnMouseExited(event -> NodeAnimations.decreaseBrightness(leaderboardButton));
+        leaderboardButton.setOnMouseEntered(event -> NodeAnimations.increaseBrightness(leaderboardButton,0.25));
+        leaderboardButton.setOnMouseExited(event -> NodeAnimations.resetBrightness(leaderboardButton));
     }
 
     private void startRotationAnimation(Button button) {

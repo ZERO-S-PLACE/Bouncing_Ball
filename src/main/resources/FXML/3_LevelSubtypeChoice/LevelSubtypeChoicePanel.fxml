@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 
-<BorderPane xmlns="http://javafx.com/javafx"
-            prefHeight="400.0" prefWidth="600.0">
+<BorderPane fx:id="gameTypeChoicePanel" styleClass="subtype-choice" stylesheets="@../../Styles/P3_LevelSubtypeChoice/LevelSubtypeChoice.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+       <AnchorPane BorderPane.alignment="CENTER">
+         <BorderPane focusTraversable="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <center>
+               <AnchorPane fx:id="buttonsContainer" focusTraversable="true" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+            </center>
+         </BorderPane>
+           <BorderPane AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0">
+              <center>
+                  <Button fx:id="returnButton" mnemonicParsing="false" prefHeight="60.0" prefWidth="60.0" styleClass="subtype-choice-back" BorderPane.alignment="CENTER" />
+              </center>
+           </BorderPane>
+       </AnchorPane>
+   </center>
+
 </BorderPane>

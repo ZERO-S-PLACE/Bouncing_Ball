@@ -8,6 +8,7 @@
     -fx-background-position: center;
     -fx-background-size: 100%;
     -fx-background-color: transparent;
+    -fx-background-radius:50%;
 }
 .welcome-panel-simulation {
 
@@ -16,6 +17,7 @@
     -fx-background-position: center;
     -fx-background-size: 100%;
     -fx-background-color: transparent;
+    -fx-background-radius:50%;
 
 }
 .welcome-panel-back {
@@ -24,5 +26,6 @@
     -fx-background-position: center;
     -fx-background-size: 100%;
     -fx-background-color: transparent;
+    -fx-background-radius:50%;
 }
 

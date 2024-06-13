@@ -286,10 +286,7 @@ public class LevelCreator {
             if (agreeTo("Is this simulation(Y) or game(N)? ")) {
                 properties.setTYPE(AnimationType.SIMULATION);
             }
-            if (agreeTo("Custom speed Y/N")) {
-                properties.setFRAME_RATE(Math.abs((int) getNumber("Frame rate: ")));
-                properties.setMAX_EVALUATIONS(Math.abs((int) getNumber("Max evaluations per frame: ")));
-            }
+
         }
         setPreviewBoundaries(HEIGHT, WIDTH);
         return properties;

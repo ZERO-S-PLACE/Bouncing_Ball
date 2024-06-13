@@ -9,6 +9,7 @@ import org.zeros.bouncy_balls.Calculations.BindsCheck;
 import org.zeros.bouncy_balls.Calculations.Bounce;
 import org.zeros.bouncy_balls.Level.Level;
 import org.zeros.bouncy_balls.Model.Model;
+import org.zeros.bouncy_balls.Model.Properties;
 import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObject;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObjectType;
@@ -95,13 +96,13 @@ public class Animation {
     private void searchForBounces() {
         singleBouncesCheck(0);
         int i = 0;
-        while (!timesElapsed.isEmpty() && i < level.PROPERTIES().getMAX_EVALUATIONS()) {
+        while (!timesElapsed.isEmpty() && i < Properties.MAX_EVALUATIONS()) {
 
             double timeElapsed = timesElapsed.getFirst();
 
             singleBouncesCheck(timeElapsed);
 
-            while (Math.abs(timesElapsed.getFirst() - timeElapsed) < 0.03 + 0.98 / level.PROPERTIES().getMAX_EVALUATIONS() * i) {
+            while (Math.abs(timesElapsed.getFirst() - timeElapsed) < 0.03 + 0.98 / Properties.MAX_EVALUATIONS() * i) {
                 timesElapsed.removeFirst();
                 if (timesElapsed.isEmpty()) {
                     break;
