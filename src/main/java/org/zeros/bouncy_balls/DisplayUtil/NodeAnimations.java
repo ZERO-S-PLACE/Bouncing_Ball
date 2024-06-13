@@ -13,9 +13,9 @@ public class NodeAnimations {
     }
     public static void decreaseBrightness(Button playButton,double value) {
         ColorAdjust colorAdjust=new ColorAdjust();
-        playButton.setEffect(colorAdjust);
         colorAdjust.setBrightness(-Math.abs(value));
         colorAdjust.setContrast(-Math.abs(value));
+        playButton.setEffect(colorAdjust);
     }
     public static void increaseBrightnessOnExit(Button playButton) {
         ColorAdjust colorAdjust = new ColorAdjust();

@@ -1,6 +1,5 @@
 package org.zeros.bouncy_balls.Controllers.P3_LevelSubtypeChoice;
 
-import javafx.animation.ParallelTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
 import javafx.beans.value.ChangeListener;
@@ -21,25 +20,40 @@ import org.zeros.bouncy_balls.Model.Properties;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 public class LevelSubtypeChoiceController implements Initializable {
-    private ParallelTransition parallelTransition;
+
     private final ArrayList<Button> leftButtons = new ArrayList<>();
     private final ArrayList<Button> rightButtons = new ArrayList<>();
-
     private Button middleButton;
-
     public Button returnButton;
     public AnchorPane buttonsContainer;
     public BorderPane gameTypeChoicePanel;
-    private final Map<Button, ChangeListener<Number>> buttonHeightListenerMap = new HashMap<>();
-    private final Map<Button, ChangeListener<Number>> buttonWidthListenerMap = new HashMap<>();
+    private final ArrayList< ChangeListener<Number>> paneHeightListeners = new ArrayList<>();
     private Point2D dragReference;
 
     private AnimationType type;
+    private void transitionToLevelSelection(String subLevelType) {
+
+    }
+
+    private void transitionToGameSelection() {
+        NodeAnimations.increaseBrightnessOnExit(returnButton);
+        Model.getInstance().controllers().getMainWindowController().changeTopLayer(Model.getInstance().getViewFactory().getLevelTypeChoicePanel(), 0.3);
+    }
+
+    private void setButtonsAnimations() {
+        returnButton.prefWidthProperty().bind(gameTypeChoicePanel.heightProperty().multiply(0.34 * 0.2));
+        returnButton.prefHeightProperty().bind(gameTypeChoicePanel.heightProperty().multiply(0.34 * 0.2));
+        returnButton.setOnMouseEntered(event -> NodeAnimations.increaseBrightness(returnButton, 0.25));
+        returnButton.setOnMouseExited(event -> NodeAnimations.resetBrightness(returnButton));
+        setMiddleButton(rightButtons.getFirst());
+        rightButtons.removeFirst();
+        for(Button button:rightButtons){
+            setLayerBrightness(button,rightButtons.indexOf(button)+2);
+        }
+    }
 
     public static Image getIcon(String name) {
 
@@ -67,14 +81,12 @@ public class LevelSubtypeChoiceController implements Initializable {
     }
 
     private void turnButtonsList(MouseEvent event) {
-
         if (dragReference.getX() < event.getX()) {
             turnButtonsRight();
         }
         if (dragReference.getX() > event.getX()) {
             turnButtonsLeft();
         }
-
     }
 
     private void turnButtonsLeft() {
@@ -87,100 +99,86 @@ public class LevelSubtypeChoiceController implements Initializable {
     }
 
     private void animateTransition() {
-        parallelTransition=new ParallelTransition();
-        animateTransitionOfElement(middleButton, 1, true);
-        for (Button button : rightButtons) {
-            animateTransitionOfElement(button, rightButtons.indexOf(button) + 2, true);
+        for(ChangeListener<Number> listener:paneHeightListeners){
+            gameTypeChoicePanel.heightProperty().removeListener(listener);
         }
-        for (Button button : leftButtons) {
-            animateTransitionOfElement(button, leftButtons.indexOf(button) + 2, false);
-        }
-
-        parallelTransition.setCycleCount(1);
-        parallelTransition.play();
-
-        parallelTransition.setOnFinished(event -> {
-            moveButtons();
-        });
-
-    }
-
-    private void moveButtons() {
-        resetButtonBindings(middleButton);
-        setButtonSizeAndPosition(middleButton, 1, false);
-        for (Button button : rightButtons) {
-            resetButtonBindings(button);
-            setButtonSizeAndPosition(button, rightButtons.indexOf(button) + 2, true);
-        }
-        for (Button button : leftButtons) {
-            resetButtonBindings(button);
-            setButtonSizeAndPosition(button, leftButtons.indexOf(button) + 2, false);
-        }
-
-        setLayerBrightness(leftButtons);
-        setLayerBrightness(rightButtons);
+            animateTransitionOfElement(middleButton, 1,true);
+            for (Button button : rightButtons) {
+                animateTransitionOfElement(button, rightButtons.indexOf(button) + 2, true);
+            }
+            for (Button button : leftButtons) {
+                animateTransitionOfElement(button, leftButtons.indexOf(button) + 2, false);
+            }
     }
 
     private void animateTransitionOfElement(Button button, int layer, boolean right) {
-        parallelTransition.getChildren().add(getRescaleTransition(button,calculateWidth(layer)));
-       parallelTransition.getChildren().add(getTranslateTransition(button,calculateLeftAnchor(layer,right),right));
-    }
+      new Thread(()->
+       { double finalWidth=calculateWidth(layer);
+           double finalAnchor=calculateLeftAnchor(layer,right,finalWidth);
+           double startWidth=button.getWidth();
+           double startAnchor= AnchorPane.getLeftAnchor(button);
+           setLayerBrightness(button,layer);
 
-   private ScaleTransition getRescaleTransition(Button button, double nextWidth) {
-        ScaleTransition transition = new ScaleTransition(Duration.millis(4000),button);
-        double scale =nextWidth/button.getWidth();
-        transition.setFromX(1);
-        transition.setFromY(1);
-        transition.setToX(scale);
-        transition.setToY(scale);
-
-        return transition;
-    }
-
-    private TranslateTransition getTranslateTransition(Button button, double nextX,boolean right) {
-        TranslateTransition transition = new TranslateTransition(Duration.millis(4000),button);
-
-        transition.setToX(nextX - button.getLayoutX());
-      transition.setCycleCount(1);
-      transition.setAutoReverse(false);
-
-
-
-        return transition;
+           for (int i=1;i<=30;i++){
+               button.setPrefWidth(startWidth+ (double) i /30*(finalWidth-startWidth));
+               button.setPrefHeight(button.getPrefWidth());
+               AnchorPane.setLeftAnchor(button,startAnchor+(double) i /30*(finalAnchor-startAnchor));
+               AnchorPane.setTopAnchor(button,(gameTypeChoicePanel.getHeight()-button.getWidth())/2);
+               try {
+                   Thread.sleep(25);
+               } catch (InterruptedException e) {
+                   throw new RuntimeException(e);
+               }
+           }
+           resetButtonBindings(middleButton);
+           setButtonSizeAndPosition(middleButton, 1, right);
+       }).start();
     }
 
     private double calculateWidth(int layer) {
         return gameTypeChoicePanel.heightProperty().get()*0.6 / layer;
     }
-    private double calculateLeftAnchor(int layer,boolean right){
-        double nextWidth=calculateWidth(layer);
+    private double calculateLeftAnchor(int layer,boolean right,double nextWidth){
+
+        if(layer==1)return (gameTypeChoicePanel.getWidth()-nextWidth) / 2;
         return (gameTypeChoicePanel.getWidth()-nextWidth) / 2 + getXOffset(layer, right, nextWidth);
     }
 
     private void setButtonSizeAndPosition(Button button, int layer, boolean right) {
-        button.prefHeightProperty().bind(gameTypeChoicePanel.heightProperty().multiply(0.6 / layer));
-        button.prefWidthProperty().bind(gameTypeChoicePanel.heightProperty().multiply(0.6  / layer));
-        ChangeListener<Number> heightListener = getHightChangeListener(button);
-        buttonHeightListenerMap.put(button, heightListener);
-        button.heightProperty().addListener(heightListener);
-        ChangeListener<Number> widthListener = getWidthChangeListener(button, layer, right);
-        buttonWidthListenerMap.put(button, widthListener);
-        button.widthProperty().addListener(widthListener);
+
+        double newWidth = gameTypeChoicePanel.heightProperty().doubleValue() * 0.6 / layer;
+        button.prefWidthProperty().set(newWidth);
+        button.prefHeightProperty().set(newWidth);
+        AnchorPane.setLeftAnchor(button, calculateLeftAnchor(layer, right, newWidth));
+        AnchorPane.setTopAnchor(button, (gameTypeChoicePanel.heightProperty().doubleValue() - newWidth) / 2);
+        ChangeListener<Number> listener=getHeightChangeListener(button, layer, right);
+        paneHeightListeners.add(listener);
+        gameTypeChoicePanel.heightProperty().addListener(listener);
+    }
+
+
+    private ChangeListener<Number> getHeightChangeListener(Button button, int layer, boolean right) {
+        return (observable, oldValue, newValue) -> {
+            double newWidth = newValue.doubleValue() * 0.6 / layer;
+            button.prefWidthProperty().set(newWidth);
+            button.prefHeightProperty().set(newWidth);
+            AnchorPane.setLeftAnchor(button, calculateLeftAnchor(layer, right, newWidth));
+            AnchorPane.setTopAnchor(button, (newValue.doubleValue() - newWidth) / 2);
+        };
     }
 
     private double getXOffset(int layer, boolean right, double width) {
         double offset = width * (layer - 1);
+        if(layer>1)offset=offset+gameTypeChoicePanel.heightProperty().get()*0.6/3;
         if (right) return offset;
         return -offset;
     }
 
-    private void setLayerBrightness(ArrayList<Button> buttons) {
-        for (int i = 1; i <= buttons.size(); i++) {
-            Button button = buttons.get(i - 1);
-            NodeAnimations.resetBrightness(button);
-            NodeAnimations.decreaseBrightness(button, i * 0.05);
+    private void setLayerBrightness(Button button,int layer) {
             button.setOpacity(1);
-        }
+            NodeAnimations.resetBrightness(button);
+            NodeAnimations.decreaseBrightness(button, layer * 0.07);
+
     }
 
 
@@ -194,25 +192,7 @@ public class LevelSubtypeChoiceController implements Initializable {
     }
 
 
-    private void transitionToLevelSelection(String subLevelType) {
 
-    }
-
-    private void transitionToGameSelection() {
-        NodeAnimations.increaseBrightnessOnExit(returnButton);
-        Model.getInstance().controllers().getMainWindowController().changeTopLayer(Model.getInstance().getViewFactory().getLevelTypeChoicePanel(), 0.3);
-    }
-
-    private void setButtonsAnimations() {
-        returnButton.prefWidthProperty().bind(gameTypeChoicePanel.heightProperty().multiply(0.34 * 0.2));
-        returnButton.prefHeightProperty().bind(gameTypeChoicePanel.heightProperty().multiply(0.34 * 0.2));
-        returnButton.setOnMouseEntered(event -> NodeAnimations.increaseBrightness(returnButton, 0.25));
-        returnButton.setOnMouseExited(event -> NodeAnimations.resetBrightness(returnButton));
-        setMiddleButton(rightButtons.getFirst());
-        rightButtons.removeFirst();
-        setLayerBrightness(rightButtons);
-
-    }
 
     private void setMiddleButton(Button button) {
         if (middleButton != null) {
@@ -240,35 +220,12 @@ public class LevelSubtypeChoiceController implements Initializable {
             button.setText(Properties.getAnimationGenres().get(i - 1));
             button.setTooltip(new CustomTooltip(Properties.getAnimationGenresDescriptions().get(i - 1)));
         }
-
-
     }
 
     private void resetButtonBindings(Button button) {
         button.setScaleX(1);
         button.setScaleY(1);
         button.setTranslateX(0);
-        button.prefHeightProperty().unbind();
-        button.prefWidthProperty().unbind();
-        button.heightProperty().removeListener(buttonHeightListenerMap.get(button));
-        button.widthProperty().removeListener(buttonWidthListenerMap.get(button));
-    }
-
-
-
-
-
-    private ChangeListener<Number> getHightChangeListener(Button button) {
-        return (obs, oldVal, newVal) -> {
-            AnchorPane.setTopAnchor(button, (gameTypeChoicePanel.getHeight() - newVal.doubleValue()) / 2);
-        };
-    }
-
-
-    private ChangeListener<Number> getWidthChangeListener(Button button, int layer, boolean right) {
-        return (obs, oldVal, newVal) -> {
-            AnchorPane.setLeftAnchor(button, calculateLeftAnchor(layer,right));
-        };
     }
 
 
