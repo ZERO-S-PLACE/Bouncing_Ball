@@ -9,6 +9,7 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.zeros.bouncy_balls.Animation.Animation.AnimationPane;
+import org.zeros.bouncy_balls.Animation.Animation.AnimationType;
 import org.zeros.bouncy_balls.Model.Model;
 import org.zeros.bouncy_balls.Model.Properties;
 
@@ -92,7 +93,7 @@ public class ViewFactory {
         }
         return leaderboardPanel;
     }
-    public BorderPane getLevelSubtypePanel()  {
+    public BorderPane getLevelSubtypePanel(AnimationType type)  {
         if (levelSubtypePanel == null) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/3_LevelSubtypeChoice/LevelSubtypeChoicePanel.fxml"));
             loader.setController(Model.getInstance().controllers().getLevelSubtypeChoiceController());
@@ -102,7 +103,21 @@ public class ViewFactory {
                 throw new RuntimeException(e);
             }
         }
+        Model.getInstance().controllers().getLevelSubtypeChoiceController().setAnimationType(type);
         return levelSubtypePanel;
+    }
+    public BorderPane getLevelSelectionPanel(AnimationType type, String subtype)  {
+        if (levelSelectionPanel == null) {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/4_LevelSelection/LevelSelectionPanel.fxml"));
+            loader.setController(Model.getInstance().controllers().getLevelSelectionController());
+            try {
+                levelSelectionPanel = loader.load();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        Model.getInstance().controllers().getLevelSelectionController().loadLevelsList(type,subtype);
+        return levelSelectionPanel;
     }
 
     private void createStage(FXMLLoader loader) {

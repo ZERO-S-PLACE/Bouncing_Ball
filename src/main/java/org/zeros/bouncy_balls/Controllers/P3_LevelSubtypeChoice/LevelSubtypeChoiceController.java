@@ -1,7 +1,6 @@
 package org.zeros.bouncy_balls.Controllers.P3_LevelSubtypeChoice;
 
-import javafx.animation.ScaleTransition;
-import javafx.animation.TranslateTransition;
+import javafx.animation.AnimationTimer;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
@@ -11,7 +10,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BorderPane;
-import javafx.util.Duration;
 import org.zeros.bouncy_balls.Animation.Animation.AnimationType;
 import org.zeros.bouncy_balls.DisplayUtil.CustomTooltip;
 import org.zeros.bouncy_balls.DisplayUtil.NodeAnimations;
@@ -26,16 +24,30 @@ public class LevelSubtypeChoiceController implements Initializable {
 
     private final ArrayList<Button> leftButtons = new ArrayList<>();
     private final ArrayList<Button> rightButtons = new ArrayList<>();
-    private Button middleButton;
+    private final ArrayList<ChangeListener<Number>> paneHeightListeners = new ArrayList<>();
     public Button returnButton;
     public AnchorPane buttonsContainer;
     public BorderPane gameTypeChoicePanel;
-    private final ArrayList< ChangeListener<Number>> paneHeightListeners = new ArrayList<>();
+    private Button middleButton;
     private Point2D dragReference;
 
     private AnimationType type;
-    private void transitionToLevelSelection(String subLevelType) {
 
+    public static Image getIcon(String name) {
+
+        Image image;
+        try {
+            image = new Image(String.valueOf(LevelSubtypeChoiceController.class.getResource("/Icons/P3_LevelSubtypeChoice/Icon" + name + ".png")));
+        } catch (Exception e) {
+            image = new Image(String.valueOf(LevelSubtypeChoiceController.class.getResource("/Icons/General/BackBallBlue.png")));
+        }
+        BackgroundImage backgroundImage = new BackgroundImage(image, null, null, null, null);
+        return image;
+    }
+
+    private void transitionToLevelSelection() {
+        NodeAnimations.increaseBrightnessOnExit(middleButton);
+        Model.getInstance().controllers().getMainWindowController().changeTopLayer(Model.getInstance().getViewFactory().getLevelSelectionPanel(type,middleButton.getText()), 0.3);
     }
 
     private void transitionToGameSelection() {
@@ -50,21 +62,9 @@ public class LevelSubtypeChoiceController implements Initializable {
         returnButton.setOnMouseExited(event -> NodeAnimations.resetBrightness(returnButton));
         setMiddleButton(rightButtons.getFirst());
         rightButtons.removeFirst();
-        for(Button button:rightButtons){
-            setLayerBrightness(button,rightButtons.indexOf(button)+2);
+        for (Button button : rightButtons) {
+            setLayerBrightness(button, rightButtons.indexOf(button) + 2);
         }
-    }
-
-    public static Image getIcon(String name) {
-
-        Image image;
-        try {
-            image = new Image(String.valueOf(LevelSubtypeChoiceController.class.getResource("/Icons/P3_LevelSubtypeChoice/Icon" + name + ".png")));
-        } catch (Exception e) {
-            image = new Image(String.valueOf(LevelSubtypeChoiceController.class.getResource("/Icons/General/BackBallBlue.png")));
-        }
-        BackgroundImage backgroundImage = new BackgroundImage(image, null, null, null, null);
-        return image;
     }
 
     @Override
@@ -99,49 +99,60 @@ public class LevelSubtypeChoiceController implements Initializable {
     }
 
     private void animateTransition() {
-        for(ChangeListener<Number> listener:paneHeightListeners){
+        for (ChangeListener<Number> listener : paneHeightListeners) {
             gameTypeChoicePanel.heightProperty().removeListener(listener);
         }
-            animateTransitionOfElement(middleButton, 1,true);
-            for (Button button : rightButtons) {
-                animateTransitionOfElement(button, rightButtons.indexOf(button) + 2, true);
-            }
-            for (Button button : leftButtons) {
-                animateTransitionOfElement(button, leftButtons.indexOf(button) + 2, false);
-            }
+        animateTransitionOfElement(middleButton, 1, true);
+        for (Button button : rightButtons) {
+            animateTransitionOfElement(button, rightButtons.indexOf(button) + 2, true);
+        }
+        for (Button button : leftButtons) {
+            animateTransitionOfElement(button, leftButtons.indexOf(button) + 2, false);
+        }
     }
+
 
     private void animateTransitionOfElement(Button button, int layer, boolean right) {
-      new Thread(()->
-       { double finalWidth=calculateWidth(layer);
-           double finalAnchor=calculateLeftAnchor(layer,right,finalWidth);
-           double startWidth=button.getWidth();
-           double startAnchor= AnchorPane.getLeftAnchor(button);
-           setLayerBrightness(button,layer);
+        AnimationTimer animationTimer = new AnimationTimer() {
+            final double startWidth = button.getWidth();
+            final double startAnchor = AnchorPane.getLeftAnchor(button);
+            final double finalWidth = gameTypeChoicePanel.heightProperty().doubleValue() * 0.6 / layer;
+            final double finalAnchor = calculateLeftAnchor(layer, right, finalWidth);
+            long startTime = 0;
 
-           for (int i=1;i<=30;i++){
-               button.setPrefWidth(startWidth+ (double) i /30*(finalWidth-startWidth));
-               button.setPrefHeight(button.getPrefWidth());
-               AnchorPane.setLeftAnchor(button,startAnchor+(double) i /30*(finalAnchor-startAnchor));
-               AnchorPane.setTopAnchor(button,(gameTypeChoicePanel.getHeight()-button.getWidth())/2);
-               try {
-                   Thread.sleep(25);
-               } catch (InterruptedException e) {
-                   throw new RuntimeException(e);
-               }
-           }
-           resetButtonBindings(middleButton);
-           setButtonSizeAndPosition(middleButton, 1, right);
-       }).start();
+            @Override
+            public void handle(long now) {
+                if (startTime == 0) {
+                    startTime = now;
+                }
+                long timeElapsed = now - startTime;
+                if (timeElapsed < Properties.ANIMATION_DURATION()) {
+                    button.setPrefWidth(startWidth + (double) timeElapsed / Properties.ANIMATION_DURATION() * (finalWidth - startWidth));
+                    button.setPrefHeight(button.getPrefWidth());
+                    AnchorPane.setLeftAnchor(button, startAnchor + (double) timeElapsed / Properties.ANIMATION_DURATION() * (finalAnchor - startAnchor));
+                    AnchorPane.setTopAnchor(button, (gameTypeChoicePanel.getHeight() - button.getHeight()) / 2);
+                } else {
+                    this.stop();
+                }
+            }
+
+            @Override
+            public void stop() {
+                super.stop();
+                resetButtonBindings(button);
+                setButtonSizeAndPosition(button, layer, right);
+                setLayerBrightness(button, layer);
+            }
+        };
+        animationTimer.start();
+
     }
 
-    private double calculateWidth(int layer) {
-        return gameTypeChoicePanel.heightProperty().get()*0.6 / layer;
-    }
-    private double calculateLeftAnchor(int layer,boolean right,double nextWidth){
 
-        if(layer==1)return (gameTypeChoicePanel.getWidth()-nextWidth) / 2;
-        return (gameTypeChoicePanel.getWidth()-nextWidth) / 2 + getXOffset(layer, right, nextWidth);
+    private double calculateLeftAnchor(int layer, boolean right, double nextWidth) {
+
+        if (layer == 1) return (gameTypeChoicePanel.getWidth() - nextWidth) / 2;
+        return (gameTypeChoicePanel.getWidth() - nextWidth) / 2 + getXOffset(layer, right, nextWidth);
     }
 
     private void setButtonSizeAndPosition(Button button, int layer, boolean right) {
@@ -151,7 +162,7 @@ public class LevelSubtypeChoiceController implements Initializable {
         button.prefHeightProperty().set(newWidth);
         AnchorPane.setLeftAnchor(button, calculateLeftAnchor(layer, right, newWidth));
         AnchorPane.setTopAnchor(button, (gameTypeChoicePanel.heightProperty().doubleValue() - newWidth) / 2);
-        ChangeListener<Number> listener=getHeightChangeListener(button, layer, right);
+        ChangeListener<Number> listener = getHeightChangeListener(button, layer, right);
         paneHeightListeners.add(listener);
         gameTypeChoicePanel.heightProperty().addListener(listener);
     }
@@ -169,15 +180,15 @@ public class LevelSubtypeChoiceController implements Initializable {
 
     private double getXOffset(int layer, boolean right, double width) {
         double offset = width * (layer - 1);
-        if(layer>1)offset=offset+gameTypeChoicePanel.heightProperty().get()*0.6/3;
+        if (layer > 1) offset = offset + gameTypeChoicePanel.heightProperty().get() * 0.6 / 3;
         if (right) return offset;
         return -offset;
     }
 
-    private void setLayerBrightness(Button button,int layer) {
-            button.setOpacity(1);
-            NodeAnimations.resetBrightness(button);
-            NodeAnimations.decreaseBrightness(button, layer * 0.07);
+    private void setLayerBrightness(Button button, int layer) {
+        button.setOpacity(1);
+        NodeAnimations.resetBrightness(button);
+        NodeAnimations.decreaseBrightness(button, layer * 0.07);
 
     }
 
@@ -190,8 +201,6 @@ public class LevelSubtypeChoiceController implements Initializable {
             animateTransition();
         }
     }
-
-
 
 
     private void setMiddleButton(Button button) {
@@ -207,7 +216,7 @@ public class LevelSubtypeChoiceController implements Initializable {
         middleButton.setDisable(false);
         middleButton.setOnMouseEntered(event -> NodeAnimations.increaseBrightness(middleButton, 0.25));
         middleButton.setOnMouseExited(event -> NodeAnimations.resetBrightness(middleButton));
-        middleButton.setOnAction(event -> transitionToLevelSelection(middleButton.getText()));
+        middleButton.setOnAction(event -> transitionToLevelSelection());
     }
 
     private void loadButtons() {
@@ -227,7 +236,6 @@ public class LevelSubtypeChoiceController implements Initializable {
         button.setScaleY(1);
         button.setTranslateX(0);
     }
-
 
 
     public void setAnimationType(AnimationType type) {

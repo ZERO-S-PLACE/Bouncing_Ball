@@ -46,8 +46,7 @@ public class LevelTypeChoiceController implements Initializable {
 
     private void transitionToSimulationSelection() {
         NodeAnimations.increaseBrightnessOnExit(simulationButton);
-        Model.getInstance().controllers().getLevelSubtypeChoiceController().setAnimationType(AnimationType.SIMULATION);
-        Model.getInstance().controllers().getMainWindowController().changeTopLayer(Model.getInstance().getViewFactory().getLevelSubtypePanel(), 0.3);
+        Model.getInstance().controllers().getMainWindowController().changeTopLayer(Model.getInstance().getViewFactory().getLevelSubtypePanel(AnimationType.SIMULATION), 0.3);
     }
 
     private void transitionToWelcomePanel() {
@@ -57,8 +56,7 @@ public class LevelTypeChoiceController implements Initializable {
 
     private void transitionToGameSelection() {
         NodeAnimations.increaseBrightnessOnExit(gameButton);
-        Model.getInstance().controllers().getLevelSubtypeChoiceController().setAnimationType(AnimationType.GAME);
-        Model.getInstance().controllers().getMainWindowController().changeTopLayer(Model.getInstance().getViewFactory().getLevelSubtypePanel(), 0.3);
+        Model.getInstance().controllers().getMainWindowController().changeTopLayer(Model.getInstance().getViewFactory().getLevelSubtypePanel(AnimationType.GAME), 0.3);
     }
 
     private void setCirclesFill() {

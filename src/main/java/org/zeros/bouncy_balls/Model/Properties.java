@@ -21,6 +21,7 @@ public class Properties {
     public static ArrayList<String> getAnimationGenresDescriptions() {
         return animationGenresDescriptions;
     }
+    private static final long animationDuration=500_000_000L;
     private static double SIZE_FACTOR = Math.pow(10, 5);
     private static Color BACKGROUND_COLOR = Color.web("#243253");
     private static double ACCURACY = Math.pow(0.1, 3);
@@ -32,6 +33,7 @@ public class Properties {
     public static double FRAME_RATE() {
         return FRAME_RATE;
     }
+    public static long ANIMATION_DURATION(){return animationDuration;}
 
     public static void setFRAME_RATE(double FRAME_RATE) {
         Properties.FRAME_RATE = FRAME_RATE;
