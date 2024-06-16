@@ -39,6 +39,7 @@ module org.zeros.bouncy_balls {
     exports org.zeros.bouncy_balls.Controllers.P5_Animation;
 
     exports org.zeros.bouncy_balls.App;
+    exports org.zeros.bouncy_balls.DisplayUtil;
 
 
 }

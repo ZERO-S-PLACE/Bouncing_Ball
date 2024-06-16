@@ -38,6 +38,13 @@ public class Level implements Serializable {
     private ComplexArea inputArea;
     private ComplexArea targetArea;
 
+    private int oneStarBound=2000;
+    private int twoStarBound=5000;
+
+
+
+    private int threeStarBound=10000;
+
     public Level(AnimationProperties properties) {
         PROPERTIES = properties;
     }
@@ -57,6 +64,23 @@ public class Level implements Serializable {
         } else {
             return save.deserialize();
         }
+    }
+    public static String getDirectoryPath(AnimationType type, String subtype) {
+        String directoryPath;
+        if (!subtype.equals("User")) {
+            if (type.equals(AnimationType.GAME)) {
+                directoryPath = "program_data/default_levels/" + subtype;
+            } else {
+                directoryPath = "program_data/default_simulations/" + subtype;
+            }
+        } else {
+            if (type.equals(AnimationType.GAME)) {
+                directoryPath = "program_data/user_levels";
+            } else {
+                directoryPath = "program_data/user_simulations";
+            }
+        }
+        return directoryPath;
     }
 
     public void rescale(double factor) {
@@ -304,6 +328,29 @@ public class Level implements Serializable {
         } finally {
             movingObjectsCannotEnterLock.unlock();
         }
+    }
+    public int getOneStarBound() {
+        return oneStarBound;
+    }
+
+    public void setOneStarBound(int oneStarBound) {
+        this.oneStarBound = oneStarBound;
+    }
+
+    public int getTwoStarBound() {
+        return twoStarBound;
+    }
+
+    public void setTwoStarBound(int twoStarBound) {
+        this.twoStarBound = twoStarBound;
+    }
+
+    public int getThreeStarBound() {
+        return threeStarBound;
+    }
+
+    public void setThreeStarBound(int threeStarBound) {
+        this.threeStarBound = threeStarBound;
     }
 
 

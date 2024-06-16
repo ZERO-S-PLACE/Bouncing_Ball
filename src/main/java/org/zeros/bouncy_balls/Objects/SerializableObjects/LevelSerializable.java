@@ -20,10 +20,16 @@ public class LevelSerializable implements Serializable {
     private final ArrayList<AreaSerializable> obstaclesToAdd = new ArrayList<>();
     private ComplexAreaSerializable inputArea;
     private ComplexAreaSerializable targetArea;
+    private final int oneStarBound;
+    private final int twoStarBound;
+    private final int threeStarBound;
 
     public LevelSerializable(Level level) {
         this.NAME = level.getNAME();
         this.PROPERTIES = level.PROPERTIES();
+        this.oneStarBound=level.getOneStarBound();
+        this.twoStarBound=level.getTwoStarBound();
+        this.threeStarBound=level.getThreeStarBound();
         for (MovingObject object : level.getMovingObjects()) {
             movingObjects.add(new MovingObjectSerializable(object));
         }
@@ -54,6 +60,9 @@ public class LevelSerializable implements Serializable {
         Level level = new Level(PROPERTIES);
         Animation animation = new Animation(level);
         level.setNAME(NAME);
+        level.setOneStarBound(oneStarBound);
+        level.setTwoStarBound(twoStarBound);
+        level.setThreeStarBound(threeStarBound);
         for (MovingObjectSerializable object : movingObjects) {
             level.getMovingObjects().add(object.deserialize(animation));
         }

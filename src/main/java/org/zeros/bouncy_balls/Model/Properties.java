@@ -13,7 +13,7 @@ public class Properties {
             "Animation of objects moves in homogeneous gravitational field",
             "Animation of objects moves considering their charges",
             "Animation of moves in gravitational fields",
-            "User levels"));
+            "Animations created by users"));
 
     public static ArrayList<String> getAnimationGenres() {
         return animationGenres;
@@ -27,9 +27,6 @@ public class Properties {
     private static double ACCURACY = Math.pow(0.1, 3);
     private static double FRAME_RATE=120;
     private static int MAX_EVALUATIONS=150;
-
-
-
     public static double FRAME_RATE() {
         return FRAME_RATE;
     }

@@ -1,29 +1,30 @@
 package org.zeros.bouncy_balls.DisplayUtil;
 
 import javafx.animation.AnimationTimer;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.effect.ColorAdjust;
 import org.zeros.bouncy_balls.Model.Properties;
 
 public class NodeAnimations {
 
-    public static void increaseBrightness(Button playButton, double value) {
+    public static void increaseBrightness(Node node, double value) {
         ColorAdjust colorAdjust = new ColorAdjust();
-        playButton.setEffect(colorAdjust);
+        node.setEffect(colorAdjust);
         colorAdjust.setBrightness(Math.abs(value));
         colorAdjust.setContrast(Math.abs(value));
     }
 
-    public static void decreaseBrightness(Button playButton, double value) {
+    public static void decreaseBrightness(Node node, double value) {
         ColorAdjust colorAdjust = new ColorAdjust();
         colorAdjust.setBrightness(-Math.abs(value));
         colorAdjust.setContrast(-Math.abs(value));
-        playButton.setEffect(colorAdjust);
+        node.setEffect(colorAdjust);
     }
 
-    public static void increaseBrightnessOnExit(Button playButton) {
+    public static void increaseBrightnessOnExit(Node node) {
         ColorAdjust colorAdjust = new ColorAdjust();
-        playButton.setEffect(colorAdjust);
+        node.setEffect(colorAdjust);
         AnimationTimer animationTimer = new AnimationTimer() {
             long startTime = 0;
 
@@ -51,8 +52,8 @@ public class NodeAnimations {
 
     }
 
-    public static void resetBrightness(Button playButton) {
-        playButton.setEffect(null);
+    public static void resetBrightness(Node node) {
+        node.setEffect(null);
     }
 
 }

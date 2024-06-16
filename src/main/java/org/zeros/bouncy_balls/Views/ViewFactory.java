@@ -96,27 +96,32 @@ public class ViewFactory {
     public BorderPane getLevelSubtypePanel(AnimationType type)  {
         if (levelSubtypePanel == null) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/3_LevelSubtypeChoice/LevelSubtypeChoicePanel.fxml"));
+            Model.getInstance().controllers().getLevelSubtypeChoiceController().setAnimationType(type);
             loader.setController(Model.getInstance().controllers().getLevelSubtypeChoiceController());
             try {
                 levelSubtypePanel = loader.load();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+        }else {
+            Model.getInstance().controllers().getLevelSubtypeChoiceController().setAnimationType(type);
         }
-        Model.getInstance().controllers().getLevelSubtypeChoiceController().setAnimationType(type);
         return levelSubtypePanel;
     }
     public BorderPane getLevelSelectionPanel(AnimationType type, String subtype)  {
         if (levelSelectionPanel == null) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/4_LevelSelection/LevelSelectionPanel.fxml"));
+            Model.getInstance().controllers().getLevelSelectionController().loadLevelsList(type,subtype);
             loader.setController(Model.getInstance().controllers().getLevelSelectionController());
             try {
                 levelSelectionPanel = loader.load();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+        }else {
+            Model.getInstance().controllers().getLevelSelectionController().loadLevelsList(type,subtype);
         }
-        Model.getInstance().controllers().getLevelSelectionController().loadLevelsList(type,subtype);
+
         return levelSelectionPanel;
     }
 

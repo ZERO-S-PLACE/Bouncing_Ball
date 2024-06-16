@@ -1,6 +1,7 @@
 package org.zeros.bouncy_balls.Model;
 
 import org.zeros.bouncy_balls.Animation.Animation.Animation;
+import org.zeros.bouncy_balls.Animation.Animation.AnimationType;
 import org.zeros.bouncy_balls.Views.ControllersBase;
 import org.zeros.bouncy_balls.Views.ViewFactory;
 
@@ -43,4 +44,5 @@ public class Model {
         }
         return null;
     }
+
 }

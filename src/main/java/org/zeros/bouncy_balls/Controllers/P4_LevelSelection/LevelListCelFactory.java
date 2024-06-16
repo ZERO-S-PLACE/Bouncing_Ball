@@ -15,7 +15,7 @@ public class LevelListCelFactory extends ListCell<Level> {
                 setText(null);
                 setGraphic(null);
             } else {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/4_LevelSelection.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/4_LevelSelection/LevelListCell.fxml"));
                 LevelListCellController controller = new LevelListCellController(level);
                 loader.setController(controller);
                 setText(null);

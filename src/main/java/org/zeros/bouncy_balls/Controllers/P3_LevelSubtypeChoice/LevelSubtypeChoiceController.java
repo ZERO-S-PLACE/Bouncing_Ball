@@ -5,11 +5,10 @@ import javafx.beans.value.ChangeListener;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
 import org.zeros.bouncy_balls.Animation.Animation.AnimationType;
 import org.zeros.bouncy_balls.DisplayUtil.CustomTooltip;
 import org.zeros.bouncy_balls.DisplayUtil.NodeAnimations;
@@ -18,6 +17,7 @@ import org.zeros.bouncy_balls.Model.Properties;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class LevelSubtypeChoiceController implements Initializable {
@@ -32,17 +32,30 @@ public class LevelSubtypeChoiceController implements Initializable {
     private Point2D dragReference;
 
     private AnimationType type;
-
-    public static Image getIcon(String name) {
-
-        Image image;
-        try {
-            image = new Image(String.valueOf(LevelSubtypeChoiceController.class.getResource("/Icons/P3_LevelSubtypeChoice/Icon" + name + ".png")));
-        } catch (Exception e) {
-            image = new Image(String.valueOf(LevelSubtypeChoiceController.class.getResource("/Icons/General/BackBallBlue.png")));
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        loadButtons();
+        setButtonsAnimations();
+        setActions();
+    }
+    private void loadButtons() {
+        for (int i = 1; i <= Properties.getAnimationGenres().size(); i++) {
+            Button button = new Button(Properties.getAnimationGenres().get(i - 1));
+            buttonsContainer.getChildren().addFirst(button);
+            rightButtons.add(button);
+            setBackground(button);
+            setButtonSizeAndPosition(button, i, true);
+            button.setDisable(true);
+            button.setTextFill(Color.TRANSPARENT);
+            button.setTooltip(new CustomTooltip(Properties.getAnimationGenresDescriptions().get(i - 1)));
         }
-        BackgroundImage backgroundImage = new BackgroundImage(image, null, null, null, null);
-        return image;
+    }
+
+    public  void setBackground(Button button) {
+        String name=button.getText();
+        String imagePath = Objects.requireNonNull(getClass().getResource("/Icons/General/Icon" + name + ".png")).toExternalForm();
+        button.setStyle("-fx-background-image: url('" + imagePath + "');");
+
     }
 
     private void transitionToLevelSelection() {
@@ -67,12 +80,7 @@ public class LevelSubtypeChoiceController implements Initializable {
         }
     }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        loadButtons();
-        setButtonsAnimations();
-        setActions();
-    }
+
 
     private void setActions() {
         gameTypeChoicePanel.setOnMousePressed(event -> dragReference = new Point2D(event.getX(), event.getY()));
@@ -81,11 +89,13 @@ public class LevelSubtypeChoiceController implements Initializable {
     }
 
     private void turnButtonsList(MouseEvent event) {
-        if (dragReference.getX() < event.getX()) {
-            turnButtonsRight();
-        }
-        if (dragReference.getX() > event.getX()) {
-            turnButtonsLeft();
+        if(Math.abs(dragReference.getX()-event.getX())>gameTypeChoicePanel.getWidth()/25) {
+            if (dragReference.getX() < event.getX()) {
+                turnButtonsRight();
+            }
+            if (dragReference.getX() > event.getX()) {
+                turnButtonsLeft();
+            }
         }
     }
 
@@ -94,6 +104,14 @@ public class LevelSubtypeChoiceController implements Initializable {
             leftButtons.addFirst(middleButton);
             setMiddleButton(rightButtons.getFirst());
             rightButtons.removeFirst();
+            animateTransition();
+        }
+    }
+    private void turnButtonsRight() {
+        if (!leftButtons.isEmpty()) {
+            rightButtons.addFirst(middleButton);
+            setMiddleButton(leftButtons.getFirst());
+            leftButtons.removeFirst();
             animateTransition();
         }
     }
@@ -130,6 +148,8 @@ public class LevelSubtypeChoiceController implements Initializable {
                     button.setPrefWidth(startWidth + (double) timeElapsed / Properties.ANIMATION_DURATION() * (finalWidth - startWidth));
                     button.setPrefHeight(button.getPrefWidth());
                     AnchorPane.setLeftAnchor(button, startAnchor + (double) timeElapsed / Properties.ANIMATION_DURATION() * (finalAnchor - startAnchor));
+
+
                     AnchorPane.setTopAnchor(button, (gameTypeChoicePanel.getHeight() - button.getHeight()) / 2);
                 } else {
                     this.stop();
@@ -193,14 +213,7 @@ public class LevelSubtypeChoiceController implements Initializable {
     }
 
 
-    private void turnButtonsRight() {
-        if (!leftButtons.isEmpty()) {
-            rightButtons.addFirst(middleButton);
-            setMiddleButton(leftButtons.getFirst());
-            leftButtons.removeFirst();
-            animateTransition();
-        }
-    }
+
 
 
     private void setMiddleButton(Button button) {
@@ -217,18 +230,6 @@ public class LevelSubtypeChoiceController implements Initializable {
         middleButton.setOnMouseEntered(event -> NodeAnimations.increaseBrightness(middleButton, 0.25));
         middleButton.setOnMouseExited(event -> NodeAnimations.resetBrightness(middleButton));
         middleButton.setOnAction(event -> transitionToLevelSelection());
-    }
-
-    private void loadButtons() {
-        for (int i = 1; i <= Properties.getAnimationGenres().size(); i++) {
-            Button button = new Button("");
-            buttonsContainer.getChildren().addFirst(button);
-            rightButtons.add(button);
-            setButtonSizeAndPosition(button, i, true);
-            button.setDisable(true);
-            button.setText(Properties.getAnimationGenres().get(i - 1));
-            button.setTooltip(new CustomTooltip(Properties.getAnimationGenresDescriptions().get(i - 1)));
-        }
     }
 
     private void resetButtonBindings(Button button) {
