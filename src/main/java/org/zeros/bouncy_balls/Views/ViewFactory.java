@@ -10,6 +10,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.zeros.bouncy_balls.Animation.Animation.AnimationPane;
 import org.zeros.bouncy_balls.Animation.Animation.AnimationType;
+import org.zeros.bouncy_balls.Level.Level;
 import org.zeros.bouncy_balls.Model.Model;
 import org.zeros.bouncy_balls.Model.Properties;
 
@@ -26,7 +27,10 @@ public class ViewFactory {
     private BorderPane leaderboardPanel;
     private BorderPane levelSubtypePanel;
     private BorderPane levelSelectionPanel;
-    private BorderPane gamePanel;
+    private BorderPane gameCountDownPanel;
+    private BorderPane gamePausedPanel;
+    private BorderPane gameControlPanel;
+    private AnimationPane gameAnimation;
 
     public void showMainWindow() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/MainWindow.fxml"));
@@ -43,19 +47,7 @@ public class ViewFactory {
         createStage(loader);
     }
 
-    public AnchorPane getGameView()  {
-        if (gameAnimationPanel == null) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/5_AnimationPanel/GameAnimationPanel.fxml"));
-                loader.setController(Model.getInstance().controllers().getGamePanelController());
-            try {
-                gameAnimationPanel = loader.load();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
 
-        return gameAnimationPanel;
-    }
     public BorderPane getWelcomePanel()  {
         if (welcomePanel == null) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/1_WelcomePanel/WelcomePanel.fxml"));
@@ -108,7 +100,7 @@ public class ViewFactory {
         }
         return levelSubtypePanel;
     }
-    public BorderPane getLevelSelectionPanel(AnimationType type, String subtype)  {
+    public BorderPane getNewLevelSelectionPanel(AnimationType type, String subtype)  {
         if (levelSelectionPanel == null) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/4_LevelSelection/LevelSelectionPanel.fxml"));
             Model.getInstance().controllers().getLevelSelectionController().loadLevelsList(type,subtype);
@@ -123,6 +115,54 @@ public class ViewFactory {
         }
 
         return levelSelectionPanel;
+    }
+    public BorderPane getLevelSelectionPanel()  {
+        return levelSelectionPanel;
+    }
+    public BorderPane getGamePausedPanel()  {
+        if (gamePausedPanel == null) {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/5_AnimationPanel/GamePausedPanel.fxml"));
+            loader.setController(Model.getInstance().controllers().getGamePausedController());
+            try {
+                gamePausedPanel = loader.load();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return gamePausedPanel;
+    }
+
+    public BorderPane getCountDownPanel()  {
+        if (gameCountDownPanel == null) {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/5_AnimationPanel/GameCountDownPanel.fxml"));
+            loader.setController(Model.getInstance().controllers().getGameCountDownController());
+            try {
+                gameCountDownPanel = loader.load();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return gameCountDownPanel;
+    }
+    public BorderPane getGameControlPanel()  {
+        if (gameControlPanel == null) {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/5_AnimationPanel/GameControlPanel.fxml"));
+            loader.setController(Model.getInstance().controllers().getGameControlController());
+            try {
+                gameControlPanel = loader.load();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return gameControlPanel;
+    }
+
+    public AnimationPane getNewAnimationPane(Level level) {
+        gameAnimation= new AnimationPane(level);
+            return gameAnimation;
+    }
+    public AnimationPane getCurrentAnimationPane() {
+        return gameAnimation;
     }
 
     private void createStage(FXMLLoader loader) {

@@ -26,8 +26,8 @@ public class GameScore implements Serializable {
             if (object instanceof GameScore) {
                 save = (GameScore) object;
             }
-        } catch (ClassNotFoundException | IOException e) {
-            throw new RuntimeException(e);
+        } catch (ClassNotFoundException | IOException ignored) {
+
         }
         return save;
     }

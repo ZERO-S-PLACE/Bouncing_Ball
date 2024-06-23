@@ -64,12 +64,11 @@ public class InputOnRunObstacle extends InputOnRun {
     @Override
     protected void onMouseClicked(MouseEvent mouseEvent) {
         Point2D pickedPoint = new Point2D(mouseEvent.getX() * Properties.SIZE_FACTOR(), mouseEvent.getY() * Properties.SIZE_FACTOR());
-        if (!AreasMath.isInsideArea(animation.getLevel().getInputArea(), pickedPoint) && !centerPicked) return;
         if (!centerPicked) {
-            obstacle.move(new Point2D(mouseEvent.getX() * Properties.SIZE_FACTOR(), mouseEvent.getY() * Properties.SIZE_FACTOR()));
+            obstacle.move(pickedPoint);
             centerPicked = true;
         } else {
-            rotateInput(new Point2D(mouseEvent.getX() * Properties.SIZE_FACTOR(), mouseEvent.getY() * Properties.SIZE_FACTOR()));
+            rotateInput(pickedPoint);
             dismiss();
             new Thread(this::animateObjectArrival).start();
         }
@@ -84,18 +83,13 @@ public class InputOnRunObstacle extends InputOnRun {
             if (animation.hasFreePlace(obstacle)) {
                 obstacle.getPath().setOpacity(1);
                 animation.getLevel().addObstacle(obstacle);
-                Model.getInstance().controllers().getGamePanelController().getAnimationPane().addInputOnRun();
                 return;
             }
             decreaseOpacity();
         }
         obstacle.move(new Point2D(-10000, -10000));
         Platform.runLater(() -> panel.getChildren().remove(obstacle.getPath()));
-
         animation.getLevel().addObstacleToAdd(obstacle);
-        Model.getInstance().controllers().getGamePanelController().getAnimationPane().addInputOnRun();
-
-
     }
 
 

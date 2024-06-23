@@ -33,6 +33,11 @@ public class LevelSelectionController implements Initializable {
     public Label levelTypeIconLabel;
     public Button returnButton;
     public BorderPane levelChoicePanel;
+
+    public TreeSet<Level> getLevelsInOrder() {
+        return levelsInOrder;
+    }
+
     private TreeSet<Level> levelsInOrder;
     private AnimationType type;
     private String subtype;

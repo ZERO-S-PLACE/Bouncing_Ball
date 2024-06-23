@@ -1,0 +1,46 @@
+.game-panel Circle{
+    -fx-stroke-width:0;
+}
+
+.start-game {
+    -fx-background-image: url("../../Icons/P1_WelcomePanel/IconPlay.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+    -fx-background-color: transparent;
+    -fx-background-radius:50%;
+}
+.previous-level-restart {
+    -fx-background-image: url("../../Icons/General/RestartIcon.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+    -fx-background-color: transparent;
+    -fx-background-radius:50%;
+}
+.arrow-button {
+    -fx-background-image: url("../../Icons/General/ReturnIcon.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+    -fx-background-color: transparent;
+    -fx-background-radius:50%;
+}
+.game-panel-text-main{
+    -fx-background-color: transparent;
+    -fx-fill:#FFFFFF;
+    -fx-font-size:5.5em;
+}
+.game-panel-text-secondary{
+    -fx-background-color: transparent;
+    -fx-fill:#EEEEEE;
+    -fx-font-size:3.3em;
+}
+.game-panel Label{
+    -fx-background-image: url("../../Icons/General/StarBlue.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+    -fx-background-color: transparent;
+    -fx-background-radius:50%;
+}

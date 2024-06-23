@@ -8,6 +8,7 @@ import javafx.scene.control.TreeCell;
 import org.zeros.bouncy_balls.Level.Level;
 
 public class LevelListCelFactory extends ListCell<Level> {
+    private LevelListCellController controller;
         @Override
         protected void updateItem(Level level, boolean empty) {
             super.updateItem(level,empty);
@@ -16,7 +17,7 @@ public class LevelListCelFactory extends ListCell<Level> {
                 setGraphic(null);
             } else {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/4_LevelSelection/LevelListCell.fxml"));
-                LevelListCellController controller = new LevelListCellController(level);
+                controller = new LevelListCellController(level);
                 loader.setController(controller);
                 setText(null);
                 try {
@@ -24,9 +25,11 @@ public class LevelListCelFactory extends ListCell<Level> {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
         }
+    public LevelListCellController getController() {
+        return controller;
+    }
 
     }

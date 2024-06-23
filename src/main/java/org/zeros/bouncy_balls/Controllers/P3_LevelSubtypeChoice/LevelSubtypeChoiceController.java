@@ -55,12 +55,11 @@ public class LevelSubtypeChoiceController implements Initializable {
         String name=button.getText();
         String imagePath = Objects.requireNonNull(getClass().getResource("/Icons/General/Icon" + name + ".png")).toExternalForm();
         button.setStyle("-fx-background-image: url('" + imagePath + "');");
-
     }
 
     private void transitionToLevelSelection() {
         NodeAnimations.increaseBrightnessOnExit(middleButton);
-        Model.getInstance().controllers().getMainWindowController().changeTopLayer(Model.getInstance().getViewFactory().getLevelSelectionPanel(type,middleButton.getText()), 0.3);
+        Model.getInstance().controllers().getMainWindowController().changeTopLayer(Model.getInstance().getViewFactory().getNewLevelSelectionPanel(type,middleButton.getText()), 0.3);
     }
 
     private void transitionToGameSelection() {

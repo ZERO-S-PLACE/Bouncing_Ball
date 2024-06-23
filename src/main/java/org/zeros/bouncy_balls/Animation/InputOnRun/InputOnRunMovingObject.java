@@ -6,6 +6,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import org.zeros.bouncy_balls.Animation.Animation.AnimationPane;
 import org.zeros.bouncy_balls.Calculations.AreasMath.AreasMath;
 import org.zeros.bouncy_balls.Model.Model;
 import org.zeros.bouncy_balls.Model.Properties;
@@ -121,7 +122,6 @@ public class InputOnRunMovingObject extends InputOnRun {
             increaseOpacity();
             if (animation.hasFreePlace((Ball) object)) {
                 animation.getLevel().addMovingObject(object);
-                Model.getInstance().controllers().getGamePanelController().getAnimationPane().addInputOnRun();
                 return;
             }
             decreaseOpacity();
@@ -129,7 +129,6 @@ public class InputOnRunMovingObject extends InputOnRun {
         Platform.runLater(() -> panel.getChildren().remove(object.getShape()));
         object.updateCenter(new Point2D(-10000, -10000));
         animation.getLevel().addMovingObjectToAdd(object);
-        Model.getInstance().controllers().getGamePanelController().getAnimationPane().addInputOnRun();
     }
 
     private void decreaseOpacity() {

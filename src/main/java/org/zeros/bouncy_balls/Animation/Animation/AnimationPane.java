@@ -1,8 +1,11 @@
 package org.zeros.bouncy_balls.Animation.Animation;
 
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+
 import org.zeros.bouncy_balls.Animation.InputOnRun.InputOnRun;
 import org.zeros.bouncy_balls.Animation.InputOnRun.InputOnRunMovingObject;
 import org.zeros.bouncy_balls.Animation.InputOnRun.InputOnRunObstacle;
@@ -13,11 +16,9 @@ import org.zeros.bouncy_balls.Objects.VectorArea.ComplexArea.ComplexArea;
 import org.zeros.bouncy_balls.Objects.VectorArea.ComplexArea.ComplexAreaPart;
 import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.Area;
 
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.ResourceBundle;
 
-public class AnimationPane  {
+public class AnimationPane {
     public AnchorPane getAnimationPane() {
         return gameBackground;
     }
@@ -26,37 +27,57 @@ public class AnimationPane  {
     private Animation animation;
     private InputOnRun input;
 
-    public AnimationPane (String path){
-        gameBackground=new AnchorPane();
-        setUp(path);
+    public AnimationPane(String path) {
+        gameBackground = new AnchorPane();
+        loadLevel(path);
+        setUp();
+        gameBackground.parentProperty().addListener(((observable, oldValue, newValue) -> {
+            if (oldValue != null) {
+                oldValue.getScene().widthProperty().removeListener(rescaleListener());
+                oldValue.getScene().heightProperty().removeListener(rescaleListener());
+            }
+            newValue.getScene().widthProperty().addListener(rescaleListener());
+            newValue.getScene().heightProperty().addListener(rescaleListener());
+        }));
     }
 
-    private void setUp(String path) {
-        loadLevel(path);
-        reloadNodes();
-        if(animation.getLevel().PROPERTIES().getTYPE().equals(AnimationType.GAME)) {
+    public Animation getAnimation() {
+        return animation;
+    }
+
+    public Level getLevel() {
+        return animation.getLevel();
+    }
+
+
+    public AnimationPane(Level level) {
+        gameBackground = new AnchorPane();
+        animation = new Animation(level);
+        setUp();
+    }
+
+    private void setUp() {
+        ;
+        if (animation.getLevel().PROPERTIES().getTYPE().equals(AnimationType.GAME)) {
             Platform.runLater(this::addInputOnRun);
         }
-
-
     }
+
     public void startGame() {
-        addRescaleObserver();
         new Thread(animation::animate).start();
     }
 
-    private void addRescaleObserver() {
-        if (getScaleFactor() != 1) reloadNodes();
-        gameBackground.getScene().widthProperty().addListener((observable, oldValue, newValue) -> reloadNodes());
-        gameBackground.getScene().heightProperty().addListener((observable, oldValue, newValue) -> reloadNodes());
-
+    private ChangeListener<? super Number> rescaleListener() {
+        return (observable, oldValue, newValue) -> reloadNodes();
     }
 
-    private synchronized double getScaleFactor() {
-        double factor1 = gameBackground.getScene().getHeight() / animation.getLevel().PROPERTIES().getHEIGHT() * Properties.SIZE_FACTOR();
-        double factor2 = gameBackground.getScene().getWidth() / animation.getLevel().PROPERTIES().getWIDTH() * Properties.SIZE_FACTOR();
-        return Math.min(factor1, factor2);
-    }
+    private double getScaleFactor(Node node) {
+    double factor1 = node.getScene().getHeight() / animation.getLevel().PROPERTIES().getHEIGHT() * Properties.SIZE_FACTOR();
+    double factor2 = node.getScene().getWidth() / animation.getLevel().PROPERTIES().getWIDTH() * Properties.SIZE_FACTOR();
+    return Math.min(factor1,factor2);
+}
+
+
 
 
     public void addInputOnRun() {
@@ -83,9 +104,6 @@ public class AnimationPane  {
     }
 
     private synchronized void reloadNodes() {
-        try {
-            animation.getLevel().rescale(getScaleFactor());
-        }catch (Exception ignored){}
             animation.reloadBorders();
             gameBackground.getChildren().removeAll(gameBackground.getChildren());
             setBackground();
@@ -113,7 +131,6 @@ public class AnimationPane  {
         gameBackground.setMaxHeight(animation.getPROPERTIES().getHEIGHT() / Properties.SIZE_FACTOR());
         gameBackground.setMinWidth(animation.getPROPERTIES().getWIDTH() / Properties.SIZE_FACTOR());
         gameBackground.setMaxWidth(animation.getPROPERTIES().getWIDTH() / Properties.SIZE_FACTOR());
-
     }
 
     private void addComplexAreaPreview(ComplexArea complexArea, Color color) {

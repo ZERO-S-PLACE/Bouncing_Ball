@@ -8,8 +8,9 @@ import org.zeros.bouncy_balls.Controllers.P2b_Leaderboard.LeaderboardPanelContro
 import org.zeros.bouncy_balls.Controllers.P2c_LevelCreator.LevelCreatorController;
 import org.zeros.bouncy_balls.Controllers.P3_LevelSubtypeChoice.LevelSubtypeChoiceController;
 import org.zeros.bouncy_balls.Controllers.P4_LevelSelection.LevelSelectionController;
-import org.zeros.bouncy_balls.Controllers.P5_Animation.GameEndController;
-import org.zeros.bouncy_balls.Controllers.P5_Animation.GameAnimationPanelController;
+import org.zeros.bouncy_balls.Controllers.P5_Animation.GameControlController;
+import org.zeros.bouncy_balls.Controllers.P5_Animation.GameCountDownController;
+
 import org.zeros.bouncy_balls.Controllers.P5_Animation.GamePausedController;
 
 public class ControllersBase {
@@ -22,9 +23,9 @@ public class ControllersBase {
     private LevelCreatorController levelCreatorController;
     private LevelSubtypeChoiceController levelSubtypeChoiceController;
     private LevelSelectionController levelSelectionController;
-    private GameEndController gameEndController;
-    private GameAnimationPanelController gamePanelController;
+    private GameCountDownController gameCountDownController;
     private GamePausedController gamePausedController;
+    private GameControlController gameControlController;
     private MainWindowController mainWindowController;
 
 
@@ -74,17 +75,17 @@ public class ControllersBase {
         }
         return levelSelectionController;
     }
-    public GameEndController getGameEndController() {
-        if (this.gameEndController == null) {
-            this.gameEndController = new GameEndController();
+    public GameCountDownController getGameCountDownController() {
+        if (this.gameCountDownController == null) {
+            this.gameCountDownController = new GameCountDownController();
         }
-        return gameEndController;
+        return gameCountDownController;
     }
-    public GameAnimationPanelController getGamePanelController() {
-        if (this.gamePanelController == null) {
-            this.gamePanelController = new GameAnimationPanelController();
+    public GameControlController getGameControlController() {
+        if (this.gameControlController == null) {
+            this.gameControlController = new GameControlController();
         }
-        return gamePanelController;
+        return gameControlController;
     }
     public GamePausedController getGamePausedController() {
         if (this.gamePausedController == null) {

@@ -63,13 +63,12 @@ public class MainWindowController implements Initializable {
     }
 
 
-    private void loadBackgroundAnimation() {
+    public void loadBackgroundAnimation() {
         AnimationPane animationPane = Model.getInstance().getViewFactory().getBackgroundAnimation();
         bottomLayer.setOpacity(0);
         bottomLayer.setCenter(animationPane.getAnimationPane());
         animationPane.startGame();
         animateLayerAppear(bottomLayer, 0.1);
-
     }
 
     private void animateLayerAppear(Pane pane, double wait) {
