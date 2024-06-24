@@ -1,6 +1,7 @@
 package org.zeros.bouncy_balls.Animation.Animation;
 
 import javafx.animation.AnimationTimer;
+import javafx.beans.property.*;
 import javafx.geometry.Point2D;
 import org.zeros.bouncy_balls.Animation.Borders.Borders;
 import org.zeros.bouncy_balls.Animation.Borders.BordersType;
@@ -21,9 +22,14 @@ public class Animation {
     private final Level level;
     private final TreeSet<Double> timesElapsed = new TreeSet<>();
     private Borders borders;
-    private double timeUsed = 0;
     private int mObj1;
     private String name;
+
+
+
+
+    private final LongProperty timeElapsedNanos=new SimpleLongProperty(0);
+    private final ObjectProperty<GameState> gameState=new SimpleObjectProperty<>();
 
     public Animation(Level level) {
         this.level = level;
@@ -33,11 +39,12 @@ public class Animation {
         for (MovingObject object : level.getMovingObjects()) {
             object.setAnimation(this);
         }
+        gameState.set(GameState.LOADED);
     }
 
     public void animate() {
+        gameState.set(GameState.IN_PROGRESS);
         setFinalPositions();
-        timeUsed = 0;
         timer.start();
     }
 
@@ -48,30 +55,46 @@ public class Animation {
     private final AnimationTimer timer = new AnimationTimer() {
         @Override
         public void handle(long now) {
-            animateThis();
+            animateThis(now);
         }
     };
 
     public void pause() {
+        gameState.set(GameState.PAUSED);
+        previousTime=0;
         timer.stop();
     }
+    public void resume(){
+        gameState.set(GameState.IN_PROGRESS);
+        timer.start();}
+    private long previousTime=0;
 
-    private void animateThis() {
-        double timeStart = System.currentTimeMillis();
+    private void animateThis(long now) {
+        if(previousTime!=0) {
+            timeElapsedNanos.set(timeElapsedNanos.get() +(now-previousTime));
+        }
+        previousTime=now;
         searchForBounces();
         setFinalPositions();
-        timeUsed = timeUsed + System.currentTimeMillis() - timeStart;
-        if (timeUsed > level.PROPERTIES().getTIME() * 1000 || gameWon() || gameLost()) {
-            pause();
-        }
 
+        if (timeElapsedNanos.get() > level.PROPERTIES().getTIME()*1000000000 || allNeededEntered() || notAllowedEnter()) {
+            setFinalState();
+        }
     }
 
-    private boolean gameLost() {
+    private void setFinalState() {
+        pause();
+        if(notAllowedEnter()){
+            gameState.set(GameState.LOST);
+        }else if(level.getMovingObjectsHaveToEnter().isEmpty()){
+            gameState.set(GameState.WON);
+        }
+    }
+
+    private boolean notAllowedEnter() {
         if (level.PROPERTIES().getTYPE().equals(AnimationType.GAME)) {
             for (MovingObject object : level.getMovingObjectsCannotEnter()) {
                 if (AreasMath.isInsideArea(level.getTargetArea(), object.center())) {
-                    System.out.println("Game Lost");
                     return true;
                 }
             }
@@ -79,16 +102,16 @@ public class Animation {
         return false;
     }
 
-    private boolean gameWon() {
+    private boolean allNeededEntered() {
         if (level.PROPERTIES().getTYPE().equals(AnimationType.GAME) && !level.getMovingObjectsHaveToEnter().isEmpty()) {
-            int temp = 0;
             for (MovingObject object : level.getMovingObjectsHaveToEnter()) {
-                if (AreasMath.isInsideArea(level.getTargetArea(), object.center())) temp++;
+                if (AreasMath.isInsideArea(level.getTargetArea(), object.center())) {
+                    level.getMovingObjects().remove(object);
+                    level.getMovingObjectsHaveToEnter().remove(object);
+                    object.getShape().setVisible(false);
+                }
             }
-            if (temp == level.getMovingObjectsHaveToEnter().size()) {
-                System.out.println("Game Won");
-                return true;
-            }
+            return level.getMovingObjectsHaveToEnter().isEmpty();
         }
         return false;
     }
@@ -264,6 +287,13 @@ public class Animation {
 
     public String getName() {
         return name;
+    }
+    public LongProperty timeElapsedNanosProperty() {
+        return timeElapsedNanos;
+    }
+
+    public ObjectProperty<GameState> gameStateProperty() {
+        return gameState;
     }
 
     public void setName(String name) {

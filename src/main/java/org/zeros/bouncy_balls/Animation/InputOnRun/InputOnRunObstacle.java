@@ -9,6 +9,7 @@ import org.zeros.bouncy_balls.Animation.Animation.Animation;
 import org.zeros.bouncy_balls.Calculations.AreasMath.AreasMath;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
 import org.zeros.bouncy_balls.Calculations.VectorMath;
+import org.zeros.bouncy_balls.DisplayUtil.BackgroundImages;
 import org.zeros.bouncy_balls.Model.Model;
 import org.zeros.bouncy_balls.Model.Properties;
 import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.Area;
@@ -19,13 +20,19 @@ public class InputOnRunObstacle extends InputOnRun {
     public InputOnRunObstacle(Area obstacle, Animation animation, AnchorPane panel) {
         super(animation, panel);
         this.obstacle = obstacle;
+        obstacle.getPath().setFill(Properties.OBSTACLE_COLOR());
+    }
+
+    @Override
+    public void dismiss() {
+        Platform.runLater(() -> panel.getChildren().remove(obstacle.getPath()));
+        super.dismiss();
     }
 
     @Override
     protected void configureMarkerAtCenterPick() {
         obstacle.getPath().setOpacity(0.3);
         Platform.runLater(() -> panel.getChildren().add(obstacle.getPath()));
-
     }
 
     @Override
@@ -69,7 +76,7 @@ public class InputOnRunObstacle extends InputOnRun {
             centerPicked = true;
         } else {
             rotateInput(pickedPoint);
-            dismiss();
+            panel.removeEventHandler(MouseEvent.MOUSE_MOVED, mouseMovedHandler);
             new Thread(this::animateObjectArrival).start();
         }
 
@@ -81,15 +88,17 @@ public class InputOnRunObstacle extends InputOnRun {
         for (int i = 0; i < 3; i++) {
             increaseOpacity();
             if (animation.hasFreePlace(obstacle)) {
-                obstacle.getPath().setOpacity(1);
                 animation.getLevel().addObstacle(obstacle);
+                obstacle.getPath().setOpacity(1);
+                animation.getLevel().removeObstacleToAdd(obstacle);
+                dismiss();
+                Platform.runLater(() -> panel.getChildren().add(obstacle.getPath()));
                 return;
             }
             decreaseOpacity();
         }
         obstacle.move(new Point2D(-10000, -10000));
-        Platform.runLater(() -> panel.getChildren().remove(obstacle.getPath()));
-        animation.getLevel().addObstacleToAdd(obstacle);
+        dismiss();
     }
 
 

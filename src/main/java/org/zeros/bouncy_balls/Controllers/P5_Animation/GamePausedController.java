@@ -11,9 +11,6 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import org.zeros.bouncy_balls.Animation.Animation.AnimationPane;
-import org.zeros.bouncy_balls.Controllers.P4_LevelSelection.LevelListCelFactory;
-import org.zeros.bouncy_balls.Controllers.P4_LevelSelection.LevelListCellController;
-import org.zeros.bouncy_balls.Controllers.P4_LevelSelection.LevelState;
 import org.zeros.bouncy_balls.DisplayUtil.CustomTooltip;
 import org.zeros.bouncy_balls.DisplayUtil.NodeAnimations;
 import org.zeros.bouncy_balls.Level.Level;
@@ -49,9 +46,6 @@ public class GamePausedController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setCirclesFill();
-        nextLevel = getLevel(1);
-        previousLevel = getLevel(-1);
-        getPreviousLevel();
         setRescaling();
         setEnterAnimation();
         setToolTips();
@@ -59,24 +53,30 @@ public class GamePausedController implements Initializable {
         setConfigurationAtNewGame();
     }
 
-    private void getPreviousLevel() {
-    }
 
-    private void setConfigurationAtNewGame() {
+    public void setConfigurationAtNewGame() {
+        nextLevel = getLevel(1,false);
+        previousLevel = getLevel(-1,false);
         endPanelContainer.setVisible(false);
         pausedContainer.setVisible(true);
         restartButton.setDisable(true);
-        if(nextLevel==null){
-            nextButton.setDisable(true);
-        }
-        if(previousLevel==null){
-            previousButton.setDisable(true);
-        }
+        nextButton.setDisable(nextLevel == null);
+        previousButton.setDisable(previousLevel == null);
+    }
+    public void setConfigurationAtPaused() {
+        endPanelContainer.setVisible(false);
+        pausedContainer.setVisible(true);
+        restartButton.setDisable(false);
+        nextButton.setDisable(nextLevel == null);
+        previousButton.setDisable(previousLevel == null);
     }
 
     private void setToolTips() {
         returnButton.setTooltip(new CustomTooltip("Return to level selection"));
-        runButton.setTooltip(new CustomTooltip("Run game"));
+        runButton.setTooltip(new CustomTooltip("""
+                Run game - click left mouse button to add a ball
+                , and right button to add obstacle
+                if there are any available"""));
         restartButton.setTooltip(new CustomTooltip("Reset and run new game"));
         nextButton.setTooltip(new CustomTooltip("Go to next level"));
         previousButton.setTooltip(new CustomTooltip("Go to previous level"));
@@ -90,15 +90,18 @@ public class GamePausedController implements Initializable {
         nextButton.setOnAction(event ->{ NodeAnimations.increaseBrightnessOnExit(nextButton);
             transitionToLevel(nextLevel);});
         restartButton.setOnAction(event ->{
-            NodeAnimations.increaseBrightnessOnExit(nextButton);
-            transitionToLevel(getLevel(0));});
+            NodeAnimations.increaseBrightnessOnExit(returnButton);
+            transitionToLevel(getLevel(0,true));});
         runButton.setOnAction(event ->runGame());
         }
 
     private void runGame() {
+        Model.getInstance().controllers().getMainWindowController().changeTopLayer(Model.getInstance().getViewFactory().getCountDownPanel(), 0.3);
+        Model.getInstance().controllers().getGameCountDownController().countDownAndRun(true);
     }
 
     private void transitionToLevelSelection() {
+        Model.getInstance().getViewFactory().getBackgroundAnimation().getAnimation().resume();
        Model.getInstance().controllers().getMainWindowController().loadBackgroundAnimation();
         NodeAnimations.increaseBrightnessOnExit(returnButton);
         Model.getInstance().controllers().getMainWindowController().changeTopLayer(Model.getInstance().getViewFactory().getLevelSelectionPanel(), 0.3);
@@ -106,29 +109,15 @@ public class GamePausedController implements Initializable {
     private void transitionToLevel(Level level) {
         AnimationPane pane = Model.getInstance().getViewFactory().getNewAnimationPane(level);
         Model.getInstance().controllers().getMainWindowController().changeBottomLayer(pane.getAnimationPane(),0.3);
-        Model.getInstance().controllers().getMainWindowController().changeTopLayer(
-                Model.getInstance().getViewFactory().getGamePausedPanel(), 0.3);
+        setConfigurationAtNewGame();
     }
 
-    private Level getLevel(int distance) {
+    private Level getLevel(int distance,boolean reset) {
         ListView<Level> listView = Model.getInstance().controllers().getLevelSelectionController().levelsList;
-        for (int i = 0; i < Model.getInstance().controllers().getLevelSelectionController().levelsList.getItems().size(); i++) {
-            LevelListCelFactory cell = (LevelListCelFactory) listView.lookup(".list-cell:nth-child(" + (i + 1) + ")");
-            if (cell != null) {
-                LevelListCellController controller = cell.getController();
-                if (controller.getLevel().equals(Model.getInstance().getViewFactory().getCurrentAnimationPane().getLevel())) {
-                    LevelListCelFactory cellNext = (LevelListCelFactory) listView.lookup(".list-cell:nth-child(" + (i + 1 + distance) + ")");
-                    if (cellNext != null) {
-                        LevelListCellController controllerNext = cellNext.getController();
-                        if (!controllerNext.getState().equals(LevelState.DISABLED)) {
-                            return controllerNext.getLevel();
-                        }
-
-                    }
-                    return null;
-                }
-            }
-
+        int indexCurrent=listView.getItems().indexOf(Model.getInstance().getViewFactory().getCurrentAnimationPane().getAnimation().getLevel());
+        if(indexCurrent+distance>=0&&indexCurrent+distance<listView.getItems().size()){
+            if(reset)Model.getInstance().controllers().getLevelSelectionController().reloadLevelsList();
+            return listView.getItems().get(indexCurrent+distance);
         }
         return null;
 
@@ -157,7 +146,7 @@ public class GamePausedController implements Initializable {
 
     private void setRescaling() {
 
-        centerCircle.radiusProperty().bind(gamePausedPanel.heightProperty().multiply(0.33));
+        centerCircle.radiusProperty().bind(gamePausedPanel.heightProperty().multiply(0.45));
         buttonsContainer.spacingProperty().bind(gamePausedPanel.heightProperty().multiply(0.08));
         runButton.prefHeightProperty().bind(gamePausedPanel.heightProperty().multiply(0.34));
         runButton.prefWidthProperty().bind(gamePausedPanel.heightProperty().multiply(0.34));
@@ -167,8 +156,10 @@ public class GamePausedController implements Initializable {
         previousButton.prefWidthProperty().bind(gamePausedPanel.heightProperty().multiply(0.34 * 0.3));
         nextButton.prefHeightProperty().bind(gamePausedPanel.heightProperty().multiply(0.34 * 0.3));
         nextButton.prefWidthProperty().bind(gamePausedPanel.heightProperty().multiply(0.34 * 0.3));
-        returnButton.prefWidthProperty().bind(gamePausedPanel.heightProperty().multiply(0.34 * 0.2));
-        returnButton.prefHeightProperty().bind(gamePausedPanel.heightProperty().multiply(0.34 * 0.2));
+        returnButton.prefWidthProperty().bind(gamePausedPanel.heightProperty().multiply(0.34 * 0.15));
+        returnButton.prefHeightProperty().bind(gamePausedPanel.heightProperty().multiply(0.34 * 0.15));
         nextButton.setRotate(180);
     }
+
+
 }

@@ -19,10 +19,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Comparator;
-import java.util.Objects;
-import java.util.ResourceBundle;
-import java.util.TreeSet;
+import java.util.*;
 
 public class LevelSelectionController implements Initializable {
 
@@ -37,6 +34,7 @@ public class LevelSelectionController implements Initializable {
     public TreeSet<Level> getLevelsInOrder() {
         return levelsInOrder;
     }
+   private ArrayList<CustomListCell> cells=new ArrayList<>();
 
     private TreeSet<Level> levelsInOrder;
     private AnimationType type;
@@ -48,9 +46,13 @@ public class LevelSelectionController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         listContainer.requestFocus();
         scrollPane.setSkin(new CustomScrollPaneSkin(scrollPane));
-        levelsList.setCellFactory(param -> new LevelListCelFactory());
+        levelsList.setCellFactory(param ->{CustomListCell cell= new CustomListCell();
+        cells.add(cell);
+        return cell;
+        });
         levelsList.getItems().addAll(levelsInOrder);
         returnButton.prefWidthProperty().bind(levelChoicePanel.heightProperty().multiply(0.34 * 0.2));
         returnButton.prefHeightProperty().bind(levelChoicePanel.heightProperty().multiply(0.34 * 0.2));
@@ -59,9 +61,14 @@ public class LevelSelectionController implements Initializable {
         returnButton.setOnAction(event -> transitionToSubtypeSelection());
         setSubtypeIcon();
     }
+    public void reloadLevelsList() {
+     loadLevelsList(type,subtype);
+    }
+
     public void loadLevelsList(AnimationType type, String subtype) {
         this.type = type;
         this.subtype = subtype;
+        cells=new ArrayList<>();
         if (levelsList != null) {
             levelsList.getItems().removeAll(levelsInOrder);
         }

@@ -1,5 +1,7 @@
 package org.zeros.bouncy_balls.Animation.InputOnRun;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -12,6 +14,15 @@ public abstract class InputOnRun {
     protected final Animation animation;
     protected final EventHandler<MouseEvent> mouseMovedHandler = this::onMouseMoved;
     protected boolean centerPicked = false;
+    protected final BooleanProperty finished=new SimpleBooleanProperty(false);
+
+    public BooleanProperty isFinishedProperty() {
+        return finished;
+    }
+
+    public BooleanProperty finishedProperty() {
+        return finished;
+    }
 
     public InputOnRun(Animation animation, AnchorPane panel) {
         this.panel = panel;
@@ -27,6 +38,7 @@ public abstract class InputOnRun {
     public void dismiss() {
         panel.removeEventHandler(MouseEvent.MOUSE_CLICKED, mouseInputHandler);
         panel.removeEventHandler(MouseEvent.MOUSE_MOVED, mouseMovedHandler);
+        finishedProperty().setValue(true);
     }
 
     protected abstract void configureMarkerAtCenterPick();

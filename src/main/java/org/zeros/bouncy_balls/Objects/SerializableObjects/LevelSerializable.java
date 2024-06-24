@@ -2,6 +2,7 @@ package org.zeros.bouncy_balls.Objects.SerializableObjects;
 
 import org.zeros.bouncy_balls.Animation.Animation.Animation;
 import org.zeros.bouncy_balls.Animation.Animation.AnimationProperties;
+import org.zeros.bouncy_balls.Exceptions.WrongValueException;
 import org.zeros.bouncy_balls.Level.Level;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObject;
 import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.Area;
@@ -73,10 +74,10 @@ public class LevelSerializable implements Serializable {
             level.getMovingObjectsToAdd().add(object.deserialize(animation));
         }
         for (MovingObjectSerializable object : movingObjectsHaveToEnter) {
-            level.getMovingObjectsHaveToEnter().add(object.deserialize(animation));
+            level.getMovingObjectsHaveToEnter().add(getEqualObject(level, object.deserialize(animation)));
         }
         for (MovingObjectSerializable object : movingObjectsCannotEnter) {
-            level.getMovingObjectsCannotEnter().add(object.deserialize(animation));
+            level.getMovingObjectsCannotEnter().add(getEqualObject(level, object.deserialize(animation)));
         }
         for (AreaSerializable area : obstaclesToAdd) {
             level.getObstaclesToAdd().add(area.deserialize());
@@ -88,5 +89,19 @@ public class LevelSerializable implements Serializable {
             level.setTargetArea(targetArea.deserialize());
         }
         return level;
+    }
+
+    private static MovingObject getEqualObject(Level level, MovingObject objToFind) {
+        for(MovingObject object1: level.getMovingObjects()){
+            if(object1.equals(objToFind)){
+               return object1;
+            }
+        }
+        for(MovingObject object1: level.getMovingObjectsToAdd()){
+            if(object1.equals(objToFind)){
+                return object1;
+            }
+        }
+        throw new IllegalArgumentException("Given level does not contain that object");
     }
 }

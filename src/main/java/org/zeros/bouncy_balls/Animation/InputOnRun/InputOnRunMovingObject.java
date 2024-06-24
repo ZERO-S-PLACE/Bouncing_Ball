@@ -1,6 +1,8 @@
 package org.zeros.bouncy_balls.Animation.InputOnRun;
 
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Point2D;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -8,6 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import org.zeros.bouncy_balls.Animation.Animation.AnimationPane;
 import org.zeros.bouncy_balls.Calculations.AreasMath.AreasMath;
+import org.zeros.bouncy_balls.DisplayUtil.BackgroundImages;
 import org.zeros.bouncy_balls.Model.Model;
 import org.zeros.bouncy_balls.Model.Properties;
 import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;
@@ -21,29 +24,39 @@ public class InputOnRunMovingObject extends InputOnRun {
     private Circle velocityMarker;
     private Circle positionMarker;
 
+
     public InputOnRunMovingObject(MovingObject object, AnchorPane panel) {
         super(object.getAnimation(), panel);
         this.object = object;
+        BackgroundImages.setBallStandardBackground(object.getShape());
     }
 
 
     @Override
     public void dismiss() {
-        super.dismiss();
+
         Platform.runLater(() -> {
-            Platform.runLater(() -> panel.getChildren().remove(positionMarker));
             panel.getChildren().remove(velocityMarker);
             panel.getChildren().removeAll(trajectoryMarkers);
+            positionMarker.setOpacity(1);
         });
+        super.dismiss();
+
     }
 
 
     @Override
     protected void configureMarkerAtCenterPick() {
         if (object.getType().equals(MovingObjectType.BALL)) {
-            positionMarker = new Circle(-10000, -10000, object.getFurthestSpan() / Properties.SIZE_FACTOR());
-            positionMarker.setFill(object.getShape().getFill());
+            positionMarker = (Circle) object.getShape();
             positionMarker.setOpacity(0.3);
+            if(animation.getLevel().getMovingObjectsCannotEnter().contains(object)) {
+                BackgroundImages.setBallCannotEnterBackground(positionMarker);
+            }else if(animation.getLevel().getMovingObjectsHaveToEnter().contains(object)) {
+                BackgroundImages.setBallHaveToEnterBackground(positionMarker);
+            }else {
+                BackgroundImages.setBallStandardBackground(positionMarker);
+            }
         }
         Platform.runLater(() -> panel.getChildren().add(positionMarker));
     }
@@ -51,12 +64,12 @@ public class InputOnRunMovingObject extends InputOnRun {
     private void configureMarkersAtVelocityPick() {
         velocityMarker = new Circle(3);
         velocityMarker.setFill(Color.TRANSPARENT);
-        velocityMarker.setStroke(new Color(0, 0, 0, 0.5));
+        velocityMarker.setStroke(Color.web("#A6D4ED"));
         velocityMarker.setStrokeWidth(2);
         for (int i = 0; i < trajectoryMarkers.length; i++) {
             trajectoryMarkers[i] = new Circle(object.getFurthestSpan() / 3);
             trajectoryMarkers[i].setFill(Color.TRANSPARENT);
-            trajectoryMarkers[i].setStroke(new Color(0.3, 0.3, 0.3, 0.3));
+            trajectoryMarkers[i].setStroke(Color.web("#A6D4ED"));
             trajectoryMarkers[i].setStrokeWidth(0.5);
         }
         Platform.runLater(() -> panel.getChildren().add(velocityMarker));
@@ -65,9 +78,16 @@ public class InputOnRunMovingObject extends InputOnRun {
 
     @Override
     protected void onMouseMoved(MouseEvent mouseEvent) {
+        Point2D pickedPoint = new Point2D(mouseEvent.getX() * Properties.SIZE_FACTOR(), mouseEvent.getY() * Properties.SIZE_FACTOR());
+
         if (!centerPicked) {
-            positionMarker.setCenterX(mouseEvent.getX());
-            positionMarker.setCenterY(mouseEvent.getY());
+            if (AreasMath.isInsideArea(animation.getLevel().getInputArea(), pickedPoint) ){
+                positionMarker.setVisible(true);
+                positionMarker.setCenterX(mouseEvent.getX());
+                positionMarker.setCenterY(mouseEvent.getY());
+            }else {
+                positionMarker.setVisible(false);
+            }
         } else {
             velocityMarker.setCenterX(mouseEvent.getX());
             velocityMarker.setCenterY(mouseEvent.getY());
@@ -100,8 +120,8 @@ public class InputOnRunMovingObject extends InputOnRun {
         if (!centerPicked) {
             object.updateCenter(pickedPoint);
             object.updateNextCenter(object.center());
-
             if (animation.hasFreePlace((Ball) object)) {
+                object.getShape().setOpacity(0.7);
                 positionMarker.setCenterX(mouseEvent.getX());
                 positionMarker.setCenterY(mouseEvent.getY());
                 centerPicked = true;
@@ -109,26 +129,26 @@ public class InputOnRunMovingObject extends InputOnRun {
             }
         } else {
             object.updateVelocity(object.center().subtract(new Point2D(mouseEvent.getX() * Properties.SIZE_FACTOR(), mouseEvent.getY() * Properties.SIZE_FACTOR())), 1);
-            dismiss();
-            new Thread(this::animateObjectArrival).start();
+            animateObjectArrival();
 
         }
     }
     @Override
     protected void animateObjectArrival() {
-        Platform.runLater(() -> panel.getChildren().add(object.getShape()));
-
         for (int i = 0; i < 4; i++) {
             increaseOpacity();
             if (animation.hasFreePlace((Ball) object)) {
                 animation.getLevel().addMovingObject(object);
+                animation.getLevel().removeMovingObjectToAdd(object);
+                dismiss();
                 return;
             }
             decreaseOpacity();
         }
         Platform.runLater(() -> panel.getChildren().remove(object.getShape()));
         object.updateCenter(new Point2D(-10000, -10000));
-        animation.getLevel().addMovingObjectToAdd(object);
+
+        dismiss();
     }
 
     private void decreaseOpacity() {

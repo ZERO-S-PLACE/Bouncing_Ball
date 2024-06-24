@@ -2,7 +2,6 @@ package org.zeros.bouncy_balls.Controllers.P4_LevelSelection;
 
 import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
@@ -186,10 +185,11 @@ public class LevelListCellController implements Initializable {
     }
 
     private void transitionToGame() {
+        Model.getInstance().getViewFactory().getBackgroundAnimation().getAnimation().pause();
         AnimationPane pane = Model.getInstance().getViewFactory().getNewAnimationPane(level);
-        Model.getInstance().controllers().getMainWindowController().changeBottomLayer(pane.getAnimationPane(),0.3);
+        Model.getInstance().controllers().getMainWindowController().changeBottomLayer(pane.getAnimationPane(),0.6);
         Model.getInstance().controllers().getMainWindowController().changeTopLayer(
-                Model.getInstance().getViewFactory().getGamePausedPanel(), 0.3);
+                Model.getInstance().getViewFactory().getGamePausedPanel(), 0.1);
     }
     public LevelState getState() {
         return state;

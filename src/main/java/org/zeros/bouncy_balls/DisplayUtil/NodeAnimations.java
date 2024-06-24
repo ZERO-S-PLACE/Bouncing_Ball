@@ -47,6 +47,11 @@ public class NodeAnimations {
                 }
             }
 
+            @Override
+            public void stop() {
+                super.stop();
+                resetBrightness(node);
+            }
         };
         animationTimer.start();
 

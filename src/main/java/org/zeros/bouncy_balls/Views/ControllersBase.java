@@ -8,7 +8,7 @@ import org.zeros.bouncy_balls.Controllers.P2b_Leaderboard.LeaderboardPanelContro
 import org.zeros.bouncy_balls.Controllers.P2c_LevelCreator.LevelCreatorController;
 import org.zeros.bouncy_balls.Controllers.P3_LevelSubtypeChoice.LevelSubtypeChoiceController;
 import org.zeros.bouncy_balls.Controllers.P4_LevelSelection.LevelSelectionController;
-import org.zeros.bouncy_balls.Controllers.P5_Animation.GameControlController;
+import org.zeros.bouncy_balls.Controllers.P5_Animation.ClockController;
 import org.zeros.bouncy_balls.Controllers.P5_Animation.GameCountDownController;
 
 import org.zeros.bouncy_balls.Controllers.P5_Animation.GamePausedController;
@@ -25,7 +25,7 @@ public class ControllersBase {
     private LevelSelectionController levelSelectionController;
     private GameCountDownController gameCountDownController;
     private GamePausedController gamePausedController;
-    private GameControlController gameControlController;
+    private ClockController gameControlController;
     private MainWindowController mainWindowController;
 
 
@@ -81,9 +81,9 @@ public class ControllersBase {
         }
         return gameCountDownController;
     }
-    public GameControlController getGameControlController() {
+    public ClockController getGameControlController() {
         if (this.gameControlController == null) {
-            this.gameControlController = new GameControlController();
+            this.gameControlController = new ClockController();
         }
         return gameControlController;
     }

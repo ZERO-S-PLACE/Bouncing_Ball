@@ -6,6 +6,5 @@ public class CustomTooltip extends Tooltip {
     public CustomTooltip (String message){
         super(message);
         this.getStyleClass().add("custom-tooltip");
-
     }
 }

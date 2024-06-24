@@ -7,12 +7,13 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.zeros.bouncy_balls.Animation.Animation.AnimationPane;
 import org.zeros.bouncy_balls.Animation.Animation.AnimationType;
+import org.zeros.bouncy_balls.DisplayUtil.BackgroundImages;
 import org.zeros.bouncy_balls.Level.Level;
 import org.zeros.bouncy_balls.Model.Model;
-import org.zeros.bouncy_balls.Model.Properties;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -37,7 +38,7 @@ public class ViewFactory {
         loader.setController(Model.getInstance().controllers().getMainWindowController());
         createStage(loader);
        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/General/tooltip.css")).toExternalForm());
-
+       scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/P5_AnimationPanel/GameAnimation.css")).toExternalForm());
 
     }
 
@@ -146,20 +147,23 @@ public class ViewFactory {
     }
     public BorderPane getGameControlPanel()  {
         if (gameControlPanel == null) {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/5_AnimationPanel/GameControlPanel.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/5_AnimationPanel/Clock.fxml"));
             loader.setController(Model.getInstance().controllers().getGameControlController());
             try {
                 gameControlPanel = loader.load();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+            gameControlPanel.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT,null,null)));
         }
+
         return gameControlPanel;
     }
 
     public AnimationPane getNewAnimationPane(Level level) {
         gameAnimation= new AnimationPane(level);
-            return gameAnimation;
+        BackgroundImages.setGameBackground(gameAnimation.getAnimationPane(),true);
+        return gameAnimation;
     }
     public AnimationPane getCurrentAnimationPane() {
         return gameAnimation;
@@ -179,11 +183,13 @@ public class ViewFactory {
         stage.setTitle("Zeros Paint");
         stage.show();
     }
+    private AnimationPane backAnimationPane;
 
     public AnimationPane getBackgroundAnimation() {
-        AnimationPane animationPane=new AnimationPane("program_data/background_animations/A1.ser");
-
-        animationPane.getAnimationPane().setBackground(new Background(new BackgroundFill(Properties.BACKGROUND_COLOR(),null,null)));
-        return animationPane;
+        if(backAnimationPane==null) {
+            backAnimationPane = new AnimationPane("program_data/background_animations/A1.ser");
+            BackgroundImages.setGameBackground(backAnimationPane.getAnimationPane(), false);
+        }
+        return backAnimationPane;
     }
 }

@@ -205,7 +205,7 @@ public class Level implements Serializable {
     public void addMovingObjectToAdd(MovingObject obj) {
         movingObjectsToAddLock.lock();
         try {
-            movingObjectsToAdd.add(obj);
+            movingObjectsToAdd.addFirst(obj);
         } finally {
             movingObjectsToAddLock.unlock();
         }
@@ -251,7 +251,7 @@ public class Level implements Serializable {
         obs.move(new Point2D(-10000, -10000));
         obstaclesToAddLock.lock();
         try {
-            obstaclesToAdd.add(obs);
+            obstaclesToAdd.addFirst(obs);
         } finally {
             obstaclesToAddLock.unlock();
         }
@@ -269,8 +269,7 @@ public class Level implements Serializable {
     public List<Area> getObstaclesToAdd() {
         obstaclesToAddLock.lock();
         try {
-
-            return new ArrayList<>(obstaclesToAdd);
+            return obstaclesToAdd;
         } finally {
             obstaclesToAddLock.unlock();
         }

@@ -1,6 +1,7 @@
 package org.zeros.bouncy_balls.Model;
 
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ public class Properties {
             "Animation of objects moves considering their charges",
             "Animation of moves in gravitational fields",
             "Animations created by users"));
+    private static final Color OBSTACLE_COLOR = Color.web("#A6D4ED");
 
     public static ArrayList<String> getAnimationGenres() {
         return animationGenres;
@@ -38,6 +40,10 @@ public class Properties {
 
     public static int MAX_EVALUATIONS() {
         return MAX_EVALUATIONS;
+    }
+
+    public static Color OBSTACLE_COLOR() {
+        return OBSTACLE_COLOR;
     }
 
     public void setMAX_EVALUATIONS(int MAX_EVALUATIONS) {

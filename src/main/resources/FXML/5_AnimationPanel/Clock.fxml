@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Arc?>
+<?import javafx.scene.shape.Circle?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+    <BorderPane layoutX="793.0" layoutY="340.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="0.0">
+        <center>
+            <VBox alignment="CENTER" styleClass="welcome-panel-button-container" BorderPane.alignment="CENTER" />
+        </center>
+    </BorderPane>
+    <center>
+      <AnchorPane fx:id="clockContainer">
+         <children>
+            <Circle fx:id="clockBack" fill="DODGERBLUE" radius="100.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <Arc fx:id="clockMeasure" fill="DODGERBLUE" length="270.0" radiusX="100.0" radiusY="100.0" stroke="BLACK" strokeType="INSIDE" type="ROUND" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+         </children>
+      </AnchorPane>
+    </center>
+
+</BorderPane>

@@ -4,11 +4,14 @@ import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.ImagePattern;
 import org.zeros.bouncy_balls.Animation.Animation.AnimationPane;
+import org.zeros.bouncy_balls.DisplayUtil.BackgroundImages;
 import org.zeros.bouncy_balls.Model.Model;
 import org.zeros.bouncy_balls.Model.Properties;
 
@@ -24,7 +27,7 @@ public class MainWindowController implements Initializable {
     public BorderPane mainPanel;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        mainPanel.setBackground(new Background(new BackgroundFill(Properties.BACKGROUND_COLOR(), null, null)));
+        mainPanel.setBackground(new Background(new BackgroundFill(Properties.BACKGROUND_COLOR(),null,null)));
     }
 
     public void loadStartNodes() throws IOException {
