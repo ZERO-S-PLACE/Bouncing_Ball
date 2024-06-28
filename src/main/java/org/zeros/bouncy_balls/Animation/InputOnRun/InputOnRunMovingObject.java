@@ -17,15 +17,15 @@ public class InputOnRunMovingObject extends InputOnRun {
 
     private final Circle[] trajectoryMarkers = new Circle[10];
     private final MovingObject object;
-    private Circle velocityMarker;
     private final Point2D maxVelocity;
-
+    private Circle velocityMarker;
     public InputOnRunMovingObject(MovingObject object, AnchorPane panel) {
         super(object.getAnimation(), panel);
         this.object = object;
-        maxVelocity=object.velocity();
+        maxVelocity = object.velocity();
         BackgroundImages.setBallStandardBackground(object.getShape());
     }
+
     @Override
     public void dismiss() {
         super.dismiss();
@@ -35,8 +35,6 @@ public class InputOnRunMovingObject extends InputOnRun {
             panel.getChildren().removeAll(trajectoryMarkers);
         });
     }
-
-
     @Override
     protected void configureMarkerAtCenterPick() {
         if (object.getType().equals(MovingObjectType.BALL)) {
@@ -71,43 +69,54 @@ public class InputOnRunMovingObject extends InputOnRun {
     protected void onMouseMoved(MouseEvent mouseEvent) {
         Point2D pickedPoint = new Point2D(mouseEvent.getX() * Properties.SIZE_FACTOR(), mouseEvent.getY() * Properties.SIZE_FACTOR());
         if (!centerPicked) {
-            if (AreasMath.isInsideArea(animation.getLevel().getInputArea(), pickedPoint)) {
-                object.getShape().setVisible(true);
-                if(object.getType().equals(MovingObjectType.BALL)) {
-                    ((Circle) object.getShape()).setCenterX(mouseEvent.getX());
-                    ((Circle) object.getShape()).setCenterY(mouseEvent.getY());
-                }
-            } else {
-                object.getShape().setVisible(false);
+            moveObject(mouseEvent, pickedPoint);
+        } else {
+            moveVelocityMarker(mouseEvent);
+        }
+    }
+
+    private void moveVelocityMarker(MouseEvent mouseEvent) {
+        velocityMarker.setCenterX(mouseEvent.getX());
+        velocityMarker.setCenterY(mouseEvent.getY());
+        Ball ball = new Ball(object.getFurthestSpan(), animation);
+        ball.updateCenter(object.center());
+        ball.updateNextCenter(object.center());
+        ball.setInitialVelocity(getPickedVelocity(mouseEvent));
+        updateTrajectoryMarkers(ball);
+    }
+
+    private void moveObject(MouseEvent mouseEvent, Point2D pickedPoint) {
+        if (AreasMath.isInsideArea(animation.getLevel().getInputArea(), pickedPoint)) {
+            object.getShape().setVisible(true);
+            if (object.getType().equals(MovingObjectType.BALL)) {
+                ((Circle) object.getShape()).setCenterX(mouseEvent.getX());
+                ((Circle) object.getShape()).setCenterY(mouseEvent.getY());
             }
         } else {
-            velocityMarker.setCenterX(mouseEvent.getX());
-            velocityMarker.setCenterY(mouseEvent.getY());
-            Ball ball = new Ball(object.getFurthestSpan(), animation);
-            ball.updateCenter(object.center());
-            ball.updateNextCenter(object.center());
-            ball.setInitialVelocity(getPickedVelocity(mouseEvent));
-            for (int i = 0; i < trajectoryMarkers.length; i++) {
-                int spacing = 8;
-                for (int j = 0; j < spacing + 2 * i; j++) {
-                    ball.nextFrame();
-                }
-                if (ball.frameVelocity().magnitude() > 1) {
-                    trajectoryMarkers[i].setRadius(ball.frameVelocity().magnitude() / Properties.SIZE_FACTOR());
-                } else {
-                    trajectoryMarkers[i].setRadius(1.5);
-                }
-                trajectoryMarkers[i].setCenterX(ball.center().getX() / Properties.SIZE_FACTOR());
-                trajectoryMarkers[i].setCenterY(ball.center().getY() / Properties.SIZE_FACTOR());
-            }
+            object.getShape().setVisible(false);
+        }
+    }
 
+    private void updateTrajectoryMarkers(Ball ball) {
+        for (int i = 0; i < trajectoryMarkers.length; i++) {
+            int spacing = 8;
+            for (int j = 0; j < spacing + 2 * i; j++) {
+                ball.nextFrame();
+            }
+            if (ball.frameVelocity().magnitude() > 1) {
+                trajectoryMarkers[i].setRadius(ball.frameVelocity().magnitude() / Properties.SIZE_FACTOR());
+            } else {
+                trajectoryMarkers[i].setRadius(1.5);
+            }
+            trajectoryMarkers[i].setCenterX(ball.center().getX() / Properties.SIZE_FACTOR());
+            trajectoryMarkers[i].setCenterY(ball.center().getY() / Properties.SIZE_FACTOR());
         }
     }
 
     private Point2D getPickedVelocity(MouseEvent mouseEvent) {
-        Point2D velocity= object.center().subtract(new Point2D(mouseEvent.getX() * Properties.SIZE_FACTOR(), mouseEvent.getY() * Properties.SIZE_FACTOR()));
-        if(velocity.magnitude()>maxVelocity.magnitude()){
-            velocity=velocity.multiply(maxVelocity.magnitude()/velocity.magnitude());
+        Point2D velocity = object.center().subtract(new Point2D(mouseEvent.getX() * Properties.SIZE_FACTOR(), mouseEvent.getY() * Properties.SIZE_FACTOR()));
+        if (velocity.magnitude() > maxVelocity.magnitude()) {
+            velocity = velocity.multiply(maxVelocity.magnitude() / velocity.magnitude());
         }
         return velocity;
     }
@@ -137,6 +146,7 @@ public class InputOnRunMovingObject extends InputOnRun {
     protected boolean arrivalCondition() {
         return animation.hasFreePlace((Ball) object);
     }
+
     @Override
     protected void onSucceededArrival() {
         animation.getLevel().addMovingObject(object);

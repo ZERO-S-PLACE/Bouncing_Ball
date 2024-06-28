@@ -34,6 +34,7 @@ module org.zeros.bouncy_balls {
     exports org.zeros.bouncy_balls.Controllers.P2a_LevelTypeChoice;
     exports org.zeros.bouncy_balls.Controllers.P2b_Leaderboard;
     exports org.zeros.bouncy_balls.Controllers.P2c_LevelCreator;
+    exports org.zeros.bouncy_balls.Controllers.P2d_Settings;
     exports org.zeros.bouncy_balls.Controllers.P3_LevelSubtypeChoice;
     exports org.zeros.bouncy_balls.Controllers.P4_LevelSelection;
     exports org.zeros.bouncy_balls.Controllers.P5_Animation;

@@ -9,7 +9,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class GameCountDownController implements Initializable {
-
     public Text countText;
 
     @Override
@@ -57,7 +56,6 @@ public class GameCountDownController implements Initializable {
                 }
                 Model.getInstance().controllers().getMainWindowController().changeTopLayer(null, 0.1);
                 Model.getInstance().controllers().getMainWindowController().topLayer.setMouseTransparent(true);
-                Model.getInstance().controllers().getMainWindowController().middleLayer.setMouseTransparent(true);
             }
         };
         animationTimer.start();

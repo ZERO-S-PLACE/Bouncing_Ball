@@ -12,7 +12,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.locks.Lock;
@@ -38,12 +37,11 @@ public class Level implements Serializable {
     private ComplexArea inputArea;
     private ComplexArea targetArea;
 
-    private int oneStarBound=2000;
-    private int twoStarBound=5000;
+    private int oneStarBound = 2000;
+    private int twoStarBound = 5000;
 
 
-
-    private int threeStarBound=10000;
+    private int threeStarBound = 10000;
 
     public Level(AnimationProperties properties) {
         PROPERTIES = properties;
@@ -65,6 +63,7 @@ public class Level implements Serializable {
             return save.deserialize();
         }
     }
+
     public static String getDirectoryPath(AnimationType type, String subtype) {
         String directoryPath;
         if (!subtype.equals("User")) {
@@ -174,15 +173,6 @@ public class Level implements Serializable {
         }
     }
 
-    public void removeMovingObject(MovingObject obj) {
-        movingObjectsLock.lock();
-        try {
-            movingObjects.remove(obj);
-        } finally {
-            movingObjectsLock.unlock();
-        }
-    }
-
     public List<MovingObject> getMovingObjects() {
         movingObjectsLock.lock();
         try {
@@ -224,15 +214,6 @@ public class Level implements Serializable {
         obstaclesLock.lock();
         try {
             obstacles.add(obs);
-        } finally {
-            obstaclesLock.unlock();
-        }
-    }
-
-    public void removeObstacle(Area obs) {
-        obstaclesLock.lock();
-        try {
-            obstacles.remove(obs);
         } finally {
             obstaclesLock.unlock();
         }
@@ -283,16 +264,6 @@ public class Level implements Serializable {
             movingObjectsHaveToEnterLock.unlock();
         }
     }
-
-    public void removeMovingObjectHaveToEnter(MovingObject obj) {
-        movingObjectsHaveToEnterLock.lock();
-        try {
-            movingObjectsHaveToEnter.remove(obj);
-        } finally {
-            movingObjectsHaveToEnterLock.unlock();
-        }
-    }
-
     public List<MovingObject> getMovingObjectsHaveToEnter() {
         movingObjectsHaveToEnterLock.lock();
         try {
@@ -311,15 +282,6 @@ public class Level implements Serializable {
         }
     }
 
-    public void removeMovingObjectCannotEnter(MovingObject obj) {
-        movingObjectsCannotEnterLock.lock();
-        try {
-            movingObjectsCannotEnter.remove(obj);
-        } finally {
-            movingObjectsCannotEnterLock.unlock();
-        }
-    }
-
     public List<MovingObject> getMovingObjectsCannotEnter() {
         movingObjectsCannotEnterLock.lock();
         try {
@@ -328,6 +290,7 @@ public class Level implements Serializable {
             movingObjectsCannotEnterLock.unlock();
         }
     }
+
     public int getOneStarBound() {
         return oneStarBound;
     }

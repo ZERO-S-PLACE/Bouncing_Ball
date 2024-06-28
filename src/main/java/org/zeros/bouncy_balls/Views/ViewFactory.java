@@ -3,11 +3,7 @@ package org.zeros.bouncy_balls.Views;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.zeros.bouncy_balls.Animation.Animation.AnimationPane;
 import org.zeros.bouncy_balls.Animation.Animation.AnimationType;
@@ -23,18 +19,20 @@ public class ViewFactory {
     private BorderPane welcomePanel;
     private BorderPane levelTypeChoicePanel;
     private BorderPane leaderboardPanel;
+    private BorderPane settingsPanel;
     private BorderPane levelSubtypePanel;
     private BorderPane levelSelectionPanel;
     private BorderPane gameCountDownPanel;
     private BorderPane gamePausedPanel;
     private AnimationPane gameAnimation;
+    private AnimationPane backAnimationPane;
 
     public void showMainWindow() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/MainWindow.fxml"));
         loader.setController(Model.getInstance().controllers().getMainWindowController());
         createStage(loader);
-       scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/General/tooltip.css")).toExternalForm());
-       scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/P5_AnimationPanel/GameAnimation.css")).toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/General/Tooltip.css")).toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/P5_AnimationPanel/GameAnimation.css")).toExternalForm());
 
     }
 
@@ -44,11 +42,10 @@ public class ViewFactory {
         createStage(loader);
     }
 
-
-    public BorderPane getWelcomePanel()  {
+    public BorderPane getWelcomePanel() {
         if (welcomePanel == null) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/1_WelcomePanel/WelcomePanel.fxml"));
-                loader.setController(Model.getInstance().controllers().getWelcomePanelController());
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/1_WelcomePanel/WelcomePanel.fxml"));
+            loader.setController(Model.getInstance().controllers().getWelcomePanelController());
             try {
                 welcomePanel = loader.load();
             } catch (IOException e) {
@@ -58,6 +55,7 @@ public class ViewFactory {
 
         return welcomePanel;
     }
+
     public BorderPane getLevelTypeChoicePanel() {
         if (levelTypeChoicePanel == null) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/2a_LevelTypeChoice/LevelTypeChoicePanel.fxml"));
@@ -70,7 +68,8 @@ public class ViewFactory {
         }
         return levelTypeChoicePanel;
     }
-    public BorderPane getLeaderboardPanel()  {
+
+    public BorderPane getLeaderboardPanel() {
         if (leaderboardPanel == null) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/2b_Leaderboard/LeaderboardPanel.fxml"));
             loader.setController(Model.getInstance().controllers().getLeaderboardPanelController());
@@ -82,7 +81,22 @@ public class ViewFactory {
         }
         return leaderboardPanel;
     }
-    public BorderPane getLevelSubtypePanel(AnimationType type)  {
+
+    public BorderPane getSettingsPanel() {
+        if (settingsPanel == null) {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/2d_Settings/SettingsPanel.fxml"));
+            loader.setController(Model.getInstance().controllers().getSettingsController());
+            try {
+                settingsPanel = loader.load();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return settingsPanel;
+
+    }
+
+    public BorderPane getLevelSubtypePanel(AnimationType type) {
         if (levelSubtypePanel == null) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/3_LevelSubtypeChoice/LevelSubtypeChoicePanel.fxml"));
             Model.getInstance().controllers().getLevelSubtypeChoiceController().setAnimationType(type);
@@ -92,31 +106,34 @@ public class ViewFactory {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-        }else {
+        } else {
             Model.getInstance().controllers().getLevelSubtypeChoiceController().setAnimationType(type);
         }
         return levelSubtypePanel;
     }
-    public BorderPane getNewLevelSelectionPanel(AnimationType type, String subtype)  {
+
+    public BorderPane getNewLevelSelectionPanel(AnimationType type, String subtype) {
         if (levelSelectionPanel == null) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/4_LevelSelection/LevelSelectionPanel.fxml"));
-            Model.getInstance().controllers().getLevelSelectionController().loadLevelsList(type,subtype);
+            Model.getInstance().controllers().getLevelSelectionController().loadLevelsList(type, subtype);
             loader.setController(Model.getInstance().controllers().getLevelSelectionController());
             try {
                 levelSelectionPanel = loader.load();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-        }else {
-            Model.getInstance().controllers().getLevelSelectionController().loadLevelsList(type,subtype);
+        } else {
+            Model.getInstance().controllers().getLevelSelectionController().loadLevelsList(type, subtype);
         }
 
         return levelSelectionPanel;
     }
-    public BorderPane getLevelSelectionPanel()  {
+
+    public BorderPane getLevelSelectionPanel() {
         return levelSelectionPanel;
     }
-    public BorderPane getGamePausedPanel()  {
+
+    public BorderPane getGamePausedPanel() {
         if (gamePausedPanel == null) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/5_AnimationPanel/GamePausedPanel.fxml"));
             loader.setController(Model.getInstance().controllers().getGamePausedController());
@@ -129,7 +146,7 @@ public class ViewFactory {
         return gamePausedPanel;
     }
 
-    public BorderPane getCountDownPanel()  {
+    public BorderPane getCountDownPanel() {
         if (gameCountDownPanel == null) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/5_AnimationPanel/GameCountDownPanel.fxml"));
             loader.setController(Model.getInstance().controllers().getGameCountDownController());
@@ -143,10 +160,11 @@ public class ViewFactory {
     }
 
     public AnimationPane getNewAnimationPane(Level level) {
-        gameAnimation= new AnimationPane(level);
-        BackgroundImages.setGameBackground(gameAnimation.getAnimationPane(),true);
+        gameAnimation = new AnimationPane(level);
+        BackgroundImages.setGameBackground(gameAnimation.getAnimationPane(), true);
         return gameAnimation;
     }
+
     public AnimationPane getCurrentAnimationPane() {
         return gameAnimation;
     }
@@ -165,14 +183,15 @@ public class ViewFactory {
         stage.setTitle("Zeros Paint");
         stage.show();
     }
-    private AnimationPane backAnimationPane;
 
     public AnimationPane getBackgroundAnimation() {
-        if(backAnimationPane==null) {
+        if (backAnimationPane == null) {
             backAnimationPane = new AnimationPane("program_data/background_animations/A1.ser");
         }
         BackgroundImages.setGameBackground(backAnimationPane.getAnimationPane(), false);
 
         return backAnimationPane;
     }
+
+
 }

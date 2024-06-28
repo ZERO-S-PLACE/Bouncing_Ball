@@ -5,19 +5,7 @@ import org.zeros.bouncy_balls.Model.Model;
 
 import java.io.*;
 
-public class GameScore implements Serializable {
-
-    private final String user;
-    private final String subType;
-    private final String levelName;
-    private final double scoreValue;
-
-    public GameScore(String user, String subType, String levelName, double scoreValue) {
-        this.user = user;
-        this.subType = subType;
-        this.levelName = levelName;
-        this.scoreValue = scoreValue;
-    }
+public record GameScore(String user, String subType, String levelName, double scoreValue) implements Serializable {
 
     public static GameScore load(String subType, String levelName) {
         String path = Level.getDirectoryPath(AnimationType.GAME, subType) + "/Scores/" + levelName + ".ser";
@@ -42,27 +30,12 @@ public class GameScore implements Serializable {
             e.printStackTrace();
         }
     }
+
     public static double getScore(Level level) {
-        return level.getOneStarBound()+ level.getMovingObjectsCannotEnter().size()*300+
-                level.getMovingObjectsToAdd().size()*400+ level.getObstaclesToAdd().size()*500
-                +30*(level.PROPERTIES().getTIME()-
-                (double) Model.getInstance().getViewFactory().getCurrentAnimationPane().getAnimation().getTimeElapsedNanos() /1_000_000_000);
-    }
-
-    public String getUser() {
-        return user;
-    }
-
-    public String getSubType() {
-        return subType;
-    }
-
-    public String getLevelName() {
-        return levelName;
-    }
-
-    public double getScoreValue() {
-        return scoreValue;
+        return level.getOneStarBound() + level.getMovingObjectsCannotEnter().size() * 300 +
+                level.getMovingObjectsToAdd().size() * 400 + level.getObstaclesToAdd().size() * 500
+                + 30 * (level.PROPERTIES().getTIME() -
+                (double) Model.getInstance().getViewFactory().getCurrentAnimationPane().getAnimation().getTimeElapsedNanos() / 1_000_000_000);
     }
 
 }

@@ -51,7 +51,6 @@ public class GamePausedController implements Initializable {
         Model.getInstance().getViewFactory().getCurrentAnimationPane().pauseGame();
         Model.getInstance().controllers().getMainWindowController().changeTopLayer(Model.getInstance().getViewFactory().getGamePausedPanel(), 0.1);
         Model.getInstance().controllers().getMainWindowController().topLayer.setMouseTransparent(false);
-        Model.getInstance().controllers().getMainWindowController().middleLayer.setMouseTransparent(false);
     }
 
     @Override
@@ -149,7 +148,7 @@ public class GamePausedController implements Initializable {
         String subtype = Model.getInstance().controllers().getLevelSelectionController().getSubtype();
         GameScore previousScore = GameScore.load(subtype, level.getNAME());
         if (previousScore != null) {
-            if (previousScore.getScoreValue() < score) {
+            if (previousScore.scoreValue() < score) {
                 saveScore(subtype, level.getNAME(), score);
             }
         } else {

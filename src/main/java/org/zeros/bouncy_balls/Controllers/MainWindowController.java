@@ -3,15 +3,11 @@ package org.zeros.bouncy_balls.Controllers;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.ImagePattern;
 import org.zeros.bouncy_balls.Animation.Animation.AnimationPane;
-import org.zeros.bouncy_balls.DisplayUtil.BackgroundImages;
 import org.zeros.bouncy_balls.Model.Model;
 import org.zeros.bouncy_balls.Model.Properties;
 
@@ -22,12 +18,12 @@ import java.util.ResourceBundle;
 public class MainWindowController implements Initializable {
 
     public BorderPane bottomLayer;
-    public BorderPane middleLayer;
     public BorderPane topLayer;
     public BorderPane mainPanel;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        mainPanel.setBackground(new Background(new BackgroundFill(Properties.BACKGROUND_COLOR(),null,null)));
+        mainPanel.setBackground(new Background(new BackgroundFill(Properties.BACKGROUND_COLOR(), null, null)));
     }
 
     public void loadStartNodes() throws IOException {
@@ -39,24 +35,20 @@ public class MainWindowController implements Initializable {
         changeLayer(topLayer, pane, wait);
     }
 
-    public void changeMiddleLayer(Pane pane, double wait) {
-        changeLayer(middleLayer, pane, wait);
-    }
-
     public void changeBottomLayer(Pane pane, double wait) {
         changeLayer(bottomLayer, pane, wait);
     }
 
     private void changeLayer(BorderPane layer, Pane pane, double wait) {
-            if (!layer.getChildren().isEmpty()) {
-                animateLayerChange(layer, pane, wait / 2);
-            } else {
-                Platform.runLater(() -> {
-                    layer.setOpacity(0);
-                    layer.setCenter(pane);
-                });
-                animateLayerAppear(layer, wait);
-            }
+        if (!layer.getChildren().isEmpty()) {
+            animateLayerChange(layer, pane, wait / 2);
+        } else {
+            Platform.runLater(() -> {
+                layer.setOpacity(0);
+                layer.setCenter(pane);
+            });
+            animateLayerAppear(layer, wait);
+        }
     }
 
 
@@ -125,8 +117,4 @@ public class MainWindowController implements Initializable {
 
     }
 
-    private void showFilesDamagedLabel(Pane pane) {
-        pane.getChildren().add(new Label("ERROR 404 "));
-        pane.getChildren().add(new Label("Files are damaged, please reinstall"));
-    }
 }

@@ -6,7 +6,6 @@ import org.zeros.bouncy_balls.Level.LevelCreator;
 import org.zeros.bouncy_balls.Model.Model;
 
 public class LevelCreatorApplication extends Application {
-
     public static void main(String[] args) {
         launch();
     }
@@ -17,5 +16,4 @@ public class LevelCreatorApplication extends Application {
         new Thread(levelCreator::create).start();
 
     }
-
 }

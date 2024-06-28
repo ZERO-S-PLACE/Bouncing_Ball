@@ -104,22 +104,22 @@ public class CurveSegment extends Segment {
             ArrayList<Point2D> commonEnds = new ArrayList<>();
 
             if (!equation.getParameterAtPoint(segment2.getPoints().getFirst()).isEmpty()) {
-                if (!VectorMath.containsPoint(segment2.getPoints().getFirst(), commonEnds)) {
+                if (VectorMath.doesNotContainPoint(segment2.getPoints().getFirst(), commonEnds)) {
                     commonEnds.add(segment2.getPoints().getFirst());
                 }
             }
             if (!equation.getParameterAtPoint(segment2.getPoints().getLast()).isEmpty()) {
-                if (!VectorMath.containsPoint(segment2.getPoints().getLast(), commonEnds)) {
+                if (VectorMath.doesNotContainPoint(segment2.getPoints().getLast(), commonEnds)) {
                     commonEnds.add(segment2.getPoints().getLast());
                 }
             }
             if (!segment2.getEquation().getParameterAtPoint(getPoints().getFirst()).isEmpty()) {
-                if (!VectorMath.containsPoint(getPoints().getFirst(), commonEnds)) {
+                if (VectorMath.doesNotContainPoint(getPoints().getFirst(), commonEnds)) {
                     commonEnds.add(getPoints().getFirst());
                 }
             }
             if (!segment2.getEquation().getParameterAtPoint(getPoints().getLast()).isEmpty()) {
-                if (!VectorMath.containsPoint(getPoints().getLast(), commonEnds)) {
+                if (VectorMath.doesNotContainPoint(getPoints().getLast(), commonEnds)) {
                     commonEnds.add(getPoints().getLast());
                 }
             }

@@ -10,9 +10,9 @@ import javafx.scene.layout.AnchorPane;
 import org.zeros.bouncy_balls.Animation.Animation.Animation;
 
 public abstract class InputOnRun {
+
     protected final AnchorPane panel;
     protected final EventHandler<MouseEvent> mouseInputHandler = this::onMouseClicked;
-
     protected final Animation animation;
     protected final EventHandler<MouseEvent> mouseMovedHandler = this::onMouseMoved;
     protected final BooleanProperty finished = new SimpleBooleanProperty(false);
@@ -25,10 +25,6 @@ public abstract class InputOnRun {
     public InputOnRun(Animation animation, AnchorPane panel) {
         this.panel = panel;
         this.animation = animation;
-    }
-
-    public BooleanProperty finishedProperty() {
-        return finished;
     }
 
     public void insert() {
@@ -106,5 +102,9 @@ public abstract class InputOnRun {
     protected abstract void onSucceededArrival();
 
     protected abstract boolean arrivalCondition();
+
+    public BooleanProperty finishedProperty() {
+        return finished;
+    }
 
 }

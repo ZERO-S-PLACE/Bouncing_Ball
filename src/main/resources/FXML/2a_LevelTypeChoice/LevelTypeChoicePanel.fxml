@@ -20,7 +20,7 @@
        <AnchorPane prefHeight="1080.0" prefWidth="1920.0" BorderPane.alignment="CENTER">
            <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <center>
-                  <Circle fx:id="centerCircle" fill="DODGERBLUE" radius="428.0" stroke="BLACK" strokeType="INSIDE" styleClass="welcome-panel-circle" BorderPane.alignment="CENTER" />
+                  <Circle fx:id="centerCircle"  radius="428.0" stroke="BLACK" strokeType="INSIDE" styleClass="welcome-panel-circle" BorderPane.alignment="CENTER" />
               </center>
            </BorderPane>
            <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">

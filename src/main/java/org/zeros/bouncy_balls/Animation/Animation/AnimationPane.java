@@ -16,7 +16,6 @@ import org.zeros.bouncy_balls.Animation.InputOnRun.InputOnRunMovingObject;
 import org.zeros.bouncy_balls.Animation.InputOnRun.InputOnRunObstacle;
 import org.zeros.bouncy_balls.DisplayUtil.BackgroundImages;
 import org.zeros.bouncy_balls.Level.Level;
-import org.zeros.bouncy_balls.Model.Model;
 import org.zeros.bouncy_balls.Model.Properties;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObject;
 import org.zeros.bouncy_balls.Objects.VectorArea.ComplexArea.ComplexArea;
@@ -38,7 +37,6 @@ public class AnimationPane {
         gameBackground = new AnchorPane();
         loadLevel(path);
         setUp();
-
     }
 
     public AnimationPane(Level level) {
@@ -46,19 +44,6 @@ public class AnimationPane {
         animation = new Animation(level);
         setUp();
     }
-
-    public AnchorPane getAnimationPane() {
-        return gameBackground;
-    }
-
-    public Animation getAnimation() {
-        return animation;
-    }
-
-    public Level getLevel() {
-        return animation.getLevel();
-    }
-
     public void addGameOverlay() {
         BorderPane pauseContainer = new BorderPane();
         pauseButton = new Button();
@@ -70,7 +55,6 @@ public class AnimationPane {
         AnchorPane.setTopAnchor(pauseContainer, 10.0);
         pauseButton.setOnAction(e -> pauseGame());
     }
-
     public void pauseGame() {
         if (input != null) {
             input.dismiss();
@@ -79,12 +63,10 @@ public class AnimationPane {
         animation.pause();
         pauseButton.setVisible(false);
     }
-
     public void resume() {
         pauseButton.setVisible(true);
         animation.resume();
     }
-
     private void setUp() {
         gameBackground.sceneProperty().addListener(((observable, oldValue, newValue) -> {
             if (oldValue != null) {
@@ -95,30 +77,24 @@ public class AnimationPane {
                 reloadNodes(newValue.heightProperty().get() / animation.getLevel().PROPERTIES().getHEIGHT() * Properties.SIZE_FACTOR());
             }
         }));
-
     }
-
     public void startGame() {
         new Thread(animation::animate).start();
         addKeyEventsListeners();
     }
-
     private void addKeyEventsListeners() {
         gameBackground.addEventHandler(KeyEvent.KEY_PRESSED, escHandler);
         gameBackground.addEventHandler(MouseEvent.MOUSE_CLICKED, inputOnRunHandler);
     }
-
     private void inputOnRunHandler(MouseEvent mouseEvent) {
         if (input == null) {
             if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
                 addNewMovingObjectOnRun();
             } else if (mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
                 addNewObstacleOnRun();
-
             }
         }
     }
-
     private void addNewObstacleOnRun() {
         if (!animation.getLevel().getObstaclesToAdd().isEmpty()) {
             Area obstacle = animation.getLevel().getObstaclesToAdd().getFirst();
@@ -129,7 +105,6 @@ public class AnimationPane {
             }));
         }
     }
-
     private void addNewMovingObjectOnRun() {
         if (!animation.getLevel().getMovingObjectsToAdd().isEmpty()) {
             addComplexAreaPreview(animation.getLevel().getInputArea(), Color.web("#435477"));
@@ -157,11 +132,9 @@ public class AnimationPane {
         }
     }
 
-
     private ChangeListener<Number> sizeChangeListener() {
         return (observable, oldValue, newValue) -> reloadNodes(newValue.doubleValue() / animation.getLevel().PROPERTIES().getHEIGHT() * Properties.SIZE_FACTOR());
     }
-
 
     public void loadLevel(String path) {
         Level level = Level.load(path);
@@ -235,6 +208,13 @@ public class AnimationPane {
             addAreaLayer(included2, color);
         }
     }
+    public AnchorPane getAnimationPane() {
+        return gameBackground;
+    }
+    public Animation getAnimation() {
+        return animation;
+    }
+    public Level getLevel() {
+        return animation.getLevel();
+    }
 }
-
-

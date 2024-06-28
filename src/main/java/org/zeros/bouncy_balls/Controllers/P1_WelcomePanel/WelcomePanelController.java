@@ -58,21 +58,21 @@ public class WelcomePanelController implements Initializable {
     }
 
     private void transitionToLeaderBoard() {
-    }
+        NodeAnimations.increaseBrightnessOnExit(leaderboardButton);
+        Model.getInstance().controllers().getMainWindowController().changeTopLayer(Model.getInstance().getViewFactory().getLeaderboardPanel(), 0.3);
 
+    }
     private void transitionToSettings() {
-    }
+        NodeAnimations.increaseBrightnessOnExit(settingsButton);
+        Model.getInstance().controllers().getMainWindowController().changeTopLayer(Model.getInstance().getViewFactory().getSettingsPanel(), 0.3);
 
-    private void setCirclesFill() {
-        String imagePath = Objects.requireNonNull(getClass().getResource("/Icons/General/BackBallBlue.png")).toExternalForm();
-        ImagePattern imagePattern = new ImagePattern(new javafx.scene.image.Image(imagePath));
-        rightCircle.setFill(imagePattern);
-        centerCircle.setFill(imagePattern);
-        leftCircle.setFill(imagePattern);
     }
-
-    private void transitionToLevelCreator() {
+    private void transitionToGameSelection() {
         NodeAnimations.increaseBrightnessOnExit(playButton);
+        Model.getInstance().controllers().getMainWindowController().changeTopLayer(Model.getInstance().getViewFactory().getLevelTypeChoicePanel(), 0.3);
+    }
+    private void transitionToLevelCreator() {
+        NodeAnimations.increaseBrightnessOnExit(creatorButton);
         Thread t1 = new Thread(() -> Model.getInstance().controllers().getMainWindowController().changeTopLayer(new Pane(), 0.3));
         t1.start();
         try {
@@ -80,34 +80,28 @@ public class WelcomePanelController implements Initializable {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        new Thread(() ->
-            Platform.runLater(() -> {
-                new LevelCreatorApplication().start(new Stage());
-                Model.getInstance().getViewFactory().getWelcomePanel().getScene().getWindow().hide();
-            })
-        ).start();
+        new Thread(() -> Platform.runLater(() -> {
+            new LevelCreatorApplication().start(new Stage());
+            Model.getInstance().getViewFactory().getWelcomePanel().getScene().getWindow().hide();
+        })).start();
     }
 
-    private void transitionToGameSelection() {
-        NodeAnimations.increaseBrightnessOnExit(playButton);
-        Model.getInstance().controllers().getMainWindowController().changeTopLayer(Model.getInstance().getViewFactory().getLevelTypeChoicePanel(), 0.3);
-    }
+
 
     private void setEnterAnimation() {
-
-        playButton.setOnMouseEntered(event -> NodeAnimations.increaseBrightness(playButton,0.25));
+        playButton.setOnMouseEntered(event -> NodeAnimations.increaseBrightness(playButton, 0.25));
         playButton.setOnMouseExited(event -> NodeAnimations.resetBrightness(playButton));
-        creatorButton.setOnMouseEntered(event -> NodeAnimations.increaseBrightness(creatorButton,0.25));
+        creatorButton.setOnMouseEntered(event -> NodeAnimations.increaseBrightness(creatorButton, 0.25));
         creatorButton.setOnMouseExited(event -> NodeAnimations.resetBrightness(creatorButton));
         settingsButton.setOnMouseEntered(event -> {
-            NodeAnimations.increaseBrightness(settingsButton,0.25);
+            NodeAnimations.increaseBrightness(settingsButton, 0.25);
             startRotationAnimation(settingsButton);
         });
         settingsButton.setOnMouseExited(event -> {
             NodeAnimations.resetBrightness(settingsButton);
-            stopRotationAnimation(settingsButton);
+            stopRotationAnimation();
         });
-        leaderboardButton.setOnMouseEntered(event -> NodeAnimations.increaseBrightness(leaderboardButton,0.25));
+        leaderboardButton.setOnMouseEntered(event -> NodeAnimations.increaseBrightness(leaderboardButton, 0.25));
         leaderboardButton.setOnMouseExited(event -> NodeAnimations.resetBrightness(leaderboardButton));
     }
 
@@ -119,15 +113,20 @@ public class WelcomePanelController implements Initializable {
         rotateTransition.play();
     }
 
-    private void stopRotationAnimation(Button button) {
+    private void stopRotationAnimation() {
         if (rotateTransition != null) {
             rotateTransition.stop();
         }
     }
-
+    private void setCirclesFill() {
+        String imagePath = Objects.requireNonNull(getClass().getResource("/Icons/General/BackBallBlue.png")).toExternalForm();
+        ImagePattern imagePattern = new ImagePattern(new javafx.scene.image.Image(imagePath));
+        rightCircle.setFill(imagePattern);
+        centerCircle.setFill(imagePattern);
+        leftCircle.setFill(imagePattern);
+    }
 
     private void setRescaling() {
-
         centerCircle.radiusProperty().bind(welcomePanel.heightProperty().multiply(0.45));
         leftCircle.radiusProperty().bind(welcomePanel.heightProperty().multiply(0.2));
         rightCircle.radiusProperty().bind(welcomePanel.heightProperty().multiply(0.2));

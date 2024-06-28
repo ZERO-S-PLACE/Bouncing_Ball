@@ -23,10 +23,6 @@ import java.util.ResourceBundle;
 public class LevelListCellController implements Initializable {
 
 
-    public Level getLevel() {
-        return level;
-    }
-
     private final Level level;
     public BorderPane cellContainer;
     public Button stateButton;
@@ -35,15 +31,10 @@ public class LevelListCellController implements Initializable {
     public Label starLabel2;
     public Label starLabel3;
     private boolean clicked;
-
-
-
     private LevelState state;
     private final EventHandler<MouseEvent> mouseClickedOutside = this::mouseClickedOutside;
     private final EventHandler<MouseEvent> mouseClickedInside = this::mouseClickedInside;
     private GameScore score;
-
-
     public LevelListCellController(Level level) {
         this.level = level;
     }
@@ -61,7 +52,7 @@ public class LevelListCellController implements Initializable {
             String subtype = Model.getInstance().controllers().getLevelSelectionController().getSubtype();
             score = GameScore.load(subtype, level.getNAME());
             if (score != null) {
-                if (score.getScoreValue() > level.getOneStarBound()) {
+                if (score.scoreValue() > level.getOneStarBound()) {
                     state = LevelState.COMPLETED;
                     configureAsCompleted();
                 } else {
@@ -75,7 +66,7 @@ public class LevelListCellController implements Initializable {
                 } else {
                     GameScore gameScorePrevious = GameScore.load(subtype, String.valueOf(Integer.parseInt(level.getNAME()) - 1));
                     if (gameScorePrevious != null) {
-                        if (gameScorePrevious.getScoreValue() > level.getOneStarBound()) {
+                        if (gameScorePrevious.scoreValue() > level.getOneStarBound()) {
                             state = LevelState.ENABLED;
                             configureAsEnabled();
                         } else {
@@ -94,7 +85,6 @@ public class LevelListCellController implements Initializable {
 
         }
     }
-
 
 
     public void setCellBackground(boolean enabled) {
@@ -131,11 +121,11 @@ public class LevelListCellController implements Initializable {
         BackgroundImages.setCircleBackground(stateButton, "Blue");
         BackgroundImages.setStarBackground(starLabel1, "Yellow");
 
-        if (score.getScoreValue() >= level.getThreeStarBound()) {
+        if (score.scoreValue() >= level.getThreeStarBound()) {
             BackgroundImages.setStarBackground(starLabel2, "Yellow");
             BackgroundImages.setStarBackground(starLabel3, "Yellow");
         } else {
-            if (score.getScoreValue() >= level.getTwoStarBound()) {
+            if (score.scoreValue() >= level.getTwoStarBound()) {
                 BackgroundImages.setStarBackground(starLabel2, "Yellow");
                 BackgroundImages.setStarBackground(starLabel3, "Blue");
             } else {
@@ -187,11 +177,14 @@ public class LevelListCellController implements Initializable {
     private void transitionToGame() {
         Model.getInstance().getViewFactory().getBackgroundAnimation().getAnimation().pause();
         AnimationPane pane = Model.getInstance().getViewFactory().getNewAnimationPane(level);
-        Model.getInstance().controllers().getMainWindowController().changeBottomLayer(pane.getAnimationPane(),0.6);
-        Model.getInstance().controllers().getMainWindowController().changeTopLayer(
-                Model.getInstance().getViewFactory().getGamePausedPanel(), 0.1);
+        Model.getInstance().controllers().getMainWindowController().changeBottomLayer(pane.getAnimationPane(), 0.6);
+        Model.getInstance().controllers().getMainWindowController().changeTopLayer(Model.getInstance().getViewFactory().getGamePausedPanel(), 0.1);
     }
+
     public LevelState getState() {
         return state;
+    }
+    public Level getLevel() {
+        return level;
     }
 }
