@@ -10,6 +10,7 @@ import java.util.Collections;
 public class ConvexHull {
     public static ArrayList<Point2D> calculatePoints(ArrayList<Point2D> inputPoints) {
         //calculating convex hull of set of points by Graham scan
+
         ArrayList<Point2D> points = new ArrayList<>(inputPoints);
         ArrayList<Point2D> hullPoints = new ArrayList<>();
 

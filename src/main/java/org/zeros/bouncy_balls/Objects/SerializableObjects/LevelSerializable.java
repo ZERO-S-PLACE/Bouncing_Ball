@@ -73,10 +73,10 @@ public class LevelSerializable implements Serializable {
             level.getMovingObjectsToAdd().add(object.deserialize(animation));
         }
         for (MovingObjectSerializable object : movingObjectsHaveToEnter) {
-            level.getMovingObjectsHaveToEnter().add(object.deserialize(animation));
+            level.getMovingObjectsHaveToEnter().add(getEqualObject(level, object.deserialize(animation)));
         }
         for (MovingObjectSerializable object : movingObjectsCannotEnter) {
-            level.getMovingObjectsCannotEnter().add(object.deserialize(animation));
+            level.getMovingObjectsCannotEnter().add(getEqualObject(level, object.deserialize(animation)));
         }
         for (AreaSerializable area : obstaclesToAdd) {
             level.getObstaclesToAdd().add(area.deserialize());
@@ -88,5 +88,19 @@ public class LevelSerializable implements Serializable {
             level.setTargetArea(targetArea.deserialize());
         }
         return level;
+    }
+
+    private static MovingObject getEqualObject(Level level, MovingObject objToFind) {
+        for(MovingObject object1: level.getMovingObjects()){
+            if(object1.equals(objToFind)){
+               return object1;
+            }
+        }
+        for(MovingObject object1: level.getMovingObjectsToAdd()){
+            if(object1.equals(objToFind)){
+                return object1;
+            }
+        }
+        throw new IllegalArgumentException("Given level does not contain that object");
     }
 }

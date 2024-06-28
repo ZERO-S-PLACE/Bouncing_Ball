@@ -2,7 +2,6 @@ package org.zeros.bouncy_balls.DisplayUtil;
 
 import javafx.animation.AnimationTimer;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.effect.ColorAdjust;
 import org.zeros.bouncy_balls.Model.Properties;
 
@@ -47,6 +46,11 @@ public class NodeAnimations {
                 }
             }
 
+            @Override
+            public void stop() {
+                super.stop();
+                resetBrightness(node);
+            }
         };
         animationTimer.start();
 

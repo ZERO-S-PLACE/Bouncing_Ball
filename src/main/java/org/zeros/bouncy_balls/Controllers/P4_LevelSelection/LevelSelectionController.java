@@ -19,10 +19,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Comparator;
-import java.util.Objects;
-import java.util.ResourceBundle;
-import java.util.TreeSet;
+import java.util.*;
 
 public class LevelSelectionController implements Initializable {
 
@@ -33,19 +30,35 @@ public class LevelSelectionController implements Initializable {
     public Label levelTypeIconLabel;
     public Button returnButton;
     public BorderPane levelChoicePanel;
+    private Map<Level, LevelListCellController> controllersMap = new HashMap<>();
     private TreeSet<Level> levelsInOrder;
     private AnimationType type;
     private String subtype;
 
-    public String getSubtype() {
-        return subtype;
+    public Map<Level, LevelListCellController> getControllersMap() {
+        return controllersMap;
     }
+
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         listContainer.requestFocus();
         scrollPane.setSkin(new CustomScrollPaneSkin(scrollPane));
-        levelsList.setCellFactory(param -> new LevelListCelFactory());
+        levelsList.setCellFactory(param -> {
+            CustomListCell cell = new CustomListCell();
+            cell.controllerProperty().addListener((obs, oldItem, newItem) -> {
+                if (oldItem != null) {
+                    controllersMap.remove(cell.getItem());
+                }
+                if (newItem != null) {
+                    controllersMap.put(cell.getItem(), newItem);
+                }
+            });
+
+            return cell;
+        });
         levelsList.getItems().addAll(levelsInOrder);
         returnButton.prefWidthProperty().bind(levelChoicePanel.heightProperty().multiply(0.34 * 0.2));
         returnButton.prefHeightProperty().bind(levelChoicePanel.heightProperty().multiply(0.34 * 0.2));
@@ -54,11 +67,17 @@ public class LevelSelectionController implements Initializable {
         returnButton.setOnAction(event -> transitionToSubtypeSelection());
         setSubtypeIcon();
     }
+
+    public void reloadLevelsList() {
+        loadLevelsList(type, subtype);
+    }
+
     public void loadLevelsList(AnimationType type, String subtype) {
         this.type = type;
         this.subtype = subtype;
+        controllersMap = new HashMap<>();
         if (levelsList != null) {
-            levelsList.getItems().removeAll(levelsInOrder);
+            levelsList.getItems().removeAll(levelsList.getItems());
         }
         levelsInOrder = new TreeSet<>(Comparator.comparing(Level::getNAME));
         Path path = Paths.get(Level.getDirectoryPath(type, subtype));
@@ -78,13 +97,10 @@ public class LevelSelectionController implements Initializable {
     }
 
 
-
-
     private void updateIcons() {
         levelsList.getItems().addAll(levelsInOrder);
         setSubtypeIcon();
     }
-
 
 
     private void setSubtypeIcon() {
@@ -101,5 +117,7 @@ public class LevelSelectionController implements Initializable {
         NodeAnimations.increaseBrightnessOnExit(returnButton);
         Model.getInstance().controllers().getMainWindowController().changeTopLayer(Model.getInstance().getViewFactory().getLevelSubtypePanel(type), 0.3);
     }
-
+    public String getSubtype() {
+        return subtype;
+    }
 }

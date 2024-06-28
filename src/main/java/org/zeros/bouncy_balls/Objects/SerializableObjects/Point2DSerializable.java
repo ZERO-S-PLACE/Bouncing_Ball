@@ -23,6 +23,6 @@ public class Point2DSerializable implements Serializable {
     }
 
     public Point2DSerializable multiply(double factor) {
-        return new Point2DSerializable(x*factor,y*factor);
+        return new Point2DSerializable(x * factor, y * factor);
     }
 }

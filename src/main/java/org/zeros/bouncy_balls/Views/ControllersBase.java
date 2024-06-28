@@ -6,10 +6,10 @@ import org.zeros.bouncy_balls.Controllers.P1_WelcomePanel.WelcomePanelController
 import org.zeros.bouncy_balls.Controllers.P2a_LevelTypeChoice.LevelTypeChoiceController;
 import org.zeros.bouncy_balls.Controllers.P2b_Leaderboard.LeaderboardPanelController;
 import org.zeros.bouncy_balls.Controllers.P2c_LevelCreator.LevelCreatorController;
+import org.zeros.bouncy_balls.Controllers.P2d_Settings.SettingsPaneController;
 import org.zeros.bouncy_balls.Controllers.P3_LevelSubtypeChoice.LevelSubtypeChoiceController;
 import org.zeros.bouncy_balls.Controllers.P4_LevelSelection.LevelSelectionController;
-import org.zeros.bouncy_balls.Controllers.P5_Animation.GameEndController;
-import org.zeros.bouncy_balls.Controllers.P5_Animation.GameAnimationPanelController;
+import org.zeros.bouncy_balls.Controllers.P5_Animation.GameCountDownController;
 import org.zeros.bouncy_balls.Controllers.P5_Animation.GamePausedController;
 
 public class ControllersBase {
@@ -19,17 +19,14 @@ public class ControllersBase {
     private WelcomePanelController welcomePanelController;
     private LevelTypeChoiceController levelTypeChoiceController;
     private LeaderboardPanelController leaderboardPanelController;
+    private SettingsPaneController settingsPaneController;
     private LevelCreatorController levelCreatorController;
     private LevelSubtypeChoiceController levelSubtypeChoiceController;
     private LevelSelectionController levelSelectionController;
-    private GameEndController gameEndController;
-    private GameAnimationPanelController gamePanelController;
+    private GameCountDownController gameCountDownController;
     private GamePausedController gamePausedController;
     private MainWindowController mainWindowController;
 
-
-
-    public ControllersBase (){}
     public LoginController getLoginController() {
         if (this.loginController == null) {
             this.loginController = new LoginController();
@@ -44,48 +41,56 @@ public class ControllersBase {
         }
         return welcomePanelController;
     }
+
     public LevelTypeChoiceController getLevelTypeChoiceController() {
         if (this.levelTypeChoiceController == null) {
             this.levelTypeChoiceController = new LevelTypeChoiceController();
         }
         return levelTypeChoiceController;
     }
+
     public LeaderboardPanelController getLeaderboardPanelController() {
         if (this.leaderboardPanelController == null) {
             this.leaderboardPanelController = new LeaderboardPanelController();
         }
         return leaderboardPanelController;
     }
+
+    public SettingsPaneController getSettingsController() {
+        if (this.settingsPaneController == null) {
+            this.settingsPaneController = new SettingsPaneController();
+        }
+        return settingsPaneController;
+    }
+
     public LevelCreatorController getLevelCreatorController() {
         if (this.levelCreatorController == null) {
             this.levelCreatorController = new LevelCreatorController();
         }
         return levelCreatorController;
     }
+
     public LevelSubtypeChoiceController getLevelSubtypeChoiceController() {
         if (this.levelSubtypeChoiceController == null) {
             this.levelSubtypeChoiceController = new LevelSubtypeChoiceController();
         }
         return levelSubtypeChoiceController;
     }
+
     public LevelSelectionController getLevelSelectionController() {
         if (this.levelSelectionController == null) {
             this.levelSelectionController = new LevelSelectionController();
         }
         return levelSelectionController;
     }
-    public GameEndController getGameEndController() {
-        if (this.gameEndController == null) {
-            this.gameEndController = new GameEndController();
+
+    public GameCountDownController getGameCountDownController() {
+        if (this.gameCountDownController == null) {
+            this.gameCountDownController = new GameCountDownController();
         }
-        return gameEndController;
+        return gameCountDownController;
     }
-    public GameAnimationPanelController getGamePanelController() {
-        if (this.gamePanelController == null) {
-            this.gamePanelController = new GameAnimationPanelController();
-        }
-        return gamePanelController;
-    }
+
     public GamePausedController getGamePausedController() {
         if (this.gamePausedController == null) {
             this.gamePausedController = new GamePausedController();
@@ -100,4 +105,6 @@ public class ControllersBase {
         }
         return mainWindowController;
     }
+
+
 }

@@ -32,12 +32,14 @@ public class LevelSubtypeChoiceController implements Initializable {
     private Point2D dragReference;
 
     private AnimationType type;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         loadButtons();
         setButtonsAnimations();
         setActions();
     }
+
     private void loadButtons() {
         for (int i = 1; i <= Properties.getAnimationGenres().size(); i++) {
             Button button = new Button(Properties.getAnimationGenres().get(i - 1));
@@ -51,16 +53,15 @@ public class LevelSubtypeChoiceController implements Initializable {
         }
     }
 
-    public  void setBackground(Button button) {
-        String name=button.getText();
+    public void setBackground(Button button) {
+        String name = button.getText();
         String imagePath = Objects.requireNonNull(getClass().getResource("/Icons/General/Icon" + name + ".png")).toExternalForm();
         button.setStyle("-fx-background-image: url('" + imagePath + "');");
-
     }
 
     private void transitionToLevelSelection() {
         NodeAnimations.increaseBrightnessOnExit(middleButton);
-        Model.getInstance().controllers().getMainWindowController().changeTopLayer(Model.getInstance().getViewFactory().getLevelSelectionPanel(type,middleButton.getText()), 0.3);
+        Model.getInstance().controllers().getMainWindowController().changeTopLayer(Model.getInstance().getViewFactory().getNewLevelSelectionPanel(type, middleButton.getText()), 0.3);
     }
 
     private void transitionToGameSelection() {
@@ -80,8 +81,6 @@ public class LevelSubtypeChoiceController implements Initializable {
         }
     }
 
-
-
     private void setActions() {
         gameTypeChoicePanel.setOnMousePressed(event -> dragReference = new Point2D(event.getX(), event.getY()));
         gameTypeChoicePanel.setOnMouseReleased(this::turnButtonsList);
@@ -89,7 +88,7 @@ public class LevelSubtypeChoiceController implements Initializable {
     }
 
     private void turnButtonsList(MouseEvent event) {
-        if(Math.abs(dragReference.getX()-event.getX())>gameTypeChoicePanel.getWidth()/25) {
+        if (Math.abs(dragReference.getX() - event.getX()) > gameTypeChoicePanel.getWidth() / 25) {
             if (dragReference.getX() < event.getX()) {
                 turnButtonsRight();
             }
@@ -107,6 +106,7 @@ public class LevelSubtypeChoiceController implements Initializable {
             animateTransition();
         }
     }
+
     private void turnButtonsRight() {
         if (!leftButtons.isEmpty()) {
             rightButtons.addFirst(middleButton);
@@ -211,9 +211,6 @@ public class LevelSubtypeChoiceController implements Initializable {
         NodeAnimations.decreaseBrightness(button, layer * 0.07);
 
     }
-
-
-
 
 
     private void setMiddleButton(Button button) {

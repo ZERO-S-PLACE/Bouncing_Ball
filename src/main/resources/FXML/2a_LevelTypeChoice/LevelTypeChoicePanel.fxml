@@ -18,30 +18,24 @@
         </BorderPane>
    <center>
        <AnchorPane prefHeight="1080.0" prefWidth="1920.0" BorderPane.alignment="CENTER">
-           <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                       AnchorPane.topAnchor="0.0">
+           <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <center>
-                  <Circle fx:id="centerCircle" fill="DODGERBLUE" radius="428.0" stroke="BLACK" strokeType="INSIDE"
-                          BorderPane.alignment="CENTER"/>
+                  <Circle fx:id="centerCircle"  radius="428.0" stroke="BLACK" strokeType="INSIDE" styleClass="welcome-panel-circle" BorderPane.alignment="CENTER" />
               </center>
            </BorderPane>
-           <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                       AnchorPane.topAnchor="0.0">
+           <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <center>
                   <VBox fx:id="buttonsContainer" alignment="CENTER" BorderPane.alignment="CENTER">
-                      <children>
-                          <Button fx:id="gameButton" mnemonicParsing="false" prefHeight="410.0" prefWidth="325.0"
-                                  styleClass="welcome-panel-game"/>
-                          <Button fx:id="simulationButton" mnemonicParsing="false" prefHeight="202.0" prefWidth="190.0"
-                                  styleClass="welcome-panel-simulation"/>
-                      </children>
+                      <Button fx:id="gameButton" mnemonicParsing="false" prefHeight="410.0" prefWidth="325.0"
+                              styleClass="welcome-panel-game"/>
+                      <Button fx:id="simulationButton" mnemonicParsing="false" prefHeight="202.0" prefWidth="190.0"
+                              styleClass="welcome-panel-simulation"/>
                   </VBox>
               </center>
            </BorderPane>
            <BorderPane AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0">
               <center>
-                  <Button fx:id="returnButton" mnemonicParsing="false" prefHeight="60.0" prefWidth="60.0"
-                          styleClass="welcome-panel-back" BorderPane.alignment="CENTER"/>
+                  <Button fx:id="returnButton" mnemonicParsing="false" prefHeight="60.0" prefWidth="60.0" styleClass="welcome-panel-back" BorderPane.alignment="CENTER" />
               </center>
            </BorderPane>
        </AnchorPane>

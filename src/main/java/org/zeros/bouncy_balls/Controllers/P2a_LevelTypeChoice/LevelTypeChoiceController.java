@@ -67,13 +67,14 @@ public class LevelTypeChoiceController implements Initializable {
 
 
     private void setEnterAnimation() {
-        gameButton.setOnMouseEntered(event -> NodeAnimations.increaseBrightness(gameButton,0.25));
+        gameButton.setOnMouseEntered(event -> NodeAnimations.increaseBrightness(gameButton, 0.25));
         gameButton.setOnMouseExited(event -> NodeAnimations.resetBrightness(gameButton));
-        simulationButton.setOnMouseEntered(event -> NodeAnimations.increaseBrightness(simulationButton,0.25));
+        simulationButton.setOnMouseEntered(event -> NodeAnimations.increaseBrightness(simulationButton, 0.25));
         simulationButton.setOnMouseExited(event -> NodeAnimations.resetBrightness(simulationButton));
-        returnButton.setOnMouseEntered(event -> NodeAnimations.increaseBrightness(returnButton,0.25));
+        returnButton.setOnMouseEntered(event -> NodeAnimations.increaseBrightness(returnButton, 0.25));
         returnButton.setOnMouseExited(event -> NodeAnimations.resetBrightness(returnButton));
     }
+
     private void setRescaling() {
         centerCircle.radiusProperty().bind(gameTypeChoicePanel.heightProperty().multiply(0.45));
         buttonsContainer.spacingProperty().bind(gameTypeChoicePanel.heightProperty().multiply(0.08));
