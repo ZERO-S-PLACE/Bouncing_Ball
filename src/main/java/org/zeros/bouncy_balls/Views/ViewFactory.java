@@ -31,7 +31,7 @@ public class ViewFactory {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/MainWindow.fxml"));
         loader.setController(Model.getInstance().controllers().getMainWindowController());
         createStage(loader);
-        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/General/Tooltip.css")).toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/CustomNodes/Tooltip.css")).toExternalForm());
         scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Styles/P5_AnimationPanel/GameAnimation.css")).toExternalForm());
 
     }

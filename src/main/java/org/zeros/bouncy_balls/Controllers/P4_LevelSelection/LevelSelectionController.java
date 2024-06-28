@@ -77,7 +77,7 @@ public class LevelSelectionController implements Initializable {
         this.subtype = subtype;
         controllersMap = new HashMap<>();
         if (levelsList != null) {
-            levelsList.getItems().removeAll(levelsInOrder);
+            levelsList.getItems().removeAll(levelsList.getItems());
         }
         levelsInOrder = new TreeSet<>(Comparator.comparing(Level::getNAME));
         Path path = Paths.get(Level.getDirectoryPath(type, subtype));

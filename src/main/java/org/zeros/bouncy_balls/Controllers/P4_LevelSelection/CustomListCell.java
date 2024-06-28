@@ -12,7 +12,6 @@ public class CustomListCell extends ListCell<Level> {
     @Override
     protected void updateItem(Level level, boolean empty) {
         super.updateItem(level, empty);
-
         if (empty) {
             setText(null);
             setGraphic(null);

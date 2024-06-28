@@ -9,7 +9,6 @@ public class QuadraticEquation extends Equation {
     private final double c;
     private final double x01;
     private final double x02;
-    private final double delta;
 
 
     public QuadraticEquation(double a, double b, double c) {
@@ -17,7 +16,7 @@ public class QuadraticEquation extends Equation {
         this.b = b;
         this.c = c;
 
-        delta = b * b - 4 * a * c;
+        double delta = b * b - 4 * a * c;
 
         if (delta >= 0) {
             x01 = (-b - Math.sqrt(delta)) / (2 * a);

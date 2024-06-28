@@ -21,8 +21,6 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class LevelListCellController implements Initializable {
-
-
     private final Level level;
     public BorderPane cellContainer;
     public Button stateButton;

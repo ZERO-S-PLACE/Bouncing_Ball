@@ -59,17 +59,17 @@ public class WelcomePanelController implements Initializable {
 
     private void transitionToLeaderBoard() {
         NodeAnimations.increaseBrightnessOnExit(leaderboardButton);
-        Model.getInstance().controllers().getMainWindowController().changeTopLayer(Model.getInstance().getViewFactory().getLeaderboardPanel(), 0.3);
+        Model.getInstance().controllers().getMainWindowController().changeTopLayer(Model.getInstance().getViewFactory().getLeaderboardPanel(), 0.1);
 
     }
     private void transitionToSettings() {
         NodeAnimations.increaseBrightnessOnExit(settingsButton);
-        Model.getInstance().controllers().getMainWindowController().changeTopLayer(Model.getInstance().getViewFactory().getSettingsPanel(), 0.3);
+        Model.getInstance().controllers().getMainWindowController().changeTopLayer(Model.getInstance().getViewFactory().getSettingsPanel(), 0.1);
 
     }
     private void transitionToGameSelection() {
         NodeAnimations.increaseBrightnessOnExit(playButton);
-        Model.getInstance().controllers().getMainWindowController().changeTopLayer(Model.getInstance().getViewFactory().getLevelTypeChoicePanel(), 0.3);
+        Model.getInstance().controllers().getMainWindowController().changeTopLayer(Model.getInstance().getViewFactory().getLevelTypeChoicePanel(), 0.1);
     }
     private void transitionToLevelCreator() {
         NodeAnimations.increaseBrightnessOnExit(creatorButton);

@@ -137,6 +137,8 @@ public class GamePausedController implements Initializable {
         restartButton.setDisable(false);
         runButton.setDisable(true);
         displayScore();
+        Level currentLevel=getLevel(0,true);
+        Model.getInstance().getViewFactory().getNewAnimationPane(currentLevel);
         nextLevel = getLevel(1, false);
         nextButton.setDisable(nextLevel == null);
         previousButton.setDisable(previousLevel == null);
@@ -176,7 +178,6 @@ public class GamePausedController implements Initializable {
     private void saveScore(String subtype, String name, double score) {
         GameScore gameScore = new GameScore(Properties.getUserName(), subtype, name, score);
         gameScore.save();
-        Model.getInstance().controllers().getLevelSelectionController().reloadLevelsList();
     }
 
 
@@ -235,6 +236,7 @@ public class GamePausedController implements Initializable {
         if (indexCurrent + distance >= 0 && indexCurrent + distance < listView.getItems().size()) {
             if (reset) Model.getInstance().controllers().getLevelSelectionController().reloadLevelsList();
             Level level = listView.getItems().get(indexCurrent + distance);
+            if(level==null) throw new RuntimeException("Something went wrong");
             if (distance <= 0 || !Model.getInstance().controllers().getLevelSelectionController().getControllersMap().get(level).getState().equals(LevelState.DISABLED)) {
                 return level;
             }

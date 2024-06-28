@@ -6,7 +6,6 @@ import org.apache.commons.math3.analysis.solvers.BrentSolver;
 import org.zeros.bouncy_balls.Calculations.ConvexHull.ConvexHull;
 import org.zeros.bouncy_balls.Calculations.BindsCheck;
 import org.zeros.bouncy_balls.Calculations.VectorMath;
-import org.zeros.bouncy_balls.Exceptions.WrongValueException;
 import org.zeros.bouncy_balls.Model.Properties;
 import org.zeros.bouncy_balls.Objects.VectorArea.PolyLineSegment.LineSegment;
 
@@ -142,8 +141,7 @@ public class BezierCurve extends Equation {
             Point2D[][] casteliau = getCasteljauTree(pointParameter);
             return casteliau[casteliau.length - 1][0];
         }
-        throw new WrongValueException(0, 1, pointParameter);
-
+        throw new IllegalArgumentException("Point is not at curve");
     }
 
     public Point2D getClosestIntersectionWithLine(Point2D center, Point2D direction) {
