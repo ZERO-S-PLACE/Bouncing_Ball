@@ -10,6 +10,4 @@ public abstract class AreaBoolean {
     public abstract ComplexArea subtractBFromA();
 
     public abstract ComplexArea subtractAFromB();
-
-
 }

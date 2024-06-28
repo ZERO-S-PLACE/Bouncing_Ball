@@ -14,9 +14,7 @@ import java.util.ArrayList;
 
 public class BindsCheck {
 
-
     public static boolean isInsideRoughBinds(MovingObject movingObject, Area obstacle) {
-
         return movingObject.nextCenter().getX() + 2 * movingObject.getFurthestSpan() >= obstacle.getRoughMin().getX() && movingObject.nextCenter().getX() - 2 * movingObject.getFurthestSpan() <= obstacle.getRoughMax().getX() && movingObject.nextCenter().getY() + 2 * movingObject.getFurthestSpan() >= obstacle.getRoughMin().getY() && movingObject.nextCenter().getY() - 2 * movingObject.getFurthestSpan() <= obstacle.getRoughMax().getY();
     }
 
@@ -50,7 +48,6 @@ public class BindsCheck {
     }
 
     private static boolean intersectWithPart(Ball ball, Area obstacle) {
-
         for (int i = 0; i < obstacle.getSegmentPoints().size(); i++) {
             ArrayList<Point2D> points = obstacle.getSegmentPoints(i);
             if (points.size() > 2) {

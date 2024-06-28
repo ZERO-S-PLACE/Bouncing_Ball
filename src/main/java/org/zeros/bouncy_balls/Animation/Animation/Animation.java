@@ -1,6 +1,10 @@
 package org.zeros.bouncy_balls.Animation.Animation;
 
 import javafx.animation.AnimationTimer;
+import javafx.beans.property.LongProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleLongProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Point2D;
 import org.zeros.bouncy_balls.Animation.Borders.Borders;
 import org.zeros.bouncy_balls.Animation.Borders.BordersType;
@@ -9,6 +13,7 @@ import org.zeros.bouncy_balls.Calculations.BindsCheck;
 import org.zeros.bouncy_balls.Calculations.Bounce;
 import org.zeros.bouncy_balls.Level.Level;
 import org.zeros.bouncy_balls.Model.Model;
+import org.zeros.bouncy_balls.Model.Properties;
 import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObject;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObjectType;
@@ -19,10 +24,12 @@ import java.util.TreeSet;
 public class Animation {
     private final Level level;
     private final TreeSet<Double> timesElapsed = new TreeSet<>();
+    private final LongProperty timeElapsedNanos = new SimpleLongProperty(0);
+    private final ObjectProperty<GameState> gameState = new SimpleObjectProperty<>();
     private Borders borders;
-    private double timeUsed = 0;
     private int mObj1;
     private String name;
+    private long previousTime = 0;
 
     public Animation(Level level) {
         this.level = level;
@@ -32,45 +39,69 @@ public class Animation {
         for (MovingObject object : level.getMovingObjects()) {
             object.setAnimation(this);
         }
+        gameState.set(GameState.LOADED);
     }
 
     public void animate() {
+        gameState.set(GameState.IN_PROGRESS);
         setFinalPositions();
-        timeUsed = 0;
         timer.start();
-    }
-
-    public void reloadBorders() {
-        borders = new Borders(this);
     }
 
     private final AnimationTimer timer = new AnimationTimer() {
         @Override
         public void handle(long now) {
-            animateThis();
+            animateThis(now);
         }
     };
 
+
+
     public void pause() {
-        timer.stop();
+        if (!gameState.get().equals(GameState.LOST) && !gameState.get().equals(GameState.WON) && !gameState.get().equals(GameState.FINISHED)) {
+            gameState.set(GameState.PAUSED);
+            previousTime = 0;
+            timer.stop();
+        }
     }
 
-    private void animateThis() {
-        double timeStart = System.currentTimeMillis();
+    public void resume() {
+        if (!gameState.get().equals(GameState.LOST) || !gameState.get().equals(GameState.LOST)&& !gameState.get().equals(GameState.FINISHED)) {
+            gameState.set(GameState.IN_PROGRESS);
+            timer.start();
+        }
+    }
+
+    private void animateThis(long now) {
+        if (previousTime != 0) {
+            timeElapsedNanos.set(timeElapsedNanos.get() + (now - previousTime));
+        }
+        previousTime = now;
         searchForBounces();
         setFinalPositions();
-        timeUsed = timeUsed + System.currentTimeMillis() - timeStart;
-        if (timeUsed > level.PROPERTIES().getTIME() * 1000 || gameWon() || gameLost()) {
-            pause();
-        }
 
+        if (timeElapsedNanos.get() > level.PROPERTIES().getTIME() * 1000000000 || allNeededEntered() || notAllowedEnter()) {
+            timer.stop();
+            setFinalState();
+        }
     }
 
-    private boolean gameLost() {
+    private void setFinalState() {
+        if (level.PROPERTIES().getTYPE().equals(AnimationType.SIMULATION)) {
+            gameState.set(GameState.FINISHED);
+        } else if (notAllowedEnter()) {
+            gameState.set(GameState.LOST);
+        } else if (level.getMovingObjectsHaveToEnter().isEmpty()) {
+            gameState.set(GameState.WON);
+        } else {
+            gameState.set(GameState.LOST);
+        }
+    }
+
+    private boolean notAllowedEnter() {
         if (level.PROPERTIES().getTYPE().equals(AnimationType.GAME)) {
             for (MovingObject object : level.getMovingObjectsCannotEnter()) {
                 if (AreasMath.isInsideArea(level.getTargetArea(), object.center())) {
-                    System.out.println("Game Lost");
                     return true;
                 }
             }
@@ -78,16 +109,16 @@ public class Animation {
         return false;
     }
 
-    private boolean gameWon() {
+    private boolean allNeededEntered() {
         if (level.PROPERTIES().getTYPE().equals(AnimationType.GAME) && !level.getMovingObjectsHaveToEnter().isEmpty()) {
-            int temp = 0;
             for (MovingObject object : level.getMovingObjectsHaveToEnter()) {
-                if (AreasMath.isInsideArea(level.getTargetArea(), object.center())) temp++;
+                if (AreasMath.isInsideArea(level.getTargetArea(), object.center())) {
+                    level.getMovingObjects().remove(object);
+                    level.getMovingObjectsHaveToEnter().remove(object);
+                    object.getShape().setVisible(false);
+                }
             }
-            if (temp == level.getMovingObjectsHaveToEnter().size()) {
-                System.out.println("Game Won");
-                return true;
-            }
+            return level.getMovingObjectsHaveToEnter().isEmpty();
         }
         return false;
     }
@@ -95,13 +126,12 @@ public class Animation {
     private void searchForBounces() {
         singleBouncesCheck(0);
         int i = 0;
-        while (!timesElapsed.isEmpty() && i < level.PROPERTIES().getMAX_EVALUATIONS()) {
+        while (!timesElapsed.isEmpty() && i < Properties.MAX_EVALUATIONS()) {
 
             double timeElapsed = timesElapsed.getFirst();
-
             singleBouncesCheck(timeElapsed);
 
-            while (Math.abs(timesElapsed.getFirst() - timeElapsed) < 0.03 + 0.98 / level.PROPERTIES().getMAX_EVALUATIONS() * i) {
+            while (Math.abs(timesElapsed.getFirst() - timeElapsed) < 0.03 + 0.98 / Properties.MAX_EVALUATIONS() * i) {
                 timesElapsed.removeFirst();
                 if (timesElapsed.isEmpty()) {
                     break;
@@ -117,19 +147,12 @@ public class Animation {
             if (level.getMovingObjects().get(mObj1).frameElapsed() <= frameElapsed) {
 
                 if (crossesBorder()) {
-
                     timesElapsed.add(level.getMovingObjects().get(mObj1).frameElapsed());
-
                 } else if (bouncedAgainstObstacle()) {
-
                     timesElapsed.add(level.getMovingObjects().get(mObj1).frameElapsed());
-
                 } else if (bouncedByAnother(frameElapsed)) {
-
                     timesElapsed.add(level.getMovingObjects().get(mObj1).frameElapsed());
                 }
-
-
             }
         }
     }
@@ -139,7 +162,6 @@ public class Animation {
             movingObject.nextFrame();
         }
     }
-
     private boolean crossesBorder() {
         boolean temp = false;
         if (!borders.isInside(level.getMovingObjects().get(mObj1).nextCenter(), level.getMovingObjects().get(mObj1).getFurthestSpan())) {
@@ -150,8 +172,6 @@ public class Animation {
                     }
                 }
                 case BordersType.CONNECTED -> temp = borders.moveToOtherSide(level.getMovingObjects().get(mObj1));
-
-
             }
         }
         return temp;
@@ -167,17 +187,13 @@ public class Animation {
                     }
                 }
             }
-
         }
-
         return temp;
     }
-
     private boolean bouncedByAnother(double frameElapsed) {
 
         int closestObj = -1;
         double shortestTime = Double.MAX_VALUE;
-
         for (int j = 0; j < level.getMovingObjects().size(); j++) {
             if (level.getMovingObjects().get(j).frameElapsed() <= frameElapsed && j != mObj1) {
                 double distance = level.getMovingObjects().get(mObj1).nextCenter().distance(level.getMovingObjects().get(j).nextCenter());
@@ -195,7 +211,6 @@ public class Animation {
                             }
                         }
                     }
-
                 }
             }
         }
@@ -222,13 +237,11 @@ public class Animation {
                     return false;
                 }
             }
-
             return true;
         }
     }
 
     public boolean hasFreePlace(Area obstacle) {
-
         if (!borders.isInside(obstacle)) return false;
         else if (intersectsWithBall(obstacle)) return false;
         else {
@@ -256,11 +269,9 @@ public class Animation {
     public AnimationProperties getPROPERTIES() {
         return level.PROPERTIES();
     }
-
     public Level getLevel() {
         return level;
     }
-
     public String getName() {
         return name;
     }
@@ -279,6 +290,21 @@ public class Animation {
             this.name = name;
         }
     }
+
+    public LongProperty timeElapsedNanosProperty() {
+        return timeElapsedNanos;
+    }
+    public ObjectProperty<GameState> gameStateProperty() {
+        return gameState;
+    }
+    public long getTimeElapsedNanos() {
+        return timeElapsedNanos.get();
+    }
+    public void reloadBorders() {
+        borders = new Borders(this);
+    }
+
+
 
 }
 

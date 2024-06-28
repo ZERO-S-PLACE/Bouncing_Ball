@@ -10,11 +10,9 @@ public class VectorMath {
     public static Point2D rotatePoint(Point2D point, Point2D center, double angle) {
         return rotateVector(point.subtract(center), angle).add(center);
     }
-
     public static Point2D rotateVector(Point2D vector, double angle) {
         return new Point2D(vector.getX() * Math.cos(angle) + vector.getY() * Math.sin(angle), -vector.getX() * Math.sin(angle) + vector.getY() * Math.cos(angle));
     }
-
     public static ArrayList<Point2D> rotatePoints(ArrayList<Point2D> points, Point2D center, double angle) {
         if (points != null) {
             points.replaceAll(point -> rotatePoint(point, center, angle));
@@ -22,7 +20,6 @@ public class VectorMath {
         }
         return null;
     }
-
     public static double binomialCoefficient(int n, int k) {
         if (n < 0 || k < 0) {
             throw new IllegalArgumentException("Factorial is not defined for negative numbers.");
@@ -36,7 +33,6 @@ public class VectorMath {
         }
 
     }
-
     public static double factorial(int x) {
 
         if (x < 0) {
@@ -47,8 +43,6 @@ public class VectorMath {
             temp = temp * i;
         }
         return temp;
-
-
     }
 
     public static double[] reverseArray(double[] array) {
@@ -72,13 +66,13 @@ public class VectorMath {
     }
 
 
-    public static boolean containsPoint(Point2D point, ArrayList<Point2D> points) {
+    public static boolean doesNotContainPoint(Point2D point, ArrayList<Point2D> points) {
         for (Point2D point2 : points) {
             if (point2.distance(point) <= Properties.ACCURACY() / 10) {
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
     }
 }
 

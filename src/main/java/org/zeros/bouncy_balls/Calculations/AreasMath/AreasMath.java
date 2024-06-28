@@ -65,8 +65,6 @@ public class AreasMath {
     public static boolean isInsideArea(Area area, Point2D point) {
         return isInsideArea(area.getSegments(), point);
     }
-
-
     public static boolean containsArea(Area area, ArrayList<Area> areas) {
         for (Area area1 : areas) {
             if (area.isEqualTo(area1)) return true;

@@ -15,7 +15,7 @@ public class Model {
 
     private Model() {
         this.viewFactory = new ViewFactory();
-        this.controllers=new ControllersBase();
+        this.controllers = new ControllersBase();
     }
 
     public static synchronized Model getInstance() {
@@ -28,19 +28,24 @@ public class Model {
     public ControllersBase controllers() {
         return controllers;
     }
+
     public ViewFactory getViewFactory() {
         return viewFactory;
     }
+
     public ArrayList<Animation> getRunningAnimations() {
         return runningAnimations;
     }
+
     public void addAnimation(Animation animation) {
         runningAnimations.add(animation);
     }
+
     public Animation getRunningAnimation(String animationName) {
         for (Animation animation : runningAnimations) {
             if (animation.getName().equals(animationName)) return animation;
         }
         return null;
     }
+
 }

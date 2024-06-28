@@ -1,27 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.VBox?>
-
-<BorderPane fx:id="welcomePanel" cacheShape="false" centerShape="false" focusTraversable="true" scaleShape="false" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
-   <center>
-      <AnchorPane prefHeight="1080.0" prefWidth="1920.0" styleClass="welcome-panel" stylesheets="@../../Styles/P1_WelcomePanel/WelcomePanel.css">
-         <BorderPane layoutX="793.0" layoutY="340.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="0.0">
-            <center>
-               <VBox fx:id="buttonsContainer" alignment="CENTER" styleClass="welcome-panel-button-container" BorderPane.alignment="CENTER">
-                  <Button fx:id="playButton" alignment="CENTER" cacheShape="false" centerShape="false" mnemonicParsing="false" prefHeight="370.0" prefWidth="370.0" scaleShape="false" styleClass="welcome-panel-startButton" />
-                  <Button fx:id="creatorButton" cacheShape="false" centerShape="false" mnemonicParsing="false" prefHeight="150.0" prefWidth="150.0" scaleShape="false" styleClass="welcome-panel-creatorButton" />
-                  <Button fx:id="leaderboardButton" cacheShape="false" mnemonicParsing="false" prefHeight="150.0" prefWidth="150.0" styleClass="welcome-panel-leaderboardButton" />
-               </VBox>
-            </center>
-         </BorderPane>
-         <BorderPane fx:id="settingsContainer" layoutX="1654.0" layoutY="814.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0">
-            <center>
-               <Button fx:id="settingsButton" mnemonicParsing="false" prefHeight="90.0" prefWidth="90.0" styleClass="welcome-panel-settingsButton" BorderPane.alignment="CENTER" />
-            </center>
-         </BorderPane>
-      </AnchorPane>
-   </center>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Circle?>
+<BorderPane fx:id="welcomePanel" cacheShape="false" centerShape="false" focusTraversable="true" scaleShape="false"
+            xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+    <center>
+        <AnchorPane styleClass="welcome-panel" stylesheets="@../../Styles/P1_WelcomePanel/WelcomePanel.css">
+            <BorderPane prefHeight="397.0" prefWidth="400.0" AnchorPane.bottomAnchor="-240.0"
+                        AnchorPane.leftAnchor="20.0">
+                <center>
+                    <Circle fx:id="leftCircle" radius="231.0" stroke="BLACK" strokeType="INSIDE"
+                            styleClass="welcome-panel-circle" BorderPane.alignment="CENTER"/>
+                </center>
+            </BorderPane>
+            <BorderPane layoutX="10.0" layoutY="10.0" prefHeight="397.0" prefWidth="400.0" AnchorPane.rightAnchor="20.0"
+                        AnchorPane.topAnchor="-240.0">
+                <center>
+                    <Circle fx:id="rightCircle" radius="231.0" stroke="BLACK" strokeType="INSIDE"
+                            styleClass="welcome-panel-circle" BorderPane.alignment="CENTER"/>
+                </center>
+            </BorderPane>
+            <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                        AnchorPane.topAnchor="0.0">
+                <center>
+                    <Circle fx:id="centerCircle" radius="441.0" stroke="BLACK" strokeType="INSIDE"
+                            styleClass="welcome-panel-circle" BorderPane.alignment="CENTER"/>
+                </center>
+            </BorderPane>
+            <BorderPane layoutX="793.0" layoutY="340.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0"
+                        AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="0.0">
+                <center>
+                    <VBox fx:id="buttonsContainer" alignment="CENTER" styleClass="welcome-panel-button-container"
+                          BorderPane.alignment="CENTER">
+                        <Button fx:id="playButton" alignment="CENTER" cacheShape="false" centerShape="false"
+                                mnemonicParsing="false" prefHeight="370.0" prefWidth="370.0" scaleShape="false"
+                                styleClass="welcome-panel-startButton"/>
+                        <Button fx:id="creatorButton" cacheShape="false" centerShape="false" mnemonicParsing="false"
+                                prefHeight="150.0" prefWidth="150.0" scaleShape="false"
+                                styleClass="welcome-panel-creatorButton"/>
+                        <Button fx:id="leaderboardButton" cacheShape="false" mnemonicParsing="false" prefHeight="150.0"
+                                prefWidth="150.0" styleClass="welcome-panel-leaderboardButton"/>
+                    </VBox>
+                </center>
+            </BorderPane>
+            <BorderPane fx:id="settingsContainer" layoutX="1654.0" layoutY="814.0" prefHeight="200.0" prefWidth="200.0"
+                        AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                <center>
+                    <Button fx:id="settingsButton" mnemonicParsing="false" prefHeight="90.0" prefWidth="90.0"
+                            styleClass="welcome-panel-settingsButton" BorderPane.alignment="CENTER"/>
+                </center>
+            </BorderPane>
+        </AnchorPane>
+    </center>
 </BorderPane>

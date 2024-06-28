@@ -1,0 +1,15 @@
+.subtype-choice Button {
+    -fx-background-radius:50%;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+}
+
+.subtype-choice-back {
+    -fx-background-image: url("../../Icons/General/ReturnIcon.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+    -fx-background-color: transparent;
+    -fx-background-radius:50%;
+}

@@ -14,7 +14,6 @@ import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.Area;
 import java.util.ArrayList;
 
 public class Borders {
-    private final AnimationProperties PROPERTIES;
     private final LinearEquation OX = new LinearEquation(0, 0);
     private final LinearEquation OY = new LinearEquation(0, Double.NaN);
     private final LinearEquation OY2;
@@ -24,7 +23,7 @@ public class Borders {
     private final int HEIGHT;
 
     public Borders(Animation animation) {
-        this.PROPERTIES = animation.getPROPERTIES();
+        AnimationProperties PROPERTIES = animation.getPROPERTIES();
         WIDTH = PROPERTIES.getWIDTH();
         HEIGHT = PROPERTIES.getHEIGHT();
         OY2 = new LinearEquation(WIDTH, Double.NaN);
