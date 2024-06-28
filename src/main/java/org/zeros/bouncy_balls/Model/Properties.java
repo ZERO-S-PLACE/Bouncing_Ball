@@ -23,15 +23,20 @@ public class Properties {
     public static ArrayList<String> getAnimationGenresDescriptions() {
         return animationGenresDescriptions;
     }
-    private static final long animationDuration=500_000_000L;
+    private static final long animationDuration=200_000_000L;
     private static double SIZE_FACTOR = Math.pow(10, 5);
     private static Color BACKGROUND_COLOR = Color.web("#243253");
     private static double ACCURACY = Math.pow(0.1, 3);
     private static double FRAME_RATE=120;
     private static int MAX_EVALUATIONS=150;
+    private static String USER_NAME ="User";
+
+
+
     public static double FRAME_RATE() {
         return FRAME_RATE;
     }
+
     public static long ANIMATION_DURATION(){return animationDuration;}
 
     public static void setFRAME_RATE(double FRAME_RATE) {
@@ -73,6 +78,12 @@ public class Properties {
     public static void setACCURACY(double ACCURACY) {
         Properties.ACCURACY = ACCURACY;
     }
+    public static String getUserName() {
+        return USER_NAME;
+    }
 
+    public static void setUserName(String userName) {
+        USER_NAME = userName;
+    }
 
 }

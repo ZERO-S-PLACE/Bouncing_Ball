@@ -6,11 +6,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Path;
 import org.zeros.bouncy_balls.Animation.Animation.Animation;
-import org.zeros.bouncy_balls.Calculations.AreasMath.AreasMath;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
 import org.zeros.bouncy_balls.Calculations.VectorMath;
-import org.zeros.bouncy_balls.DisplayUtil.BackgroundImages;
-import org.zeros.bouncy_balls.Model.Model;
 import org.zeros.bouncy_balls.Model.Properties;
 import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.Area;
 
@@ -22,19 +19,15 @@ public class InputOnRunObstacle extends InputOnRun {
         this.obstacle = obstacle;
         obstacle.getPath().setFill(Properties.OBSTACLE_COLOR());
     }
-
-    @Override
     public void dismiss() {
-        Platform.runLater(() -> panel.getChildren().remove(obstacle.getPath()));
         super.dismiss();
+        Platform.runLater(() ->panel.getChildren().remove(obstacle.getPath()));
     }
-
     @Override
     protected void configureMarkerAtCenterPick() {
         obstacle.getPath().setOpacity(0.3);
         Platform.runLater(() -> panel.getChildren().add(obstacle.getPath()));
     }
-
     @Override
     protected void onMouseMoved(MouseEvent mouseEvent) {
         Point2D pickedPoint = new Point2D(mouseEvent.getX() * Properties.SIZE_FACTOR(), mouseEvent.getY() * Properties.SIZE_FACTOR());
@@ -44,7 +37,6 @@ public class InputOnRunObstacle extends InputOnRun {
             rotateInput(pickedPoint);
         }
     }
-
     private void rotateInput(Point2D pickedPoint) {
         Path path = obstacle.getPath();
         Point2D trackedPoint = obstacle.getCorners().getFirst();
@@ -77,52 +69,23 @@ public class InputOnRunObstacle extends InputOnRun {
         } else {
             rotateInput(pickedPoint);
             panel.removeEventHandler(MouseEvent.MOUSE_MOVED, mouseMovedHandler);
-            new Thread(this::animateObjectArrival).start();
+            animateObjectArrival(obstacle.getPath());
         }
 
     }
-
 
     @Override
-    protected void animateObjectArrival() {
-        for (int i = 0; i < 3; i++) {
-            increaseOpacity();
-            if (animation.hasFreePlace(obstacle)) {
-                animation.getLevel().addObstacle(obstacle);
-                obstacle.getPath().setOpacity(1);
-                animation.getLevel().removeObstacleToAdd(obstacle);
-                dismiss();
-                Platform.runLater(() -> panel.getChildren().add(obstacle.getPath()));
-                return;
-            }
-            decreaseOpacity();
-        }
-        obstacle.move(new Point2D(-10000, -10000));
-        dismiss();
+    protected boolean arrivalCondition() {
+        return animation.hasFreePlace(obstacle);
     }
 
-
-    private void decreaseOpacity() {
-        for (int i = 90; i > 10; i--) {
-            obstacle.getPath().setOpacity((double) i / 100);
-            try {
-                Thread.sleep(5);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
+    @Override
+    protected void onSucceededArrival() {
+        animation.getLevel().addObstacle(obstacle);
+        animation.getLevel().removeObstacleToAdd(obstacle);
+        Platform.runLater(() -> panel.getChildren().add(obstacle.getPath()));
     }
 
-    private void increaseOpacity() {
-        for (int i = 10; i < 90; i = i + 2) {
-            obstacle.getPath().setOpacity((double) i / 100);
-            try {
-                Thread.sleep(5);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
 }
 
 

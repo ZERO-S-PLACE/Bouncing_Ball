@@ -19,10 +19,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class ViewFactory {
-    private Stage stage;
     private Scene scene;
-
-    private AnchorPane gameAnimationPanel;
     private BorderPane welcomePanel;
     private BorderPane levelTypeChoicePanel;
     private BorderPane leaderboardPanel;
@@ -30,7 +27,6 @@ public class ViewFactory {
     private BorderPane levelSelectionPanel;
     private BorderPane gameCountDownPanel;
     private BorderPane gamePausedPanel;
-    private BorderPane gameControlPanel;
     private AnimationPane gameAnimation;
 
     public void showMainWindow() {
@@ -145,20 +141,6 @@ public class ViewFactory {
         }
         return gameCountDownPanel;
     }
-    public BorderPane getGameControlPanel()  {
-        if (gameControlPanel == null) {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/5_AnimationPanel/Clock.fxml"));
-            loader.setController(Model.getInstance().controllers().getGameControlController());
-            try {
-                gameControlPanel = loader.load();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            gameControlPanel.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT,null,null)));
-        }
-
-        return gameControlPanel;
-    }
 
     public AnimationPane getNewAnimationPane(Level level) {
         gameAnimation= new AnimationPane(level);
@@ -176,7 +158,7 @@ public class ViewFactory {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        stage = new Stage();
+        Stage stage = new Stage();
         stage.getIcons().add(new Image(String.valueOf(ViewFactory.class.getResource("/Icons/ProgramIcon.png"))));
         stage.setScene(scene);
         stage.setMaximized(true);
@@ -188,8 +170,9 @@ public class ViewFactory {
     public AnimationPane getBackgroundAnimation() {
         if(backAnimationPane==null) {
             backAnimationPane = new AnimationPane("program_data/background_animations/A1.ser");
-            BackgroundImages.setGameBackground(backAnimationPane.getAnimationPane(), false);
         }
+        BackgroundImages.setGameBackground(backAnimationPane.getAnimationPane(), false);
+
         return backAnimationPane;
     }
 }

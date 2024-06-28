@@ -80,18 +80,12 @@ public class WelcomePanelController implements Initializable {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        new Thread(() -> {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+        new Thread(() ->
             Platform.runLater(() -> {
                 new LevelCreatorApplication().start(new Stage());
                 Model.getInstance().getViewFactory().getWelcomePanel().getScene().getWindow().hide();
-            });
-
-        }).start();
+            })
+        ).start();
     }
 
     private void transitionToGameSelection() {

@@ -34,7 +34,12 @@ public class LevelSelectionController implements Initializable {
     public TreeSet<Level> getLevelsInOrder() {
         return levelsInOrder;
     }
-   private ArrayList<CustomListCell> cells=new ArrayList<>();
+
+    public Map<Level,LevelListCellController> getControllersMap() {
+        return controllersMap;
+    }
+
+    private Map<Level,LevelListCellController> controllersMap =new HashMap<>();
 
     private TreeSet<Level> levelsInOrder;
     private AnimationType type;
@@ -49,8 +54,17 @@ public class LevelSelectionController implements Initializable {
 
         listContainer.requestFocus();
         scrollPane.setSkin(new CustomScrollPaneSkin(scrollPane));
-        levelsList.setCellFactory(param ->{CustomListCell cell= new CustomListCell();
-        cells.add(cell);
+        levelsList.setCellFactory(param ->{
+            CustomListCell cell= new CustomListCell();
+            cell.getControllerProperty().addListener((obs, oldItem, newItem) -> {
+                if (oldItem != null) {
+                    controllersMap.remove(cell.getItem());
+                }
+                if (newItem != null) {
+                    controllersMap.put(cell.getItem(),newItem);
+                }
+            });
+
         return cell;
         });
         levelsList.getItems().addAll(levelsInOrder);
@@ -68,7 +82,7 @@ public class LevelSelectionController implements Initializable {
     public void loadLevelsList(AnimationType type, String subtype) {
         this.type = type;
         this.subtype = subtype;
-        cells=new ArrayList<>();
+        controllersMap =new HashMap<>();
         if (levelsList != null) {
             levelsList.getItems().removeAll(levelsInOrder);
         }

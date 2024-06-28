@@ -1,6 +1,7 @@
 package org.zeros.bouncy_balls.Level;
 
 import org.zeros.bouncy_balls.Animation.Animation.AnimationType;
+import org.zeros.bouncy_balls.Model.Model;
 
 import java.io.*;
 
@@ -40,6 +41,12 @@ public class GameScore implements Serializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    public static double getScore(Level level) {
+        return level.getOneStarBound()+ level.getMovingObjectsCannotEnter().size()*300+
+                level.getMovingObjectsToAdd().size()*400+ level.getObstaclesToAdd().size()*500
+                +30*(level.PROPERTIES().getTIME()-
+                (double) Model.getInstance().getViewFactory().getCurrentAnimationPane().getAnimation().getTimeElapsedNanos() /1_000_000_000);
     }
 
     public String getUser() {

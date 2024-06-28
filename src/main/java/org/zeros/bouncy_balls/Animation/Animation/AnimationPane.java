@@ -31,7 +31,6 @@ public class AnimationPane {
     private InputOnRun input;
     private final EventHandler<MouseEvent> inputOnRunHandler = this::inputOnRunHandler;
     private BorderPane clockContainer;
-    private BorderPane pauseContainer;
     private Button pauseButton;
     private final EventHandler<KeyEvent> escHandler = this::escHandler;
 
@@ -41,6 +40,7 @@ public class AnimationPane {
         setUp();
 
     }
+
     public AnimationPane(Level level) {
         gameBackground = new AnchorPane();
         animation = new Animation(level);
@@ -60,7 +60,7 @@ public class AnimationPane {
     }
 
     public void addGameOverlay() {
-        pauseContainer = new BorderPane();
+        BorderPane pauseContainer = new BorderPane();
         pauseButton = new Button();
         pauseButton.getStyleClass().add("pause-button");
         pauseButton.setPrefSize(40, 40);
@@ -77,15 +77,11 @@ public class AnimationPane {
             input = null;
         }
         animation.pause();
-        Model.getInstance().controllers().getGamePausedController().setConfigurationAtPaused();
-        Model.getInstance().controllers().getMainWindowController().changeTopLayer(Model.getInstance().getViewFactory().getGamePausedPanel(), 0.1);
-        Model.getInstance().controllers().getMainWindowController().topLayer.setMouseTransparent(false);
-        Model.getInstance().controllers().getMainWindowController().middleLayer.setMouseTransparent(false);
         pauseButton.setVisible(false);
     }
 
     public void resume() {
-        pauseButton.setVisible(false);
+        pauseButton.setVisible(true);
         animation.resume();
     }
 
@@ -189,7 +185,6 @@ public class AnimationPane {
             gameBackground.getChildren().add(obstacle.getPath());
             obstacle.getPath().setFill(Properties.OBSTACLE_COLOR());
         }
-
         for (MovingObject object : animation.getLevel().getMovingObjects()) {
             BackgroundImages.setBallStandardBackground(object.getShape());
             gameBackground.getChildren().add(object.getShape());
@@ -200,8 +195,6 @@ public class AnimationPane {
         for (MovingObject object : animation.getLevel().getMovingObjectsCannotEnter()) {
             BackgroundImages.setBallCannotEnterBackground(object.getShape());
         }
-
-
     }
 
     private void setBackground() {
@@ -209,7 +202,6 @@ public class AnimationPane {
         gameBackground.setMaxHeight(animation.getPROPERTIES().getHEIGHT() / Properties.SIZE_FACTOR());
         gameBackground.setMinWidth(animation.getPROPERTIES().getWIDTH() / Properties.SIZE_FACTOR());
         gameBackground.setMaxWidth(animation.getPROPERTIES().getWIDTH() / Properties.SIZE_FACTOR());
-
     }
 
     private void addComplexAreaPreview(ComplexArea complexArea, Color color) {
@@ -217,7 +209,6 @@ public class AnimationPane {
             ArrayList<ComplexAreaPart> included = complexArea.partAreas();
             addAreaLayer(included, color);
         }
-
     }
 
     private void addAreaLayer(ArrayList<ComplexAreaPart> included, Color color) {
@@ -244,8 +235,6 @@ public class AnimationPane {
             addAreaLayer(included2, color);
         }
     }
-
-
 }
 
 

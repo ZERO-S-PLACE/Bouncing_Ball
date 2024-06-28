@@ -48,7 +48,6 @@ public class MainWindowController implements Initializable {
     }
 
     private void changeLayer(BorderPane layer, Pane pane, double wait) {
-        new Thread(() -> {
             if (!layer.getChildren().isEmpty()) {
                 animateLayerChange(layer, pane, wait / 2);
             } else {
@@ -56,13 +55,8 @@ public class MainWindowController implements Initializable {
                     layer.setOpacity(0);
                     layer.setCenter(pane);
                 });
-
                 animateLayerAppear(layer, wait);
-
             }
-        }).start();
-
-
     }
 
 

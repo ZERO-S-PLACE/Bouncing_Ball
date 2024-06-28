@@ -30,19 +30,25 @@ public class BackgroundImages {
 
         } else {
             pane.setStyle("-fx-background-color: #243253; ");
+            Model.getInstance().controllers().getMainWindowController()
+                    .mainPanel.setBackground(new Background(new BackgroundFill(Properties.BACKGROUND_COLOR(), null, null)));
         }
     }
     public static void setBallStandardBackground(Node node) {
         String imagePath = Objects.requireNonNull(LevelListCellController.class.getResource("/Icons/General/CircleGreen.png")).toExternalForm();
         node.setStyle("-fx-fill: url('" + imagePath + "');");
+        //node.setStyle("-fx-fill: #009900");
     }
     public static void setBallHaveToEnterBackground(Node node) {
         String imagePath = Objects.requireNonNull(LevelListCellController.class.getResource("/Icons/General/CircleBlue.png")).toExternalForm();
         node.setStyle("-fx-fill: url('" + imagePath + "');");
+        //node.setStyle("-fx-fill: #990000");
+
     }
     public static void setBallCannotEnterBackground(Node node) {
         String imagePath = Objects.requireNonNull(LevelListCellController.class.getResource("/Icons/General/CircleRed.png")).toExternalForm();
         node.setStyle("-fx-fill: url('" + imagePath + "');");
+        //node.setStyle("-fx-fill: #000099");
     }
 
 }

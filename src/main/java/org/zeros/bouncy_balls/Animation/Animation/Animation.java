@@ -1,7 +1,10 @@
 package org.zeros.bouncy_balls.Animation.Animation;
 
 import javafx.animation.AnimationTimer;
-import javafx.beans.property.*;
+import javafx.beans.property.LongProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleLongProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Point2D;
 import org.zeros.bouncy_balls.Animation.Borders.Borders;
 import org.zeros.bouncy_balls.Animation.Borders.BordersType;
@@ -21,15 +24,12 @@ import java.util.TreeSet;
 public class Animation {
     private final Level level;
     private final TreeSet<Double> timesElapsed = new TreeSet<>();
+    private final LongProperty timeElapsedNanos = new SimpleLongProperty(0);
+    private final ObjectProperty<GameState> gameState = new SimpleObjectProperty<>();
     private Borders borders;
     private int mObj1;
     private String name;
-
-
-
-
-    private final LongProperty timeElapsedNanos=new SimpleLongProperty(0);
-    private final ObjectProperty<GameState> gameState=new SimpleObjectProperty<>();
+    private long previousTime = 0;
 
     public Animation(Level level) {
         this.level = level;
@@ -50,44 +50,61 @@ public class Animation {
 
     public void reloadBorders() {
         borders = new Borders(this);
-    }
-
-    private final AnimationTimer timer = new AnimationTimer() {
+    }    private final AnimationTimer timer = new AnimationTimer() {
         @Override
         public void handle(long now) {
             animateThis(now);
         }
+
+        @Override
+        public void stop() {
+            super.stop();
+        }
     };
 
-    public void pause() {
-        gameState.set(GameState.PAUSED);
-        previousTime=0;
-        timer.stop();
+    public long getTimeElapsedNanos() {
+        return timeElapsedNanos.get();
     }
-    public void resume(){
-        gameState.set(GameState.IN_PROGRESS);
-        timer.start();}
-    private long previousTime=0;
+
+    public void pause() {
+
+        if (!gameState.get().equals(GameState.LOST) && !gameState.get().equals(GameState.WON) && !gameState.get().equals(GameState.FINISHED)) {
+            gameState.set(GameState.PAUSED);
+            previousTime = 0;
+            timer.stop();
+        }
+    }
+
+    public void resume() {
+        if (!gameState.get().equals(GameState.LOST) || !gameState.get().equals(GameState.LOST)) {
+            gameState.set(GameState.IN_PROGRESS);
+            timer.start();
+        }
+    }
 
     private void animateThis(long now) {
-        if(previousTime!=0) {
-            timeElapsedNanos.set(timeElapsedNanos.get() +(now-previousTime));
+        if (previousTime != 0) {
+            timeElapsedNanos.set(timeElapsedNanos.get() + (now - previousTime));
         }
-        previousTime=now;
+        previousTime = now;
         searchForBounces();
         setFinalPositions();
 
-        if (timeElapsedNanos.get() > level.PROPERTIES().getTIME()*1000000000 || allNeededEntered() || notAllowedEnter()) {
+        if (timeElapsedNanos.get() > level.PROPERTIES().getTIME() * 1000000000 || allNeededEntered() || notAllowedEnter()) {
+            timer.stop();
             setFinalState();
         }
     }
 
     private void setFinalState() {
-        pause();
-        if(notAllowedEnter()){
+        if (level.PROPERTIES().getTYPE().equals(AnimationType.SIMULATION)) {
+            gameState.set(GameState.FINISHED);
+        } else if (notAllowedEnter()) {
             gameState.set(GameState.LOST);
-        }else if(level.getMovingObjectsHaveToEnter().isEmpty()){
+        } else if (level.getMovingObjectsHaveToEnter().isEmpty()) {
             gameState.set(GameState.WON);
+        } else {
+            gameState.set(GameState.LOST);
         }
     }
 
@@ -288,13 +305,6 @@ public class Animation {
     public String getName() {
         return name;
     }
-    public LongProperty timeElapsedNanosProperty() {
-        return timeElapsedNanos;
-    }
-
-    public ObjectProperty<GameState> gameStateProperty() {
-        return gameState;
-    }
 
     public void setName(String name) {
         if (Model.getInstance().getRunningAnimations().isEmpty()) {
@@ -310,6 +320,16 @@ public class Animation {
             this.name = name;
         }
     }
+
+    public LongProperty timeElapsedNanosProperty() {
+        return timeElapsedNanos;
+    }
+
+    public ObjectProperty<GameState> gameStateProperty() {
+        return gameState;
+    }
+
+
 
 }
 
