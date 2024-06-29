@@ -14,13 +14,13 @@ import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.Area;
 import java.util.ArrayList;
 
 public class Borders {
+    private final int WIDTH;
+    private final int HEIGHT;
     private final LinearEquation OX = new LinearEquation(0, 0);
     private final LinearEquation OY = new LinearEquation(0, Double.NaN);
     private final LinearEquation OY2;
     private final LinearEquation OX2;
     private final ArrayList<LineSegment> boundaryLines = new ArrayList<>();
-    private final int WIDTH;
-    private final int HEIGHT;
 
     public Borders(Animation animation) {
         AnimationProperties PROPERTIES = animation.getPROPERTIES();
@@ -70,8 +70,6 @@ public class Borders {
             return false;
         }
         return true;
-
-
     }
 
     public boolean moveToOtherSide(MovingObject obj) {

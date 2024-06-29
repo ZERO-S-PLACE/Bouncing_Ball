@@ -9,28 +9,29 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import org.zeros.bouncy_balls.Animation.InputOnRun.InputOnRun;
 import org.zeros.bouncy_balls.Animation.InputOnRun.InputOnRunMovingObject;
 import org.zeros.bouncy_balls.Animation.InputOnRun.InputOnRunObstacle;
 import org.zeros.bouncy_balls.DisplayUtil.BackgroundImages;
+import org.zeros.bouncy_balls.DisplayUtil.ClockMeasurement;
 import org.zeros.bouncy_balls.Level.Level;
 import org.zeros.bouncy_balls.Model.Properties;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObject;
 import org.zeros.bouncy_balls.Objects.VectorArea.ComplexArea.ComplexArea;
-import org.zeros.bouncy_balls.Objects.VectorArea.ComplexArea.ComplexAreaPart;
 import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.Area;
-
-import java.util.ArrayList;
 
 public class AnimationPane {
     private final AnchorPane gameBackground;
-    private Animation animation;
-    private InputOnRun input;
-    private final EventHandler<MouseEvent> inputOnRunHandler = this::inputOnRunHandler;
-    private BorderPane clockContainer;
+    private HBox measurementsBox;
+    private ClockMeasurement timeMeasurement;
+    private ClockMeasurement movingObjectsToAddCounter;
+    private ClockMeasurement obstaclesToAddCounter;
     private Button pauseButton;
+    private Animation animation;
+    private InputOnRun inputOnRun;
+    private final EventHandler<MouseEvent> inputOnRunHandler = this::inputOnRunHandler;
     private final EventHandler<KeyEvent> escHandler = this::escHandler;
 
     public AnimationPane(String path) {
@@ -44,92 +45,17 @@ public class AnimationPane {
         animation = new Animation(level);
         setUp();
     }
-    public void addGameOverlay() {
-        BorderPane pauseContainer = new BorderPane();
-        pauseButton = new Button();
-        pauseButton.getStyleClass().add("pause-button");
-        pauseButton.setPrefSize(40, 40);
-        pauseContainer.setCenter(pauseButton);
-        gameBackground.getChildren().add(pauseContainer);
-        AnchorPane.setLeftAnchor(pauseContainer, 10.0);
-        AnchorPane.setTopAnchor(pauseContainer, 10.0);
-        pauseButton.setOnAction(e -> pauseGame());
-    }
-    public void pauseGame() {
-        if (input != null) {
-            input.dismiss();
-            input = null;
-        }
-        animation.pause();
-        pauseButton.setVisible(false);
-    }
-    public void resume() {
-        pauseButton.setVisible(true);
-        animation.resume();
-    }
+
     private void setUp() {
         gameBackground.sceneProperty().addListener(((observable, oldValue, newValue) -> {
             if (oldValue != null) {
                 oldValue.heightProperty().removeListener(sizeChangeListener());
             }
             if (newValue != null) {
-                newValue.heightProperty().addListener(sizeChangeListener());
                 reloadNodes(newValue.heightProperty().get() / animation.getLevel().PROPERTIES().getHEIGHT() * Properties.SIZE_FACTOR());
+                newValue.heightProperty().addListener(sizeChangeListener());
             }
         }));
-    }
-    public void startGame() {
-        new Thread(animation::animate).start();
-        addKeyEventsListeners();
-    }
-    private void addKeyEventsListeners() {
-        gameBackground.addEventHandler(KeyEvent.KEY_PRESSED, escHandler);
-        gameBackground.addEventHandler(MouseEvent.MOUSE_CLICKED, inputOnRunHandler);
-    }
-    private void inputOnRunHandler(MouseEvent mouseEvent) {
-        if (input == null) {
-            if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
-                addNewMovingObjectOnRun();
-            } else if (mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
-                addNewObstacleOnRun();
-            }
-        }
-    }
-    private void addNewObstacleOnRun() {
-        if (!animation.getLevel().getObstaclesToAdd().isEmpty()) {
-            Area obstacle = animation.getLevel().getObstaclesToAdd().getFirst();
-            input = new InputOnRunObstacle(obstacle, animation, gameBackground);
-            new Thread(() -> input.insert()).start();
-            input.finishedProperty().addListener(((observable, oldValue, newValue) -> {
-                if (newValue) input = null;
-            }));
-        }
-    }
-    private void addNewMovingObjectOnRun() {
-        if (!animation.getLevel().getMovingObjectsToAdd().isEmpty()) {
-            addComplexAreaPreview(animation.getLevel().getInputArea(), Color.web("#435477"));
-            MovingObject object = animation.getLevel().getMovingObjectsToAdd().getFirst();
-            input = new InputOnRunMovingObject(object, gameBackground);
-            new Thread(() -> input.insert()).start();
-            input.finishedProperty().addListener(((observable, oldValue, newValue) -> {
-                if (newValue) {
-                    Platform.runLater(() -> {
-                        addComplexAreaPreview(animation.getLevel().getInputArea(), Color.TRANSPARENT);
-                        input = null;
-                    });
-                }
-            }));
-        }
-    }
-
-    private void escHandler(KeyEvent event) {
-        if (event.getCode().equals(KeyCode.ESCAPE)) {
-            if (input == null) {
-                pauseGame();
-            } else {
-                input.dismiss();
-            }
-        }
     }
 
     private ChangeListener<Number> sizeChangeListener() {
@@ -143,17 +69,188 @@ public class AnimationPane {
         }
     }
 
+    public void startGame() {
+        new Thread(animation::animate).start();
+        addKeyEventsListeners();
+    }
+
+    private void addKeyEventsListeners() {
+        gameBackground.addEventHandler(KeyEvent.KEY_PRESSED, escHandler);
+        gameBackground.addEventHandler(MouseEvent.MOUSE_CLICKED, inputOnRunHandler);
+    }
+
+    private void escHandler(KeyEvent event) {
+        if (event.getCode().equals(KeyCode.ESCAPE)) {
+            if (inputOnRun == null) {
+                pauseGame();
+            } else {
+                inputOnRun.dismiss();
+            }
+        }
+    }
+
+    public void pauseGame() {
+        dismissInputOnRun();
+        animation.pause();
+        pauseButton.setVisible(false);
+    }
+
+    private void dismissInputOnRun() {
+        if (inputOnRun != null) {
+            inputOnRun.dismiss();
+            inputOnRun = null;
+        }
+    }
+
+    public void resume() {
+        pauseButton.setVisible(true);
+        animation.resume();
+    }
+
+
+    public void addGameOverlay() {
+        addPauseButton();
+        createMeasurementsBox();
+        if ((animation.getPROPERTIES().getTYPE().equals(AnimationType.GAME))) {
+            addMovingObjectsToAddCounter();
+            addObstaclesToAddCounter();
+            updateCountersValues();
+        }
+        addTimeMeasurement();
+        rescaleOverlay();
+    }
+
+    private void createMeasurementsBox() {
+        measurementsBox = new HBox();
+        measurementsBox.setOpacity(0.7);
+        AnchorPane.setRightAnchor(measurementsBox, 10.0);
+        AnchorPane.setTopAnchor(measurementsBox, 10.0);
+        gameBackground.getChildren().add(measurementsBox);
+    }
+
+    private void addObstaclesToAddCounter() {
+        obstaclesToAddCounter = new ClockMeasurement(animation.getLevel().getObstaclesToAdd().size(), "O");
+        measurementsBox.getChildren().add(obstaclesToAddCounter);
+        obstaclesToAddCounter.getController().setMeasurementColorStart(Color.web("#BCBBAC"));
+        obstaclesToAddCounter.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+            if (inputOnRun == null) addNewObstacleOnRun();
+        });
+    }
+
+    private void addMovingObjectsToAddCounter() {
+        movingObjectsToAddCounter = new ClockMeasurement(animation.getLevel().getMovingObjectsToAdd().size(), "M");
+        measurementsBox.getChildren().add(movingObjectsToAddCounter);
+        movingObjectsToAddCounter.getController().setMeasurementColorStart(Color.web("#BCBBAC"));
+        movingObjectsToAddCounter.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+            if (inputOnRun == null) addNewMovingObjectOnRun();
+        });
+    }
+
+    private void updateCountersValues() {
+        obstaclesToAddCounter.getController().setValue(animation.getLevel().getObstaclesToAdd().size());
+        movingObjectsToAddCounter.getController().setValue(animation.getLevel().getMovingObjectsToAdd().size());
+    }
+
+    private void addTimeMeasurement() {
+        timeMeasurement = new ClockMeasurement(animation.getPROPERTIES().getTIME(), "T");
+        measurementsBox.getChildren().add(timeMeasurement);
+        timeMeasurement.setMouseTransparent(true);
+        timeMeasurement.getController().setValueSubtracted(animation.getLevel().PROPERTIES().getTIME());
+        animation.timeElapsedNanosProperty().addListener(((observable, oldValue, newValue) -> timeMeasurement.getController().setValueSubtracted((double) (newValue.longValue() / 1_000_000_000))));
+    }
+
+    private void addPauseButton() {
+        pauseButton = new Button();
+        pauseButton.getStyleClass().add("pause-button");
+        pauseButton.setPrefSize(40, 40);
+        gameBackground.getChildren().add(pauseButton);
+        AnchorPane.setLeftAnchor(pauseButton, 10.0);
+        AnchorPane.setTopAnchor(pauseButton, 10.0);
+        pauseButton.setOnAction(e -> pauseGame());
+    }
+
+    private void inputOnRunHandler(MouseEvent mouseEvent) {
+        if (inputOnRun == null) {
+            if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
+                addNewMovingObjectOnRun();
+            } else if (mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
+                addNewObstacleOnRun();
+            }
+        }
+    }
+
+    private void addNewObstacleOnRun() {
+        if (!animation.getLevel().getObstaclesToAdd().isEmpty()) {
+            measurementsBox.setMouseTransparent(true);
+            Area obstacle = animation.getLevel().getObstaclesToAdd().getFirst();
+            inputOnRun = new InputOnRunObstacle(obstacle, animation, gameBackground);
+            new Thread(() -> inputOnRun.insert()).start();
+            inputOnRun.finishedProperty().addListener(((observable, oldValue, newValue) -> Platform.runLater(() -> {
+                measurementsBox.setMouseTransparent(false);
+                inputOnRun = null;
+                updateCountersValues();
+            })));
+        }
+    }
+
+    private void addNewMovingObjectOnRun() {
+        if (!animation.getLevel().getMovingObjectsToAdd().isEmpty()) {
+            measurementsBox.setMouseTransparent(true);
+            ComplexArea.addComplexAreaToPane(animation.getLevel().getInputArea(), Color.web("#435477"), gameBackground);
+            MovingObject object = animation.getLevel().getMovingObjectsToAdd().getFirst();
+            inputOnRun = new InputOnRunMovingObject(object, gameBackground);
+            new Thread(() -> inputOnRun.insert()).start();
+            inputOnRun.finishedProperty().addListener(((observable, oldValue, newValue) -> {
+                if (newValue) {
+                    Platform.runLater(() -> {
+                        measurementsBox.setMouseTransparent(false);
+                        ComplexArea.addComplexAreaToPane(animation.getLevel().getInputArea(), Color.TRANSPARENT, getAnimationPane());
+                        inputOnRun = null;
+                        updateCountersValues();
+                    });
+                }
+            }));
+        }
+    }
+
+
     private void reloadNodes(double scaleFactor) {
+        rescaleAnimation(scaleFactor);
+        animation.reloadBorders();
+        setBackground();
+        gameBackground.getChildren().removeAll(gameBackground.getChildren());
+        reloadAnimationElements();
+        if (pauseButton != null && measurementsBox != null) {
+            gameBackground.getChildren().add(pauseButton);
+            gameBackground.getChildren().add(measurementsBox);
+            Platform.runLater(this::rescaleOverlay);
+        }
+    }
+
+    private void rescaleAnimation(double scaleFactor) {
         if (scaleFactor > 0 && scaleFactor != 1) {
             try {
                 animation.getLevel().rescale(scaleFactor);
-            } catch (Exception ignored) {
+            } catch (Exception e) {
+                throw new RuntimeException("Animation cannot be rescaled");
             }
         }
-        animation.reloadBorders();
-        gameBackground.getChildren().removeAll(gameBackground.getChildren());
-        setBackground();
-        addComplexAreaPreview(animation.getLevel().getTargetArea(), Color.web("#081633"));
+    }
+
+    private void rescaleOverlay() {
+        measurementsBox.setSpacing(gameBackground.getHeight() / 50);
+        timeMeasurement.getController().setSize(gameBackground.getHeight() / 6);
+        if (movingObjectsToAddCounter != null) {
+            movingObjectsToAddCounter.getController().setSize(gameBackground.getHeight() / 9);
+        }
+        if (obstaclesToAddCounter != null) {
+            obstaclesToAddCounter.getController().setSize(gameBackground.getHeight() / 9);
+        }
+        updateCountersValues();
+    }
+
+    private void reloadAnimationElements() {
+        ComplexArea.addComplexAreaToPane(animation.getLevel().getTargetArea(), Color.web("#081633"), gameBackground);
         for (Area obstacle : animation.getLevel().getObstacles()) {
             gameBackground.getChildren().add(obstacle.getPath());
             obstacle.getPath().setFill(Properties.OBSTACLE_COLOR());
@@ -177,43 +274,15 @@ public class AnimationPane {
         gameBackground.setMaxWidth(animation.getPROPERTIES().getWIDTH() / Properties.SIZE_FACTOR());
     }
 
-    private void addComplexAreaPreview(ComplexArea complexArea, Color color) {
-        if (complexArea != null) {
-            ArrayList<ComplexAreaPart> included = complexArea.partAreas();
-            addAreaLayer(included, color);
-        }
-    }
 
-    private void addAreaLayer(ArrayList<ComplexAreaPart> included, Color color) {
-        ArrayList<ComplexAreaPart> excluded = new ArrayList<>();
-
-        for (ComplexAreaPart part : included) {
-            part.area().getPath().setFill(color);
-            excluded.addAll(part.excluded());
-            Platform.runLater(() -> {
-                gameBackground.getChildren().remove(part.area().getPath());
-                gameBackground.getChildren().add(part.area().getPath());
-            });
-        }
-        ArrayList<ComplexAreaPart> included2 = new ArrayList<>();
-        for (ComplexAreaPart part : excluded) {
-            part.area().getPath().setFill(Properties.BACKGROUND_COLOR());
-            included2.addAll(part.excluded());
-            Platform.runLater(() -> {
-                gameBackground.getChildren().remove(part.area().getPath());
-                gameBackground.getChildren().add(part.area().getPath());
-            });
-        }
-        if (!included2.isEmpty()) {
-            addAreaLayer(included2, color);
-        }
-    }
     public AnchorPane getAnimationPane() {
         return gameBackground;
     }
+
     public Animation getAnimation() {
         return animation;
     }
+
     public Level getLevel() {
         return animation.getLevel();
     }

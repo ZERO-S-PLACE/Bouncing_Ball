@@ -135,7 +135,7 @@ public abstract class MovingObject implements Cloneable {
 
     public void setAnimation(Animation animation) {
         this.animationProperties = animation.getLevel().PROPERTIES();
-        this.animationName = animation.getName();
+        this.animationName = animation.getAnimationIdentifier();
         this.acceleration = new Point2D(0, animationProperties.getGRAVITY());
     }
 

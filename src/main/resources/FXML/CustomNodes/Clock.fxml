@@ -6,21 +6,15 @@
 <?import javafx.scene.shape.Arc?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Text?>
-<AnchorPane fx:id="clockPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-            prefHeight="203.0" prefWidth="204.0" styleClass="clock" stylesheets="@../../Styles/CustomNodes/Clock.css"
+<AnchorPane fx:id="clockPane" styleClass="clock" stylesheets="@../../Styles/CustomNodes/Clock.css"
             xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
     <Circle fx:id="clockBackground" layoutX="100.0" layoutY="100.0" radius="100.0" stroke="BLACK"
             strokeType="INSIDE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
             AnchorPane.topAnchor="0.0"/>
-    <Arc fx:id="clockMeasurement" layoutX="100.0" layoutY="100.0" length="270.0" radiusX="100.0"
-         radiusY="100.0" startAngle="45.0" stroke="BLACK" strokeType="INSIDE" type="ROUND"/>
-    <Circle fx:id="valueBackground" layoutX="100.0" layoutY="100.0" radius="41.0" stroke="BLACK"
-            strokeType="INSIDE"/>
-    <Text fx:id="measurementText" layoutX="85.0" layoutY="109.0" strokeType="OUTSIDE" strokeWidth="0.0"
-          styleClass="clock"
-          text="30" wrappingWidth="28.9375">
+    <Arc fx:id="clockMeasurement"  type="ROUND"/>
+    <Label fx:id="valueLabel" layoutX="7.0" layoutY="12.0" prefHeight="50.0" prefWidth="50.0" text="s"
+           AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0"/>
 
-    </Text>
     <Label fx:id="unitLabel" layoutX="7.0" layoutY="12.0" prefHeight="50.0" prefWidth="50.0" text="s"
            AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0"/>
 </AnchorPane>

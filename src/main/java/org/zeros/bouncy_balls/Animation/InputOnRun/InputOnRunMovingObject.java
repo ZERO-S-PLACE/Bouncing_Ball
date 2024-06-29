@@ -14,7 +14,6 @@ import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObject;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObjectType;
 
 public class InputOnRunMovingObject extends InputOnRun {
-
     private final Circle[] trajectoryMarkers = new Circle[10];
     private final MovingObject object;
     private final Point2D maxVelocity;
@@ -153,6 +152,4 @@ public class InputOnRunMovingObject extends InputOnRun {
         animation.getLevel().removeMovingObjectToAdd(object);
         Platform.runLater(() -> panel.getChildren().add(object.getShape()));
     }
-
-
 }

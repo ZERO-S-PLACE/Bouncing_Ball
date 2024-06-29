@@ -5,15 +5,21 @@ import javafx.scene.layout.AnchorPane;
 
 public class ClockMeasurement extends AnchorPane {
 
+    private final ClockMeasurementController controller;
 
-    public ClockMeasurement(double range, double value, String unit) {
+    public ClockMeasurement(double range, String unit) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/CustomNodes/Clock.fxml"));
-        loader.setController(new ClockMeasurementController(range, value, unit));
+        controller = new ClockMeasurementController(range, unit);
+        loader.setController(controller);
         try {
             AnchorPane clock = loader.load();
             this.getChildren().setAll(clock);
         } catch (Exception e) {
-           throw new RuntimeException("Loading clock pane failed");
+            throw new RuntimeException("Loading clock pane failed");
         }
+    }
+
+    public ClockMeasurementController getController() {
+        return controller;
     }
 }

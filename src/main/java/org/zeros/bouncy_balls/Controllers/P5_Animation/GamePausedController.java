@@ -55,12 +55,29 @@ public class GamePausedController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        setConfigurationAtNewGame();
         setCirclesFill();
         setRescaling();
         setEnterAnimation();
         setToolTips();
         setButtonFunctions();
-        setConfigurationAtNewGame();
+    }
+
+    private void setButtonFunctions() {
+        returnButton.setOnAction(event -> transitionToLevelSelection());
+        previousButton.setOnAction(event -> {
+            NodeAnimations.increaseBrightnessOnExit(previousButton);
+            transitionToLevel(previousLevel);
+        });
+        nextButton.setOnAction(event -> {
+            NodeAnimations.increaseBrightnessOnExit(nextButton);
+            transitionToLevel(nextLevel);
+        });
+        restartButton.setOnAction(event -> {
+            NodeAnimations.increaseBrightnessOnExit(returnButton);
+            transitionToLevel(getLevel(0, true));
+        });
+        runButton.setOnAction(event -> runGame());
     }
 
     private ChangeListener<GameState> getGameStateChangeListener() {
@@ -82,6 +99,7 @@ public class GamePausedController implements Initializable {
     }
 
     public void setConfigurationAtNewGame() {
+        firstStart = true;
         Model.getInstance().getViewFactory().getCurrentAnimationPane().getAnimation().gameStateProperty().addListener(getGameStateChangeListener());
         nextLevel = getLevel(1, false);
         previousLevel = getLevel(-1, false);
@@ -91,7 +109,7 @@ public class GamePausedController implements Initializable {
         nextButton.setDisable(nextLevel == null);
         previousButton.setDisable(previousLevel == null);
         runButton.setDisable(false);
-        firstStart = true;
+
     }
 
     public void setConfigurationAtPaused() {
@@ -137,7 +155,7 @@ public class GamePausedController implements Initializable {
         restartButton.setDisable(false);
         runButton.setDisable(true);
         displayScore();
-        Level currentLevel=getLevel(0,true);
+        Level currentLevel = getLevel(0, true);
         Model.getInstance().getViewFactory().getNewAnimationPane(currentLevel);
         nextLevel = getLevel(1, false);
         nextButton.setDisable(nextLevel == null);
@@ -193,23 +211,6 @@ public class GamePausedController implements Initializable {
     }
 
 
-    private void setButtonFunctions() {
-        returnButton.setOnAction(event -> transitionToLevelSelection());
-        previousButton.setOnAction(event -> {
-            NodeAnimations.increaseBrightnessOnExit(previousButton);
-            transitionToLevel(previousLevel);
-        });
-        nextButton.setOnAction(event -> {
-            NodeAnimations.increaseBrightnessOnExit(nextButton);
-            transitionToLevel(nextLevel);
-        });
-        restartButton.setOnAction(event -> {
-            NodeAnimations.increaseBrightnessOnExit(returnButton);
-            transitionToLevel(getLevel(0, true));
-        });
-        runButton.setOnAction(event -> runGame());
-    }
-
     private void runGame() {
         Model.getInstance().controllers().getMainWindowController().changeTopLayer(Model.getInstance().getViewFactory().getCountDownPanel(), 0.3);
         Model.getInstance().controllers().getGameCountDownController().countDownAndRun(firstStart);
@@ -236,7 +237,7 @@ public class GamePausedController implements Initializable {
         if (indexCurrent + distance >= 0 && indexCurrent + distance < listView.getItems().size()) {
             if (reset) Model.getInstance().controllers().getLevelSelectionController().reloadLevelsList();
             Level level = listView.getItems().get(indexCurrent + distance);
-            if(level==null) throw new RuntimeException("Something went wrong");
+            if (level == null) throw new RuntimeException("Something went wrong");
             if (distance <= 0 || !Model.getInstance().controllers().getLevelSelectionController().getControllersMap().get(level).getState().equals(LevelState.DISABLED)) {
                 return level;
             }
@@ -244,7 +245,6 @@ public class GamePausedController implements Initializable {
         return null;
 
     }
-
 
     private void setCirclesFill() {
         String imagePath = Objects.requireNonNull(getClass().getResource("/Icons/General/BackBallBlue.png")).toExternalForm();

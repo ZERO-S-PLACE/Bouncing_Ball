@@ -11,15 +11,16 @@ import org.zeros.bouncy_balls.Animation.Animation.Animation;
 
 public abstract class InputOnRun {
 
-    protected final AnchorPane panel;
-    protected final EventHandler<MouseEvent> mouseInputHandler = this::onMouseClicked;
     protected final Animation animation;
+
+    protected final AnchorPane panel;
+    protected AnimationTimer animationTimer;
+    protected final EventHandler<MouseEvent> mouseInputHandler = this::onMouseClicked;
     protected final EventHandler<MouseEvent> mouseMovedHandler = this::onMouseMoved;
     protected final BooleanProperty finished = new SimpleBooleanProperty(false);
-    protected final long waitForFreePlaceNanos = 2_500_000_000L;
-    protected final int brightnessCyclesOnWait = 3;
+    protected final long WAIT_TIME_NANOS = 2_500_000_000L;
+    protected final int BRIGHTNESS_CYCLES_AT_WAIT = 3;
     protected boolean centerPicked = false;
-    protected AnimationTimer animationTimer;
     private boolean animationIsRunning = false;
 
     public InputOnRun(Animation animation, AnchorPane panel) {
@@ -54,7 +55,6 @@ public abstract class InputOnRun {
             private long startTime = 0;
             private boolean succeeded = false;
             private int cycle = 0;
-
             @Override
             public void handle(long now) {
                 if (startTime == 0) {
@@ -62,19 +62,8 @@ public abstract class InputOnRun {
                     startTime = now;
                 }
                 long timeElapsed = now - startTime;
-                if (timeElapsed < waitForFreePlaceNanos) {
-                    long cycleTime = waitForFreePlaceNanos / brightnessCyclesOnWait;
-                    long currentCycleTime = now - startTime - cycle * cycleTime;
-                    if (currentCycleTime > cycleTime) {
-                        cycle++;
-                        currentCycleTime = currentCycleTime - cycleTime;
-                    }
-                    double brightnessFactor = (double) currentCycleTime / cycleTime;
-                    if (brightnessFactor <= 0.5) {
-                        node.setOpacity(2 * brightnessFactor);
-                    } else {
-                        node.setOpacity(1 - 2 * (brightnessFactor - 0.5));
-                    }
+                if (timeElapsed < WAIT_TIME_NANOS) {
+                    changeBrightnessInCycle(now);
 
                 } else {
                     this.stop();
@@ -82,6 +71,20 @@ public abstract class InputOnRun {
                 if (arrivalCondition()) {
                     succeeded = true;
                     stop();
+                }
+            }
+            private void changeBrightnessInCycle(long now) {
+                long cycleTime = WAIT_TIME_NANOS / BRIGHTNESS_CYCLES_AT_WAIT;
+                long currentCycleTime = now - startTime - cycle * cycleTime;
+                if (currentCycleTime > cycleTime) {
+                    cycle++;
+                    currentCycleTime = currentCycleTime - cycleTime;
+                }
+                double brightnessFactor = (double) currentCycleTime / cycleTime;
+                if (brightnessFactor <= 0.5) {
+                    node.setOpacity(2 * brightnessFactor);
+                } else {
+                    node.setOpacity(1 - 2 * (brightnessFactor - 0.5));
                 }
             }
 

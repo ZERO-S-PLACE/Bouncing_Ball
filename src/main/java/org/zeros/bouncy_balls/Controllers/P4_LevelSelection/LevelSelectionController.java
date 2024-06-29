@@ -75,6 +75,7 @@ public class LevelSelectionController implements Initializable {
     public void loadLevelsList(AnimationType type, String subtype) {
         this.type = type;
         this.subtype = subtype;
+
         controllersMap = new HashMap<>();
         if (levelsList != null) {
             levelsList.getItems().removeAll(levelsList.getItems());
