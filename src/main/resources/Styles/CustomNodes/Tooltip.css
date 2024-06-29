@@ -1,0 +1,11 @@
+.custom-tooltip {
+    -fx-background-color: rgba(36, 50, 83, 0.3);
+    -fx-font-weight: bold;
+    -fx-font-style:italic;
+    -fx-font-family: Calibri;
+    -fx-font-size: 14;
+    -fx-text-fill: rgba(122,192,233,0.8);
+    -fx-padding: 5px;
+    -fx-background-radius: 8px;
+    -fx-border-width: 0px;
+}

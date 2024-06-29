@@ -15,7 +15,7 @@ import org.zeros.bouncy_balls.Animation.Borders.BordersType;
 import org.zeros.bouncy_balls.Calculations.AreasMath.SimpleComplexAreaBoolean;
 import org.zeros.bouncy_balls.Calculations.AreasMath.SimpleSimpleAreaBoolean;
 import org.zeros.bouncy_balls.Calculations.ConvexHull.ConvexHull;
-import org.zeros.bouncy_balls.Controllers.LevelCreatorController;
+import org.zeros.bouncy_balls.Controllers.P2c_LevelCreator.LevelCreatorController;
 import org.zeros.bouncy_balls.Model.Model;
 import org.zeros.bouncy_balls.Model.Properties;
 import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;
@@ -47,17 +47,17 @@ public class LevelCreator {
         try {
             value = Double.parseDouble(text);
         } catch (Exception e) {
-            Platform.runLater(() -> Model.getInstance().getLevelCreatorController().messageLabel.textProperty().setValue("Wrong value"));
+            Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().messageLabel.textProperty().setValue("Wrong value"));
             return null;
         }
         return value;
     }
 
     private static String getStringInput(String message) {
-        Platform.runLater(() -> Model.getInstance().getLevelCreatorController().messageLabel.textProperty().setValue(message));
-        Platform.runLater(() -> Model.getInstance().getLevelCreatorController().setTextEntered(""));
+        Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().messageLabel.textProperty().setValue(message));
+        Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().setTextEntered(""));
         waitForInput();
-        return Model.getInstance().getLevelCreatorController().getTextEntered();
+        return Model.getInstance().controllers().getLevelCreatorController().getTextEntered();
     }
 
     private static void waitForInput() {
@@ -77,19 +77,19 @@ public class LevelCreator {
         for (ComplexAreaPart part : included) {
             part.area().getPath().setFill(color);
             excluded.addAll(part.excluded());
-            if (!Model.getInstance().getLevelCreatorController().preview.getChildren().contains(part.area().getPath())) {
-                Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().remove(part.area().getPath()));
+            if (!Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().contains(part.area().getPath())) {
+                Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().remove(part.area().getPath()));
             }
-            Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().add(part.area().getPath()));
+            Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().add(part.area().getPath()));
         }
         ArrayList<ComplexAreaPart> included2 = new ArrayList<>();
         for (ComplexAreaPart part : excluded) {
             part.area().getPath().setFill(Color.WHITE);
             included2.addAll(part.excluded());
-            if (!Model.getInstance().getLevelCreatorController().preview.getChildren().contains(part.area().getPath())) {
-                Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().remove(part.area().getPath()));
+            if (!Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().contains(part.area().getPath())) {
+                Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().remove(part.area().getPath()));
             }
-            Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().add(part.area().getPath()));
+            Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().add(part.area().getPath()));
         }
         if (!included2.isEmpty()) {
             addAreaLayer(included2, color);
@@ -98,23 +98,23 @@ public class LevelCreator {
 
     private static void checkingHullCalculations(Area obstacle) {
         ArrayList<Point2D> hull = ConvexHull.calculatePoints(obstacle.getAllPoints());
-        Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().add(new Circle(hull.getFirst().getX(), hull.getFirst().getY(), 8)));
+        Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().add(new Circle(hull.getFirst().getX(), hull.getFirst().getY(), 8)));
 
         for (Point2D point : obstacle.getAllPoints()) {
-            Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().add(new Circle(point.getX(), point.getY(), 1)));
+            Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().add(new Circle(point.getX(), point.getY(), 1)));
         }
         for (int i = 1; i < hull.size(); i++) {
 
             int finalI = i;
-            Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().add(new Line(hull.get(finalI - 1).getX(), hull.get(finalI - 1).getY(), hull.get(finalI).getX(), hull.get(finalI).getY())));
+            Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().add(new Line(hull.get(finalI - 1).getX(), hull.get(finalI - 1).getY(), hull.get(finalI).getX(), hull.get(finalI).getY())));
             Circle circle = new Circle(hull.get(finalI).getX(), hull.get(finalI).getY(), 3);
             circle.setFill(Color.RED);
-            Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().add(circle));
+            Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().add(circle));
         }
     }
 
     public void create() {
-        Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().removeAll(Model.getInstance().getLevelCreatorController().preview.getChildren()));
+        Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().removeAll(Model.getInstance().controllers().getLevelCreatorController().preview.getChildren()));
         level = new Level(getAnimationProperties());
         animation = new Animation(level);
         addComplexArea(true);
@@ -131,13 +131,13 @@ public class LevelCreator {
     private void simulateAnimation() {
         if (agreeTo("Check animation?")) {
             animation = new Animation(level);
-            Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().removeAll(Model.getInstance().getLevelCreatorController().preview.getChildren()));
+            Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().removeAll(Model.getInstance().controllers().getLevelCreatorController().preview.getChildren()));
             for (Area obstacle : animation.getLevel().getObstacles()) {
-                Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().add(obstacle.getPath()));
+                Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().add(obstacle.getPath()));
             }
             for (MovingObject obj : animation.getLevel().getMovingObjects()) {
                 obj.setAnimation(animation);
-                Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().add(obj.getShape()));
+                Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().add(obj.getShape()));
             }
             new Thread(() -> animation.animate()).start();
             while (true) {
@@ -261,10 +261,10 @@ public class LevelCreator {
 
     private void removeComplexAreaPreview(ComplexArea complexArea) {
         for (Area area : complexArea.getAllIncludedAreas()) {
-            Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().remove(area.getPath()));
+            Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().remove(area.getPath()));
         }
         for (Area area : complexArea.getAllExcludedAreas()) {
-            Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().remove(area.getPath()));
+            Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().remove(area.getPath()));
         }
     }
 
@@ -286,10 +286,7 @@ public class LevelCreator {
             if (agreeTo("Is this simulation(Y) or game(N)? ")) {
                 properties.setTYPE(AnimationType.SIMULATION);
             }
-            if (agreeTo("Custom speed Y/N")) {
-                properties.setFRAME_RATE(Math.abs((int) getNumber("Frame rate: ")));
-                properties.setMAX_EVALUATIONS(Math.abs((int) getNumber("Max evaluations per frame: ")));
-            }
+
         }
         setPreviewBoundaries(HEIGHT, WIDTH);
         return properties;
@@ -352,13 +349,13 @@ public class LevelCreator {
     }
 
     private void removeMovingObjectPreview(MovingObject obj, Shape velocityShadow) {
-        Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().remove(obj.getShape()));
-        Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().remove(velocityShadow));
+        Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().remove(obj.getShape()));
+        Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().remove(velocityShadow));
     }
 
     private void addMovingObjectPreview(MovingObject obj, Shape velocityShadow) {
-        Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().add(obj.getShape()));
-        Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().add(velocityShadow));
+        Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().add(obj.getShape()));
+        Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().add(velocityShadow));
     }
 
     private void saveMovingObject(MovingObject obj, Shape velocityShadow) {
@@ -432,11 +429,11 @@ public class LevelCreator {
 
                             Random random = new Random();
                             for (Area area : subdivisions) {
-                                if(! Model.getInstance().getLevelCreatorController().preview.getChildren().contains(area.getPath())) {
+                                if(! Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().contains(area.getPath())) {
                                     Platform.runLater(() -> {
 
                                         area.getPath().setFill(new Color(random.nextDouble(), random.nextDouble(), random.nextDouble(), 1));
-                                        Model.getInstance().getLevelCreatorController().preview.getChildren().add(area.getPath());
+                                        Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().add(area.getPath());
 
                                     });
                                     try {
@@ -496,7 +493,7 @@ public class LevelCreator {
                 }
 
                 for (Point2D intersection : intersections) {
-                    Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().add(new Circle(intersection.getX(), intersection.getY(), 1, Color.BLUE)));
+                    Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().add(new Circle(intersection.getX(), intersection.getY(), 1, Color.BLUE)));
                 }
 
 
@@ -505,18 +502,18 @@ public class LevelCreator {
     }
 
     private void addObstaclePreview(Area obstacle) {
-        Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().add(obstacle.getPath()));
+        Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().add(obstacle.getPath()));
     }
 
     private void removeObstaclePreview(Area obstacle) {
-        Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().remove(obstacle.getPath()));
+        Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().remove(obstacle.getPath()));
     }
 
     private void saveObstacle(Area obstacle) {
         if (objectInStartState) {
             level.addObstacle(obstacle);
         } else {
-            Platform.runLater(() -> Model.getInstance().getLevelCreatorController().preview.getChildren().remove(obstacle.getPath()));
+            Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().remove(obstacle.getPath()));
             level.addObstacleToAdd(obstacle);
         }
 
@@ -657,14 +654,14 @@ public class LevelCreator {
     }
 
     private double getDimension(String message, Point2D reference) {
-        Model.getInstance().getLevelCreatorController().setSelectedPoint(reference);
+        Model.getInstance().controllers().getLevelCreatorController().setSelectedPoint(reference);
         while (true) {
             String userInput = getStringInput(message);
-            if (Model.getInstance().getLevelCreatorController().getLastEvent() instanceof KeyEvent) {
+            if (Model.getInstance().controllers().getLevelCreatorController().getLastEvent() instanceof KeyEvent) {
                 Double value = getTextValue(userInput);
                 if (value != null) return Math.abs(value);
             } else {
-                return Model.getInstance().getLevelCreatorController().getPickedDistance();
+                return Model.getInstance().controllers().getLevelCreatorController().getPickedDistance();
             }
         }
     }
@@ -688,7 +685,7 @@ public class LevelCreator {
                     return false;
                 }
                 default ->
-                        Platform.runLater(() -> Model.getInstance().getLevelCreatorController().messageLabel.textProperty().setValue("Wrong value"));
+                        Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().messageLabel.textProperty().setValue("Wrong value"));
 
             }
 
@@ -699,12 +696,12 @@ public class LevelCreator {
 
     public Point2D getPoint(String message) {
         double x = getDimension(message + " X:", null);
-        if (!(Model.getInstance().getLevelCreatorController().getLastEvent() instanceof KeyEvent)) {
-            return Model.getInstance().getLevelCreatorController().getSelectedPoint();
+        if (!(Model.getInstance().controllers().getLevelCreatorController().getLastEvent() instanceof KeyEvent)) {
+            return Model.getInstance().controllers().getLevelCreatorController().getSelectedPoint();
         }
         double y = getDimension(message + " Y:", null);
-        if (!(Model.getInstance().getLevelCreatorController().getLastEvent() instanceof KeyEvent)) {
-            return Model.getInstance().getLevelCreatorController().getSelectedPoint();
+        if (!(Model.getInstance().controllers().getLevelCreatorController().getLastEvent() instanceof KeyEvent)) {
+            return Model.getInstance().controllers().getLevelCreatorController().getSelectedPoint();
         }
         return new Point2D(x, y);
     }
@@ -731,8 +728,8 @@ public class LevelCreator {
     }
 
     private void setPreviewBoundaries(int HEIGHT, int WIDTH) {
-        Model.getInstance().getLevelCreatorController().preview.setMinSize(WIDTH / Properties.SIZE_FACTOR(), HEIGHT / Properties.SIZE_FACTOR());
-        Model.getInstance().getLevelCreatorController().preview.setMaxSize(WIDTH / Properties.SIZE_FACTOR(), HEIGHT / Properties.SIZE_FACTOR());
-        Model.getInstance().getLevelCreatorController().preview.backgroundProperty().set(Background.fill(Color.BEIGE));
+        Model.getInstance().controllers().getLevelCreatorController().preview.setMinSize(WIDTH / Properties.SIZE_FACTOR(), HEIGHT / Properties.SIZE_FACTOR());
+        Model.getInstance().controllers().getLevelCreatorController().preview.setMaxSize(WIDTH / Properties.SIZE_FACTOR(), HEIGHT / Properties.SIZE_FACTOR());
+        Model.getInstance().controllers().getLevelCreatorController().preview.backgroundProperty().set(Background.fill(Color.BEIGE));
     }
 }

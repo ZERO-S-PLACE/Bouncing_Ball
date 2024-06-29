@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane fx:id="levelChoicePanel" prefHeight="1080.0" prefWidth="1920.0" styleClass="subtype-choice"
+            stylesheets="@../../Styles/P4_LevelSelection/LevelSelection.css" xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1">
+    <left>
+        <Button fx:id="returnButton" mnemonicParsing="false" prefHeight="60.0" prefWidth="60.0" styleClass="choice-back"
+                BorderPane.alignment="TOP_LEFT">
+            <BorderPane.margin>
+                <Insets left="11.0" top="10.0"/>
+            </BorderPane.margin>
+        </Button>
+    </left>
+    <center>
+        <BorderPane focusTraversable="true" BorderPane.alignment="CENTER">
+            <center>
+                <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER"
+                            BorderPane.alignment="TOP_LEFT">
+                    <BorderPane.margin>
+                        <Insets left="150.0" right="40.0"/>
+                    </BorderPane.margin>
+                    <AnchorPane fx:id="listContainer" minHeight="0.0" minWidth="0.0">
+                        <ListView fx:id="levelsList" layoutX="29.0" layoutY="-181.0"
+                                  AnchorPane.bottomAnchor="-10000.0" AnchorPane.leftAnchor="30.0"
+                                  AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+                    </AnchorPane>
+                </ScrollPane>
+            </center>
+            <top>
+                <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                    <top>
+                        <AnchorPane BorderPane.alignment="CENTER">
+                            <Label fx:id="levelTypeNameLabel" layoutX="164.8" styleClass="panel-icon-name-back"
+                                   text="              Simple bounce" AnchorPane.bottomAnchor="60.0"
+                                   AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="30.0"
+                                   AnchorPane.topAnchor="60.0"/>
+                            <Label fx:id="levelTypeIconLabel" layoutX="33.0" layoutY="-17.0" prefHeight="240.0"
+                                   prefWidth="230.0" styleClass="panel-icon" AnchorPane.bottomAnchor="15.0"
+                                   AnchorPane.topAnchor="15.0"/>
+                        </AnchorPane>
+                    </top>
+                </BorderPane>
+            </top>
+        </BorderPane>
+    </center>
+
+</BorderPane>

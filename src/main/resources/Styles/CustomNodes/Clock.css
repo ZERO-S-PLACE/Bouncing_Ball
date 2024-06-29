@@ -1,0 +1,13 @@
+
+.clock Label{
+    -fx-background-radius:50%;
+    -fx-text-fill:#DADAF7;
+    -fx-alignment: center;
+    -fx-stroke-width:0;
+}
+.clock Circle{
+    -fx-stroke-width:0;
+}
+.clock Arc{
+    -fx-stroke-width:0;
+}

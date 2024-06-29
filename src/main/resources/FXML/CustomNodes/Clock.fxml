@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Arc?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Text?>
+<AnchorPane fx:id="clockPane" styleClass="clock" stylesheets="@../../Styles/CustomNodes/Clock.css"
+            xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+    <Circle fx:id="clockBackground" layoutX="100.0" layoutY="100.0" radius="100.0" stroke="BLACK"
+            strokeType="INSIDE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+            AnchorPane.topAnchor="0.0"/>
+    <Arc fx:id="clockMeasurement"  type="ROUND"/>
+    <Label fx:id="valueLabel" layoutX="7.0" layoutY="12.0" prefHeight="50.0" prefWidth="50.0" text="s"
+           AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+
+    <Label fx:id="unitLabel" layoutX="7.0" layoutY="12.0" prefHeight="50.0" prefWidth="50.0" text="s"
+           AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+</AnchorPane>

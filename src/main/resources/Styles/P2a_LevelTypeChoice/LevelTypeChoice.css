@@ -1,0 +1,31 @@
+.welcome-panel-circle{
+    -fx-stroke-width:0;
+}
+
+.welcome-panel-game {
+    -fx-background-image: url("../../Icons/P2a_LevelTypeChoice/IconGame.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+    -fx-background-color: transparent;
+    -fx-background-radius:50%;
+}
+.welcome-panel-simulation {
+
+    -fx-background-image: url("../../Icons/P2a_LevelTypeChoice/IconSimulation.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+    -fx-background-color: transparent;
+    -fx-background-radius:50%;
+
+}
+.welcome-panel-back {
+    -fx-background-image: url("../../Icons/General/ReturnIcon.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+    -fx-background-color: transparent;
+    -fx-background-radius:50%;
+}
+

@@ -8,10 +8,10 @@ module org.zeros.bouncy_balls {
     requires org.kordamp.bootstrapfx.core;
     requires com.almasb.fxgl.all;
     requires commons.math3;
+    requires annotations;
 
-    opens org.zeros.bouncy_balls to javafx.fxml;
+    opens org.zeros.bouncy_balls.App to javafx.fxml;
 
-    exports org.zeros.bouncy_balls;
     exports org.zeros.bouncy_balls.Model;
     exports org.zeros.bouncy_balls.Calculations;
     exports org.zeros.bouncy_balls.Calculations.Equations;
@@ -24,12 +24,23 @@ module org.zeros.bouncy_balls {
     exports org.zeros.bouncy_balls.Animation.Borders;
     exports org.zeros.bouncy_balls.Animation.Animation;
 
-    opens org.zeros.bouncy_balls.Level to javafx.fxml;
     exports org.zeros.bouncy_balls.Calculations.AreasMath;
     exports org.zeros.bouncy_balls.Objects.VectorArea.PolyLineSegment;
-    exports org.zeros.bouncy_balls.Exceptions;
     exports org.zeros.bouncy_balls.Calculations.ConvexHull;
     exports org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea;
     exports org.zeros.bouncy_balls.Objects.VectorArea.ComplexArea;
+    exports org.zeros.bouncy_balls.Controllers.P0_Login;
+    exports org.zeros.bouncy_balls.Controllers.P1_WelcomePanel;
+    exports org.zeros.bouncy_balls.Controllers.P2a_LevelTypeChoice;
+    exports org.zeros.bouncy_balls.Controllers.P2b_Leaderboard;
+    exports org.zeros.bouncy_balls.Controllers.P2c_LevelCreator;
+    exports org.zeros.bouncy_balls.Controllers.P2d_Settings;
+    exports org.zeros.bouncy_balls.Controllers.P3_LevelSubtypeChoice;
+    exports org.zeros.bouncy_balls.Controllers.P4_LevelSelection;
+    exports org.zeros.bouncy_balls.Controllers.P5_Animation;
+
+    exports org.zeros.bouncy_balls.App;
+    exports org.zeros.bouncy_balls.DisplayUtil;
+
 
 }

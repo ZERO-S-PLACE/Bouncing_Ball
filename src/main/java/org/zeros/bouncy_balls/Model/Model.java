@@ -1,8 +1,7 @@
 package org.zeros.bouncy_balls.Model;
 
 import org.zeros.bouncy_balls.Animation.Animation.Animation;
-import org.zeros.bouncy_balls.Controllers.GamePanelController;
-import org.zeros.bouncy_balls.Controllers.LevelCreatorController;
+import org.zeros.bouncy_balls.Views.ControllersBase;
 import org.zeros.bouncy_balls.Views.ViewFactory;
 
 import java.util.ArrayList;
@@ -10,12 +9,13 @@ import java.util.ArrayList;
 public class Model {
     private static Model model;
     private final ViewFactory viewFactory;
+    private final ControllersBase controllers;
     private final ArrayList<Animation> runningAnimations = new ArrayList<>();
-    private GamePanelController gamePanelController;
-    private LevelCreatorController levelCreatorController;
+
 
     private Model() {
         this.viewFactory = new ViewFactory();
+        this.controllers = new ControllersBase();
     }
 
     public static synchronized Model getInstance() {
@@ -25,15 +25,12 @@ public class Model {
         return model;
     }
 
-    public ViewFactory getViewFactory() {
-        return viewFactory;
+    public ControllersBase controllers() {
+        return controllers;
     }
 
-    public GamePanelController getGamePanelController() {
-        if (this.gamePanelController == null) {
-            this.gamePanelController = new GamePanelController();
-        }
-        return gamePanelController;
+    public ViewFactory getViewFactory() {
+        return viewFactory;
     }
 
     public ArrayList<Animation> getRunningAnimations() {
@@ -44,18 +41,11 @@ public class Model {
         runningAnimations.add(animation);
     }
 
-    public LevelCreatorController getLevelCreatorController() {
-        if (this.levelCreatorController == null) {
-            this.levelCreatorController = new LevelCreatorController();
-        }
-        return levelCreatorController;
-    }
-
-
     public Animation getRunningAnimation(String animationName) {
         for (Animation animation : runningAnimations) {
-            if (animation.getName().equals(animationName)) return animation;
+            if (animation.getAnimationIdentifier().equals(animationName)) return animation;
         }
         return null;
     }
+
 }
