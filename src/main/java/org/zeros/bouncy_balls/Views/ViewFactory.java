@@ -169,6 +169,7 @@ public class ViewFactory {
         return gameAnimation;
     }
 
+
     private void createStage(FXMLLoader loader) {
 
         try {
@@ -192,6 +193,4 @@ public class ViewFactory {
 
         return backAnimationPane;
     }
-
-
 }

@@ -22,15 +22,12 @@ public class CustomListCell extends ListCell<Level> {
             setText(null);
             try {
                 setGraphic(loader.load());
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (Exception ignored) {
             }
         }
-
     }
 
     public ObjectProperty<LevelListCellController> controllerProperty() {
         return controllerProperty;
     }
-
 }

@@ -18,7 +18,7 @@ public class GameCountDownController implements Initializable {
     public void countDownAndRun(boolean firstStart) {
         countText.setText("3");
         AnimationTimer animationTimer = new AnimationTimer() {
-            final long duration = 1_000_000_000L;
+            final long DURATION = 1_200_000_000L;
             long startTime = 0;
             int step = 0;
 
@@ -28,19 +28,23 @@ public class GameCountDownController implements Initializable {
                     startTime = now;
                 }
                 long timeElapsed = now - startTime;
-                if (timeElapsed < duration) {
-                    if (timeElapsed > duration * 0.3 && step < 1) {
-                        step++;
-                        countText.setText("2");
-                    } else if (timeElapsed > duration * 0.6 && step < 2) {
-                        step++;
-                        countText.setText("1");
-                    } else if (timeElapsed > duration * 0.8 && step < 3) {
-                        step++;
-                        countText.setText("0");
-                    }
+                if (timeElapsed < DURATION) {
+                    changeNumberAtTime(timeElapsed);
                 } else {
                     this.stop();
+                }
+            }
+
+            private void changeNumberAtTime(long timeElapsed) {
+                if (timeElapsed > DURATION * 0.3 && step < 1) {
+                    step++;
+                    countText.setText("2");
+                } else if (timeElapsed > DURATION * 0.6 && step < 2) {
+                    step++;
+                    countText.setText("1");
+                } else if (timeElapsed > DURATION * 0.8 && step < 3) {
+                    step++;
+                    countText.setText("0");
                 }
             }
 
@@ -50,7 +54,6 @@ public class GameCountDownController implements Initializable {
                 if (firstStart) {
                     Model.getInstance().getViewFactory().getCurrentAnimationPane().addGameOverlay();
                     Model.getInstance().getViewFactory().getCurrentAnimationPane().startGame();
-
                 } else {
                     Model.getInstance().getViewFactory().getCurrentAnimationPane().resume();
                 }

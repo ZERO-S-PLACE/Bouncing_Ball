@@ -13,8 +13,6 @@ import org.zeros.bouncy_balls.Controllers.P5_Animation.GameCountDownController;
 import org.zeros.bouncy_balls.Controllers.P5_Animation.GamePausedController;
 
 public class ControllersBase {
-
-
     private LoginController loginController;
     private WelcomePanelController welcomePanelController;
     private LevelTypeChoiceController levelTypeChoiceController;
@@ -33,8 +31,6 @@ public class ControllersBase {
         }
         return loginController;
     }
-
-
     public WelcomePanelController getWelcomePanelController() {
         if (this.welcomePanelController == null) {
             this.welcomePanelController = new WelcomePanelController();
@@ -105,6 +101,4 @@ public class ControllersBase {
         }
         return mainWindowController;
     }
-
-
 }

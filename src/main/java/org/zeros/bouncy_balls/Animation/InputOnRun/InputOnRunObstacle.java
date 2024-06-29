@@ -13,7 +13,6 @@ import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.Area;
 
 public class InputOnRunObstacle extends InputOnRun {
     private final Area obstacle;
-
     public InputOnRunObstacle(Area obstacle, Animation animation, AnchorPane panel) {
         super(animation, panel);
         this.obstacle = obstacle;

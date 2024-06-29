@@ -43,7 +43,7 @@ public class Model {
 
     public Animation getRunningAnimation(String animationName) {
         for (Animation animation : runningAnimations) {
-            if (animation.getName().equals(animationName)) return animation;
+            if (animation.getAnimationIdentifier().equals(animationName)) return animation;
         }
         return null;
     }

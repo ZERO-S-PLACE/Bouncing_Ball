@@ -177,6 +177,7 @@ public class LevelListCellController implements Initializable {
         AnimationPane pane = Model.getInstance().getViewFactory().getNewAnimationPane(level);
         Model.getInstance().controllers().getMainWindowController().changeBottomLayer(pane.getAnimationPane(), 0.6);
         Model.getInstance().controllers().getMainWindowController().changeTopLayer(Model.getInstance().getViewFactory().getGamePausedPanel(), 0.1);
+        Model.getInstance().controllers().getGamePausedController().setConfigurationAtNewGame();
     }
 
     public LevelState getState() {

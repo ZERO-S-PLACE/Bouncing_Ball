@@ -21,7 +21,6 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class LevelSubtypeChoiceController implements Initializable {
-
     private final ArrayList<Button> leftButtons = new ArrayList<>();
     private final ArrayList<Button> rightButtons = new ArrayList<>();
     private final ArrayList<ChangeListener<Number>> paneHeightListeners = new ArrayList<>();
@@ -30,7 +29,6 @@ public class LevelSubtypeChoiceController implements Initializable {
     public BorderPane gameTypeChoicePanel;
     private Button middleButton;
     private Point2D dragReference;
-
     private AnimationType type;
 
     @Override
@@ -170,7 +168,6 @@ public class LevelSubtypeChoiceController implements Initializable {
 
 
     private double calculateLeftAnchor(int layer, boolean right, double nextWidth) {
-
         if (layer == 1) return (gameTypeChoicePanel.getWidth() - nextWidth) / 2;
         return (gameTypeChoicePanel.getWidth() - nextWidth) / 2 + getXOffset(layer, right, nextWidth);
     }

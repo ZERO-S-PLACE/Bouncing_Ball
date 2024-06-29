@@ -8,6 +8,7 @@ module org.zeros.bouncy_balls {
     requires org.kordamp.bootstrapfx.core;
     requires com.almasb.fxgl.all;
     requires commons.math3;
+    requires annotations;
 
     opens org.zeros.bouncy_balls.App to javafx.fxml;
 

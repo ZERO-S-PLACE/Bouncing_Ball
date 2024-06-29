@@ -34,5 +34,4 @@ public class RectangleArea extends Area {
         addStraightLineTo(corner1);
     }
 
-
 }
