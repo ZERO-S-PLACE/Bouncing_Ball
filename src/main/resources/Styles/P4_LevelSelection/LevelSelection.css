@@ -1,0 +1,76 @@
+.choice-back {
+    -fx-background-image: url("../../Icons/General/ReturnIcon.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+    -fx-background-color: transparent;
+    -fx-background-radius:50%;
+}
+.panel-icon {
+    -fx-background-image: url("../../Icons/General/IconSpace.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+    -fx-background-color: transparent;
+    -fx-background-radius:50%;
+}
+.panel-icon-name-back {
+    -fx-background-image: url("../../Icons/P4_LevelSelection/TopBench.png");
+    -fx-background-position: center;
+    -fx-background-size: 100% 100%;
+    -fx-background-color: transparent;
+    -fx-text-fill:#DADAF7;
+    -fx-font-size:5.3em;
+
+}
+.scroll-pane .viewport{
+    -fx-background-color:transparent;
+}
+.scroll-pane {
+    -fx-background-color:transparent;
+}
+.scroll-pane AnchorPane{
+    -fx-background-color:transparent;
+}
+
+.scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width:24;
+    -fx-pref-height:50%;
+}
+
+.scroll-bar:vertical .increment-button {
+    -fx-opacity: 0;
+    -fx-padding: 0;
+    -fx-pref-width: 0;
+    -fx-pref-height: 0;
+}
+
+.scroll-bar:vertical .decrement-button {
+    -fx-opacity: 0;
+    -fx-padding: 0;
+    -fx-pref-width: 0;
+    -fx-pref-height: 0;
+}
+
+.scroll-bar:vertical .thumb {
+    -fx-background-color: A2A2CC;
+    -fx-background-radius:12;
+
+}
+.scroll-pane > .corner {
+    -fx-background-color: transparent;
+}
+
+
+ .list-view {
+    -fx-background-color:transparent;
+    -fx-border-width:0;
+    -fx-spaceing:10;
+}
+
+.list-cell{
+    -fx-background-color:transparent;
+    -fx-padding:10 0 10 0;
+
+}
