@@ -3,7 +3,7 @@ package org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Path;
-import org.zeros.bouncy_balls.Model.Properties;
+import org.zeros.bouncy_balls.Applications.GameApplication.Model.Properties;
 import org.zeros.bouncy_balls.Objects.VectorArea.PolyLineSegment.Segment;
 
 import java.util.ArrayList;

@@ -3,7 +3,7 @@ package org.zeros.bouncy_balls.App;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import org.zeros.bouncy_balls.Level.LevelCreator;
-import org.zeros.bouncy_balls.Model.Model;
+import org.zeros.bouncy_balls.Applications.GameApplication.Model.Model;
 
 public class LevelCreatorApplication extends Application {
     public static void main(String[] args) {

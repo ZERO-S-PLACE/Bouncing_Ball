@@ -4,7 +4,7 @@ import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import org.zeros.bouncy_balls.Calculations.AreasMath.AreasMath;
-import org.zeros.bouncy_balls.Model.Properties;
+import org.zeros.bouncy_balls.Applications.GameApplication.Model.Properties;
 import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.Area;
 import org.zeros.bouncy_balls.Objects.VectorArea.VectorArea;
 

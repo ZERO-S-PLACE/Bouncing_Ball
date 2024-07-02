@@ -1,7 +1,7 @@
 package org.zeros.bouncy_balls.Calculations;
 
 import javafx.geometry.Point2D;
-import org.zeros.bouncy_balls.Model.Properties;
+import org.zeros.bouncy_balls.Applications.GameApplication.Model.Properties;
 
 import java.util.ArrayList;
 

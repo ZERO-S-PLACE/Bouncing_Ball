@@ -17,7 +17,7 @@ import org.zeros.bouncy_balls.Animation.InputOnRun.InputOnRunObstacle;
 import org.zeros.bouncy_balls.DisplayUtil.BackgroundImages;
 import org.zeros.bouncy_balls.DisplayUtil.ClockMeasurement;
 import org.zeros.bouncy_balls.Level.Level;
-import org.zeros.bouncy_balls.Model.Properties;
+import org.zeros.bouncy_balls.Applications.GameApplication.Model.Properties;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObject;
 import org.zeros.bouncy_balls.Objects.VectorArea.ComplexArea.ComplexArea;
 import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.Area;

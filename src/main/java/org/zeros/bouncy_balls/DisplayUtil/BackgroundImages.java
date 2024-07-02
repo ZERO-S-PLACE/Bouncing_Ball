@@ -5,9 +5,9 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import org.zeros.bouncy_balls.Controllers.P4_LevelSelection.LevelListCellController;
-import org.zeros.bouncy_balls.Model.Model;
-import org.zeros.bouncy_balls.Model.Properties;
+import org.zeros.bouncy_balls.Applications.GameApplication.Controllers.P4_LevelSelection.LevelListCellController;
+import org.zeros.bouncy_balls.Applications.GameApplication.Model.Model;
+import org.zeros.bouncy_balls.Applications.GameApplication.Model.Properties;
 
 import java.util.Objects;
 

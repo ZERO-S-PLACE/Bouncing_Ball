@@ -4,7 +4,7 @@ import javafx.geometry.Point2D;
 import org.zeros.bouncy_balls.Calculations.BindsCheck;
 import org.zeros.bouncy_balls.Calculations.Equations.BezierCurve;
 import org.zeros.bouncy_balls.Calculations.Equations.Equation;
-import org.zeros.bouncy_balls.Model.Properties;
+import org.zeros.bouncy_balls.Applications.GameApplication.Model.Properties;
 
 import java.util.ArrayList;
 

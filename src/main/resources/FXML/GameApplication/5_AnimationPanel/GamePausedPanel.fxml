@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Text?>
+<BorderPane fx:id="gamePausedPanel" styleClass="game-panel" stylesheets="@../../../Styles/P5_AnimationPanel/GameStop.css"
+            xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+    <BorderPane layoutX="793.0" layoutY="340.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0"
+                AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="0.0">
+        <center>
+            <VBox alignment="CENTER" styleClass="welcome-panel-button-container" BorderPane.alignment="CENTER"/>
+        </center>
+    </BorderPane>
+    <center>
+        <AnchorPane BorderPane.alignment="TOP_LEFT">
+            <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                        AnchorPane.topAnchor="0.0">
+                <center>
+                    <Circle fx:id="centerCircle" radius="316.0" stroke="BLACK" strokeType="INSIDE"
+                            styleClass="welcome-panel-circle" BorderPane.alignment="CENTER"/>
+                </center>
+            </BorderPane>
+            <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                        AnchorPane.topAnchor="0.0">
+                <center>
+                    <VBox fx:id="buttonsContainer" alignment="CENTER" spacing="30.0" BorderPane.alignment="CENTER">
+                        <StackPane>
+                            <BorderPane fx:id="pausedContainer" visible="false">
+                                <center>
+                                    <Button fx:id="runButton" mnemonicParsing="false" prefHeight="376.0"
+                                            prefWidth="367.0" styleClass="start-game" BorderPane.alignment="CENTER"/>
+                                </center>
+                            </BorderPane>
+                            <BorderPane fx:id="endPanelContainer">
+                                <top>
+                                    <Text fx:id="endMessageText" strokeType="OUTSIDE" strokeWidth="0.0"
+                                          styleClass="game-panel-text-main" text="YOU WIN!"
+                                          BorderPane.alignment="CENTER"/>
+                                </top>
+                                <center>
+                                    <HBox fx:id="starsBox" alignment="CENTER" fillHeight="false" focusTraversable="true"
+                                          scaleShape="false" spacing="30.0" BorderPane.alignment="CENTER">
+                                        <BorderPane.margin>
+                                            <Insets/>
+                                        </BorderPane.margin>
+                                        <opaqueInsets>
+                                            <Insets/>
+                                        </opaqueInsets>
+                                        <Label fx:id="starLabel1" graphicTextGap="0.0" prefHeight="100.0"
+                                               prefWidth="100.0" styleClass="game-panel-star"/>
+                                        <Label fx:id="starLabel2" prefHeight="101.0" prefWidth="100.0"
+                                               styleClass="game-panel-star"/>
+                                        <Label fx:id="starLabel3" prefHeight="105.0" prefWidth="100.0"
+                                               styleClass="game-panel-star"/>
+                                    </HBox>
+                                </center>
+                                <bottom>
+                                    <Text fx:id="scoreText" strokeType="OUTSIDE" strokeWidth="0.0"
+                                          styleClass="game-panel-text-secondary" text="Your score: "
+                                          BorderPane.alignment="CENTER"/>
+                                </bottom>
+                            </BorderPane>
+                        </StackPane>
+                        <HBox fx:id="toolsContainer" alignment="CENTER" spacing="40.0">
+                            <Button fx:id="previousButton" alignment="CENTER" mnemonicParsing="false" prefHeight="82.0"
+                                    prefWidth="82.0" styleClass="arrow-button"/>
+                            <Button fx:id="restartButton" alignment="CENTER" mnemonicParsing="false" prefHeight="147.0"
+                                    prefWidth="142.0" styleClass="previous-level-restart"/>
+                            <Button fx:id="nextButton" alignment="CENTER" mnemonicParsing="false" prefHeight="84.0"
+                                    prefWidth="80.0" styleClass="arrow-button"/>
+                        </HBox>
+                    </VBox>
+                </center>
+            </BorderPane>
+            <BorderPane AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0">
+                <center>
+                    <Button fx:id="returnButton" mnemonicParsing="false" prefHeight="60.0" prefWidth="60.0"
+                            styleClass="arrow-button" BorderPane.alignment="CENTER"/>
+                </center>
+            </BorderPane>
+        </AnchorPane>
+    </center>
+
+</BorderPane>

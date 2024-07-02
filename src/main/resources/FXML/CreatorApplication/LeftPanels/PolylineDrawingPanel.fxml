@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.CubicCurve?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane styleClass="left-panel-container" stylesheets="@../../../Styles/P6_LevelCreator/LeftPanel.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <VBox alignment="TOP_CENTER" layoutX="3.2" layoutY="1.6" styleClass="left-panel-menu" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <Line endX="40.0" layoutX="114.0" layoutY="42.0" />
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Segment" />
+      <Line endX="25.0" layoutX="16.0" layoutY="23.0" />
+      <Button fx:id="straightLineButton" mnemonicParsing="false">
+         <graphic>
+            <Line endX="-102.45674133300781" endY="25.69289207458496" fill="#231818" startX="-88.76382446289062" startY="13.279661178588867" stroke="#d1b0b0" styleClass="left-panel-icon-lines" />
+         </graphic>
+      </Button>
+      <Button fx:id="cubicCurveButton" mnemonicParsing="false" styleClass="left-panel-lines">
+         <graphic>
+            <CubicCurve controlX1="-142.40699768066406" controlX2="-130.38787841796875" controlY1="-4.672672748565674" controlY2="-3.979468822479248" endX="-142.406982421875" endY="16.697113037109375" fill="#1f93ff00" startX="-150.0" stroke="BLACK" styleClass="left-panel-icon-lines" />
+         </graphic>
+      </Button>
+      <Button fx:id="quadCurveButton" mnemonicParsing="false" styleClass="left-panel-lines">
+         <graphic>
+            <CubicCurve controlX1="-156.0465087890625" controlX2="-130.38787841796875" controlY1="18.148290634155273" controlY2="-3.979468822479248" endX="-142.406982421875" endY="16.697113037109375" fill="#1f93ff00" startX="-150.0" stroke="BLACK" styleClass="left-panel-icon-lines" />
+         </graphic>
+      </Button>
+      <Line endX="25.0" layoutX="16.0" layoutY="549.0" />
+      <Button fx:id="acceptButton" mnemonicParsing="false">
+         <graphic>
+            <FontAwesomeIconView glyphName="CHECK" size="15.0" styleClass="accept-shape" />
+         </graphic>
+      </Button>
+      <Button fx:id="dismissButton" mnemonicParsing="false">
+         <graphic>
+            <FontAwesomeIconView glyphName="TIMES" size="15.0" styleClass="dismiss-shape" />
+         </graphic>
+      </Button>
+   </VBox>
+</AnchorPane>

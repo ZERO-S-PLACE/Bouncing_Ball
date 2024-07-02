@@ -1,0 +1,46 @@
+.background{
+-fx-background-color:#101f23;
+}
+
+
+
+ .scroll-pane{
+     -fx-background-color:#101f23;
+}
+
+/* Customize the vertical scrollbar */
+.scroll-bar:vertical {
+    -fx-background-color: #1c353d;
+}
+
+.scroll-bar:vertical .increment-button {
+    -fx-background-color: #1c353d;
+}
+
+.scroll-bar:vertical .decrement-button {
+    -fx-background-color:#1c353d;
+}
+
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #55616A;
+}
+
+/* Customize the horizontal scrollbar */
+.scroll-bar:horizontal {
+    -fx-background-color: #1c353d;
+}
+
+.scroll-bar:horizontal .increment-button {
+    -fx-background-color: #1c353d;
+}
+
+.scroll-bar:horizontal .decrement-button {
+    -fx-background-color: #1c353d;
+}
+
+.scroll-bar:horizontal .thumb {
+    -fx-background-color: #55616A;
+}
+.scroll-pane > .corner {
+    -fx-background-color: #55616A;
+}

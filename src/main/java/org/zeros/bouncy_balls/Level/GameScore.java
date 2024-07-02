@@ -1,7 +1,7 @@
 package org.zeros.bouncy_balls.Level;
 
 import org.zeros.bouncy_balls.Animation.Animation.AnimationType;
-import org.zeros.bouncy_balls.Model.Model;
+import org.zeros.bouncy_balls.Applications.GameApplication.Model.Model;
 
 import java.io.*;
 

@@ -9,14 +9,18 @@ module org.zeros.bouncy_balls {
     requires com.almasb.fxgl.all;
     requires commons.math3;
     requires annotations;
+    requires javafx.web;
 
+
+    requires eu.hansolo.tilesfx;
+    requires de.jensd.fx.glyphs.fontawesome;
     opens org.zeros.bouncy_balls.App to javafx.fxml;
 
-    exports org.zeros.bouncy_balls.Model;
+    exports org.zeros.bouncy_balls.Applications.GameApplication.Model;
     exports org.zeros.bouncy_balls.Calculations;
     exports org.zeros.bouncy_balls.Calculations.Equations;
-    exports org.zeros.bouncy_balls.Controllers;
-    exports org.zeros.bouncy_balls.Views;
+    exports org.zeros.bouncy_balls.Applications.GameApplication.Controllers;
+    exports org.zeros.bouncy_balls.Applications.GameApplication.Views;
     exports org.zeros.bouncy_balls.Objects.MovingObjects;
     exports org.zeros.bouncy_balls.Objects.VectorArea;
     exports org.zeros.bouncy_balls.Level;
@@ -29,18 +33,25 @@ module org.zeros.bouncy_balls {
     exports org.zeros.bouncy_balls.Calculations.ConvexHull;
     exports org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea;
     exports org.zeros.bouncy_balls.Objects.VectorArea.ComplexArea;
-    exports org.zeros.bouncy_balls.Controllers.P0_Login;
-    exports org.zeros.bouncy_balls.Controllers.P1_WelcomePanel;
-    exports org.zeros.bouncy_balls.Controllers.P2a_LevelTypeChoice;
-    exports org.zeros.bouncy_balls.Controllers.P2b_Leaderboard;
-    exports org.zeros.bouncy_balls.Controllers.P2c_LevelCreator;
-    exports org.zeros.bouncy_balls.Controllers.P2d_Settings;
-    exports org.zeros.bouncy_balls.Controllers.P3_LevelSubtypeChoice;
-    exports org.zeros.bouncy_balls.Controllers.P4_LevelSelection;
-    exports org.zeros.bouncy_balls.Controllers.P5_Animation;
-
+    exports org.zeros.bouncy_balls.Applications.GameApplication.Controllers.P0_Login;
+    exports org.zeros.bouncy_balls.Applications.GameApplication.Controllers.P1_WelcomePanel;
+    exports org.zeros.bouncy_balls.Applications.GameApplication.Controllers.P2a_LevelTypeChoice;
+    exports org.zeros.bouncy_balls.Applications.GameApplication.Controllers.P2b_Leaderboard;
+    exports org.zeros.bouncy_balls.Applications.GameApplication.Controllers.P2c_LevelCreator;
+    exports org.zeros.bouncy_balls.Applications.GameApplication.Controllers.P2d_Settings;
+    exports org.zeros.bouncy_balls.Applications.GameApplication.Controllers.P3_LevelSubtypeChoice;
+    exports org.zeros.bouncy_balls.Applications.GameApplication.Controllers.P4_LevelSelection;
+    exports org.zeros.bouncy_balls.Applications.GameApplication.Controllers.P5_Animation;
     exports org.zeros.bouncy_balls.App;
     exports org.zeros.bouncy_balls.DisplayUtil;
+    exports org.zeros.bouncy_balls.Applications.CreatorApplication;
+    exports org.zeros.bouncy_balls.Applications.CreatorApplication.Controllers;
+    exports org.zeros.bouncy_balls.Applications.CreatorApplication.Views;
+    exports org.zeros.bouncy_balls.Applications.CreatorApplication.Models;
+    exports org.zeros.bouncy_balls.Applications.CreatorApplication.Controllers.LeftPanel;
+    exports org.zeros.bouncy_balls.Applications.CreatorApplication.Controllers.CreatorSettings;
+    exports org.zeros.bouncy_balls.Applications.GameApplication;
+    opens org.zeros.bouncy_balls.Applications.GameApplication to javafx.fxml;
 
 
 }

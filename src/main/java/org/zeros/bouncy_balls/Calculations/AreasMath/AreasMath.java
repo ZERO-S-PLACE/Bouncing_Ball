@@ -1,7 +1,7 @@
 package org.zeros.bouncy_balls.Calculations.AreasMath;
 
 import javafx.geometry.Point2D;
-import org.zeros.bouncy_balls.Model.Properties;
+import org.zeros.bouncy_balls.Applications.GameApplication.Model.Properties;
 import org.zeros.bouncy_balls.Objects.VectorArea.ComplexArea.ComplexArea;
 import org.zeros.bouncy_balls.Objects.VectorArea.ComplexArea.ComplexAreaPart;
 import org.zeros.bouncy_balls.Objects.VectorArea.PolyLineSegment.LineSegment;

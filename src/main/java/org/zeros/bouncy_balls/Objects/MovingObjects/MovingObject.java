@@ -5,8 +5,8 @@ import javafx.scene.shape.Shape;
 import org.zeros.bouncy_balls.Animation.Animation.Animation;
 import org.zeros.bouncy_balls.Animation.Animation.AnimationProperties;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
-import org.zeros.bouncy_balls.Model.Model;
-import org.zeros.bouncy_balls.Model.Properties;
+import org.zeros.bouncy_balls.Applications.GameApplication.Model.Model;
+import org.zeros.bouncy_balls.Applications.GameApplication.Model.Properties;
 
 public abstract class MovingObject implements Cloneable {
 
