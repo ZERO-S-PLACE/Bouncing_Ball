@@ -10,6 +10,7 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         CreatorModel.getInstance().getViewFactory().showMainWindow();
+        CreatorModel.getInstance().getLevelCreator().create();
     }
 
     public static void main(String[] args) {

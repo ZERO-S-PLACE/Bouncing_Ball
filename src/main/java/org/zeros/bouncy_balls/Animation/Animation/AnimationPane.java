@@ -34,19 +34,21 @@ public class AnimationPane {
     private final EventHandler<MouseEvent> inputOnRunHandler = this::inputOnRunHandler;
     private final EventHandler<KeyEvent> escHandler = this::escHandler;
 
-    public AnimationPane(String path) {
+    public AnimationPane(String path,boolean rescale) {
         gameBackground = new AnchorPane();
         loadLevel(path);
-        setUp();
+        if(rescale) addRescaling();
+
     }
 
-    public AnimationPane(Level level) {
+    public AnimationPane(Level level,boolean rescale) {
         gameBackground = new AnchorPane();
         animation = new Animation(level);
-        setUp();
+        if(rescale) addRescaling();
+
     }
 
-    private void setUp() {
+    private void addRescaling() {
         gameBackground.sceneProperty().addListener(((observable, oldValue, newValue) -> {
             if (oldValue != null) {
                 oldValue.heightProperty().removeListener(sizeChangeListener());
@@ -214,7 +216,7 @@ public class AnimationPane {
     }
 
 
-    private void reloadNodes(double scaleFactor) {
+    public void reloadNodes(double scaleFactor) {
         rescaleAnimation(scaleFactor);
         animation.reloadBorders();
         setBackground();

@@ -3,18 +3,18 @@ package org.zeros.bouncy_balls.Applications.CreatorApplication.Views;
 import org.zeros.bouncy_balls.Applications.CreatorApplication.Controllers.BottomPanelController;
 import org.zeros.bouncy_balls.Applications.CreatorApplication.Controllers.CreatorSettings.GeneralSettingsController;
 import org.zeros.bouncy_balls.Applications.CreatorApplication.Controllers.CreatorSettings.PhysicsSettingsController;
-import org.zeros.bouncy_balls.Applications.CreatorApplication.Controllers.ImageEditionPanelController;
+import org.zeros.bouncy_balls.Applications.CreatorApplication.Controllers.LevelEditionController;
 import org.zeros.bouncy_balls.Applications.CreatorApplication.Controllers.LeftPanel.*;
 import org.zeros.bouncy_balls.Applications.CreatorApplication.Controllers.MainWindowController;
 import org.zeros.bouncy_balls.Applications.CreatorApplication.Controllers.TopPanelController;
 
 public class ControllersBaseCreator {
     private MainWindowController mainWindowController;
-    private ImageEditionPanelController imageEditionPanelController;
-    private ActionChoicePanelController actionChoiceController;
+    private LevelEditionController imageEditionPanelController;
+    private ActionChoiceController actionChoiceController;
     private TopPanelController topPanelController;
     private BottomPanelController bottomPanelController;
-    private ComplexAreaActionChoiceController complexAreaActionChoiceController;
+    private ComplexAreaFlowController complexAreaActionChoiceController;
     private LeftPanelController currentLeftPanelController;
     private MovingObjectAddController movingObjectAddController;
     private PolyLineDrawingController polyLineDrawingController;
@@ -30,9 +30,9 @@ public class ControllersBaseCreator {
     }
 
 
-    public ImageEditionPanelController getImageEditionPanelController() {
+    public LevelEditionController getLevelEditionController() {
         if(this.imageEditionPanelController==null){
-            this.imageEditionPanelController = new ImageEditionPanelController();
+            this.imageEditionPanelController = new LevelEditionController();
         }
         return imageEditionPanelController;
     }
@@ -50,16 +50,16 @@ public class ControllersBaseCreator {
         }
         return bottomPanelController;
     }
-    public ActionChoicePanelController getActionChoiceController() {
+    public ActionChoiceController getActionChoiceController() {
         if(this.actionChoiceController ==null){
-            this.actionChoiceController = new ActionChoicePanelController();
+            this.actionChoiceController = new ActionChoiceController();
         }
         return actionChoiceController;
     }
 
-    public ComplexAreaActionChoiceController getComplexAreaActionChoiceController() {
+    public ComplexAreaFlowController getComplexAreaActionChoiceController() {
         if(this.complexAreaActionChoiceController ==null){
-            this.complexAreaActionChoiceController = new ComplexAreaActionChoiceController();
+            this.complexAreaActionChoiceController = new ComplexAreaFlowController();
         }
         return complexAreaActionChoiceController;
     }

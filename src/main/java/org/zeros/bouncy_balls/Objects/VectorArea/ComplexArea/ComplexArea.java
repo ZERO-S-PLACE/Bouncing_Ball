@@ -3,6 +3,7 @@ package org.zeros.bouncy_balls.Objects.VectorArea.ComplexArea;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import org.zeros.bouncy_balls.Applications.GameApplication.Model.Model;
 import org.zeros.bouncy_balls.Calculations.AreasMath.AreasMath;
 import org.zeros.bouncy_balls.Applications.GameApplication.Model.Properties;
 import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.Area;
@@ -106,6 +107,14 @@ public class ComplexArea extends VectorArea implements Serializable {
         }
         if (!included2.isEmpty()) {
             addAreaLayer(included2, color,pane);
+        }
+    }
+    private static void removeComplexAreaPreview(ComplexArea complexArea,Pane pane) {
+        for (Area area : complexArea.getAllIncludedAreas()) {
+            Platform.runLater(() -> pane.getChildren().remove(area.getPath()));
+        }
+        for (Area area : complexArea.getAllExcludedAreas()) {
+            Platform.runLater(() -> pane.getChildren().remove(area.getPath()));
         }
     }
 }

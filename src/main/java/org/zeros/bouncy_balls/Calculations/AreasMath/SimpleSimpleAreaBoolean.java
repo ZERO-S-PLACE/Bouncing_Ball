@@ -1,11 +1,9 @@
 package org.zeros.bouncy_balls.Calculations.AreasMath;
 
-import javafx.application.Platform;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
-import org.zeros.bouncy_balls.Calculations.VectorMath;
-import org.zeros.bouncy_balls.Applications.GameApplication.Model.Model;
 import org.zeros.bouncy_balls.Applications.GameApplication.Model.Properties;
+import org.zeros.bouncy_balls.Calculations.VectorMath;
 import org.zeros.bouncy_balls.Objects.VectorArea.ComplexArea.ComplexArea;
 import org.zeros.bouncy_balls.Objects.VectorArea.PolyLineSegment.Segment;
 import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.Area;
@@ -166,7 +164,6 @@ public class SimpleSimpleAreaBoolean extends AreaBoolean {
                     area.getPath().setFill(Color.RED);
                     area.getPath().setStrokeWidth(2);
                     area.getPath().setStroke(Color.BLACK);
-                    Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().add(area.getPath()));
                 }
 
                 throw new IllegalArgumentException("Areas simplified not properly");

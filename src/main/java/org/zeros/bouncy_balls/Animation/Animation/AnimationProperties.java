@@ -1,6 +1,7 @@
 package org.zeros.bouncy_balls.Animation.Animation;
 
 import org.zeros.bouncy_balls.Animation.Borders.BordersType;
+import org.zeros.bouncy_balls.Applications.GameApplication.Model.Properties;
 
 import java.io.Serializable;
 
@@ -14,8 +15,8 @@ public class AnimationProperties implements Serializable {
     private double TIME;
     public AnimationProperties(int HEIGHT, int WIDTH) {
         this.TYPE = AnimationType.GAME;
-        this.HEIGHT = HEIGHT;
-        this.WIDTH = WIDTH;
+        this.HEIGHT = (int) (HEIGHT* Properties.SIZE_FACTOR());
+        this.WIDTH = (int) (WIDTH* Properties.SIZE_FACTOR());
         this.GRAVITY = 0;
         this.BOUNDARIES = BordersType.BOUNCING;
         this.TIME = 240;

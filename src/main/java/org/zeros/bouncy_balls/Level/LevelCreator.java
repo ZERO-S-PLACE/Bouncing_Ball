@@ -1,28 +1,23 @@
 package org.zeros.bouncy_balls.Level;
 
 import javafx.application.Platform;
+import javafx.beans.Observable;
+import javafx.beans.value.ChangeListener;
 import javafx.geometry.Point2D;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
 import javafx.scene.shape.Shape;
+import org.jetbrains.annotations.NotNull;
 import org.zeros.bouncy_balls.Animation.Animation.Animation;
-import org.zeros.bouncy_balls.Animation.Animation.AnimationProperties;
 import org.zeros.bouncy_balls.Animation.Animation.AnimationType;
 import org.zeros.bouncy_balls.Animation.Borders.BordersType;
-import org.zeros.bouncy_balls.Calculations.AreasMath.SimpleComplexAreaBoolean;
-import org.zeros.bouncy_balls.Calculations.AreasMath.SimpleSimpleAreaBoolean;
-import org.zeros.bouncy_balls.Calculations.ConvexHull.ConvexHull;
-import org.zeros.bouncy_balls.Applications.GameApplication.Controllers.P2c_LevelCreator.LevelCreatorController;
-import org.zeros.bouncy_balls.Applications.GameApplication.Model.Model;
+import org.zeros.bouncy_balls.Applications.CreatorApplication.Models.CreatorModel;
 import org.zeros.bouncy_balls.Applications.GameApplication.Model.Properties;
+import org.zeros.bouncy_balls.Calculations.AreasMath.SimpleComplexAreaBoolean;
 import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObject;
 import org.zeros.bouncy_balls.Objects.SerializableObjects.LevelSerializable;
 import org.zeros.bouncy_balls.Objects.VectorArea.ComplexArea.ComplexArea;
-import org.zeros.bouncy_balls.Objects.VectorArea.ComplexArea.ComplexAreaPart;
 import org.zeros.bouncy_balls.Objects.VectorArea.PolyLineSegment.Segment;
 import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.Area;
 import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.OvalArea;
@@ -33,91 +28,127 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.Random;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class LevelCreator {
-
     private Level level;
     private Animation animation;
     private boolean objectInStartState = true;
+    private Thread textInputThread;
+    private Thread mouseInputThread;
 
-    private static Double getTextValue(String text) {
 
+
+    public LevelCreator() {
+
+    }
+
+    private static Double convertToDouble(String text) {
         double value;
         try {
             value = Double.parseDouble(text);
         } catch (Exception e) {
-            Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().messageLabel.textProperty().setValue("Wrong value"));
+            Platform.runLater(() -> CreatorModel.getInstance().controllers().getBottomPanelController().inputTextField.textProperty().setValue("Wrong value"));
             return null;
         }
         return value;
     }
+private String textInput=null;
+    private  String getStringInput(String message) {
+        Platform.runLater(() -> CreatorModel.getInstance().controllers().getBottomPanelController().tipLabel.textProperty().setValue(message));
+        Platform.runLater(() ->CreatorModel.getInstance().controllers().getBottomPanelController().setTextEntered(""));
+        CreatorModel.getInstance().controllers().getBottomPanelController().textEnteredProperty().addListener(getTextInputListener());
 
-    private static String getStringInput(String message) {
-        Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().messageLabel.textProperty().setValue(message));
-        Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().setTextEntered(""));
-        waitForInput();
-        return Model.getInstance().controllers().getLevelCreatorController().getTextEntered();
+        try {
+            inputLock.lock();
+            inputLock.wait();
+        }catch (Exception e){
+            throw new RuntimeException("Error getting String input");
+        }
+
+        CreatorModel.getInstance().controllers().getBottomPanelController().textEnteredProperty().removeListener(getTextInputListener());
+        System.out.println("after lock"+textInput);
+        return textInput;
     }
 
-    private static void waitForInput() {
-        Object lock = LevelCreatorController.getLock();
-        synchronized (lock) {
-            try {
-                lock.wait();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+
+    private  ChangeListener<String> getTextInputListener() {
+        return (observable, oldValue, newValue) -> {
+            if(!newValue.equals(oldValue)&& !newValue.isEmpty()){
+                textInput=newValue;
+                System.out.println("in listener"+textInput);
+                //inputLock.unlock();
             }
-        }
+        };
     }
 
-    private static void addAreaLayer(ArrayList<ComplexAreaPart> included, Color color) {
-        ArrayList<ComplexAreaPart> excluded = new ArrayList<>();
 
-        for (ComplexAreaPart part : included) {
-            part.area().getPath().setFill(color);
-            excluded.addAll(part.excluded());
-            if (!Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().contains(part.area().getPath())) {
-                Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().remove(part.area().getPath()));
+    private double getDimension(String message, Point2D reference) {
+        CreatorModel.getInstance().controllers().getBottomPanelController().tipLabel.setText(message);
+        CreatorModel.getInstance().getViewFactory().getTrackingPane().getReferencePointProperty().set(reference);
+
+
+
+
+
+       /* CreatorModel.getInstance().getViewFactory().getTrackingPane().setReferencePoint(reference);
+        while (true) {
+            String userInput = getStringInput(message);
+            if (Model.getInstance().controllers().getLevelCreatorController().getLastEvent() instanceof KeyEvent) {
+                Double value = getTextValue(userInput);
+                if (value != null) return Math.abs(value);
+            } else {
+                return Model.getInstance().controllers().getLevelCreatorController().getPickedDistance();
             }
-            Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().add(part.area().getPath()));
+        }*/
+        return 0;
+    }
+
+    public double getNumber(String message) {
+        while (true) {
+            String userInput = getStringInput(message);
+            Double value = convertToDouble(userInput);
+            if (value != null) return value;
         }
-        ArrayList<ComplexAreaPart> included2 = new ArrayList<>();
-        for (ComplexAreaPart part : excluded) {
-            part.area().getPath().setFill(Color.WHITE);
-            included2.addAll(part.excluded());
-            if (!Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().contains(part.area().getPath())) {
-                Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().remove(part.area().getPath()));
+
+    }
+
+    public boolean agreeTo(String message) {
+        while (true) {
+            switch (getStringInput(message)) {
+                case "Y", "y", "1" -> {
+                    return true;
+                }
+                case "N", "n", "0" -> {
+                    return false;
+                }
+                default ->
+                        Platform.runLater(() -> CreatorModel.getInstance().controllers().getBottomPanelController().tipLabel.textProperty().setValue("Wrong value"));
+
             }
-            Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().add(part.area().getPath()));
+
         }
-        if (!included2.isEmpty()) {
-            addAreaLayer(included2, color);
-        }
+
+
     }
 
-    private static void checkingHullCalculations(Area obstacle) {
-        ArrayList<Point2D> hull = ConvexHull.calculatePoints(obstacle.getAllPoints());
-        Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().add(new Circle(hull.getFirst().getX(), hull.getFirst().getY(), 8)));
-
-        for (Point2D point : obstacle.getAllPoints()) {
-            Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().add(new Circle(point.getX(), point.getY(), 1)));
+    public Point2D getPoint(String message) {
+      /*  double x = getDimension(message + " X:", null);
+        if (!(Model.getInstance().controllers().getLevelCreatorController().getLastEvent() instanceof KeyEvent)) {
+            return Model.getInstance().controllers().getLevelCreatorController().getSelectedPoint();
         }
-        for (int i = 1; i < hull.size(); i++) {
-
-            int finalI = i;
-            Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().add(new Line(hull.get(finalI - 1).getX(), hull.get(finalI - 1).getY(), hull.get(finalI).getX(), hull.get(finalI).getY())));
-            Circle circle = new Circle(hull.get(finalI).getX(), hull.get(finalI).getY(), 3);
-            circle.setFill(Color.RED);
-            Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().add(circle));
+        double y = getDimension(message + " Y:", null);
+        if (!(Model.getInstance().controllers().getLevelCreatorController().getLastEvent() instanceof KeyEvent)) {
+            return Model.getInstance().controllers().getLevelCreatorController().getSelectedPoint();
         }
+        return new Point2D(x, y);*/
+        return new Point2D(0,0);
     }
-
     public void create() {
-        Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().removeAll(Model.getInstance().controllers().getLevelCreatorController().preview.getChildren()));
-        level = new Level(getAnimationProperties());
-        animation = new Animation(level);
-        addComplexArea(true);
+
+        level = CreatorModel.getInstance().getViewFactory().getCurrentAnimationPane().getLevel();
+        animation = CreatorModel.getInstance().getViewFactory().getCurrentAnimationPane().getAnimation();
+        getStringInput("Anyway");
         addElements();
         simulateAnimation();
         if (agreeTo("Save level ? Y/N")) {
@@ -130,22 +161,7 @@ public class LevelCreator {
 
     private void simulateAnimation() {
         if (agreeTo("Check animation?")) {
-            animation = new Animation(level);
-            Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().removeAll(Model.getInstance().controllers().getLevelCreatorController().preview.getChildren()));
-            for (Area obstacle : animation.getLevel().getObstacles()) {
-                Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().add(obstacle.getPath()));
-            }
-            for (MovingObject obj : animation.getLevel().getMovingObjects()) {
-                obj.setAnimation(animation);
-                Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().add(obj.getShape()));
-            }
-            new Thread(() -> animation.animate()).start();
-            while (true) {
-                if (agreeTo("Stop animation?")) {
-                    animation.pause();
-                    break;
-                }
-            }
+
         }
     }
 
@@ -201,42 +217,37 @@ public class LevelCreator {
 
             switch ((int) getNumber("0-dismiss 1-include area, 2 exclude area ,3 intersection ,4 exclude currentArea from new 5- save")) {
                 case 0 -> {
-                    removeComplexAreaPreview(complexArea);
-                    return;
+
                 }
                 case 1 -> {
                     Area areaToAdd = createNewArea();
-                    removeObstaclePreview(areaToAdd);
-                    removeComplexAreaPreview(complexArea);
+
                     SimpleComplexAreaBoolean boolMath = new SimpleComplexAreaBoolean(areaToAdd, complexArea);
                     complexArea = boolMath.sum();
-                    addComplexAreaPreview(complexArea);
                 }
                 case 2 -> {
                     Area areaToExclude = createNewArea();
-                    removeObstaclePreview(areaToExclude);
 
-                    removeComplexAreaPreview(complexArea);
+
+
                     SimpleComplexAreaBoolean boolMath = new SimpleComplexAreaBoolean(areaToExclude, complexArea);
                     complexArea = boolMath.subtractAFromB();
-                    addComplexAreaPreview(complexArea);
+
                 }
                 case 3 -> {
                     Area areaToExclude = createNewArea();
-                    removeObstaclePreview(areaToExclude);
 
-                    removeComplexAreaPreview(complexArea);
+
+
                     SimpleComplexAreaBoolean boolMath = new SimpleComplexAreaBoolean(areaToExclude, complexArea);
                     complexArea = boolMath.intersection();
-                    addComplexAreaPreview(complexArea);
+
                 }
                 case 4 -> {
                     Area areaToExclude = createNewArea();
-                    removeObstaclePreview(areaToExclude);
-                    removeComplexAreaPreview(complexArea);
+
                     SimpleComplexAreaBoolean boolMath = new SimpleComplexAreaBoolean(areaToExclude, complexArea);
                     complexArea = boolMath.subtractBFromA();
-                    addComplexAreaPreview(complexArea);
                 }
                 case 5 -> {
                     if (isTargetArea) {
@@ -251,46 +262,6 @@ public class LevelCreator {
         }
     }
 
-    private void addComplexAreaPreview(ComplexArea complexArea) {
-        Random random = new Random();
-        Color color = new Color(random.nextDouble(), random.nextDouble(), random.nextDouble(), 1);
-        ArrayList<ComplexAreaPart> included = complexArea.partAreas();
-        addAreaLayer(included, color);
-
-    }
-
-    private void removeComplexAreaPreview(ComplexArea complexArea) {
-        for (Area area : complexArea.getAllIncludedAreas()) {
-            Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().remove(area.getPath()));
-        }
-        for (Area area : complexArea.getAllExcludedAreas()) {
-            Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().remove(area.getPath()));
-        }
-    }
-
-    private AnimationProperties getAnimationProperties() {
-
-        int HEIGHT = (int) Math.abs((int) getNumber("Animation height:(px) ") * Properties.SIZE_FACTOR());
-        int WIDTH = (int) Math.abs((int) getNumber("Animation width (px): ") * Properties.SIZE_FACTOR());
-
-        AnimationProperties properties = new AnimationProperties(HEIGHT, WIDTH);
-
-        if (agreeTo("Custom properties Y/N")) {
-            properties.setTIME(Math.abs(getNumber("Time of animation: ")));
-            properties.setGRAVITY(getGravity());
-            properties.setBOUNDARIES(getBordersType());
-            properties.setFRICTION(getNumber("Friction 0-1"));
-            if (properties.getFRICTION() > 1 || properties.getFRICTION() < 0) {
-                properties.setFRICTION(0);
-            }
-            if (agreeTo("Is this simulation(Y) or game(N)? ")) {
-                properties.setTYPE(AnimationType.SIMULATION);
-            }
-
-        }
-        setPreviewBoundaries(HEIGHT, WIDTH);
-        return properties;
-    }
 
     private void addMovingObjects() {
         while (true) {
@@ -312,10 +283,9 @@ public class LevelCreator {
         velocityShadow.setOpacity(0.1);
         velocityShadow.setFill(Color.BLACK);
         updateBallVelocityShadow(ball, velocityShadow);
-        addMovingObjectPreview(ball, velocityShadow);
+
         modifyBall(ball, velocityShadow);
         if (!animation.hasFreePlace(ball)) {
-            removeMovingObjectPreview(ball, velocityShadow);
             if (agreeTo("Not enough space,try again?")) addMovingBall();
         } else if (agreeTo("Save?")) {
             saveMovingObject(ball, velocityShadow);
@@ -324,8 +294,6 @@ public class LevelCreator {
                     setObjectFunction(ball);
                 }
             }
-        } else {
-            removeMovingObjectPreview(ball, velocityShadow);
         }
 
     }
@@ -348,21 +316,12 @@ public class LevelCreator {
         }
     }
 
-    private void removeMovingObjectPreview(MovingObject obj, Shape velocityShadow) {
-        Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().remove(obj.getShape()));
-        Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().remove(velocityShadow));
-    }
 
-    private void addMovingObjectPreview(MovingObject obj, Shape velocityShadow) {
-        Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().add(obj.getShape()));
-        Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().add(velocityShadow));
-    }
 
     private void saveMovingObject(MovingObject obj, Shape velocityShadow) {
         if (objectInStartState) {
             level.addMovingObject(obj);
         } else {
-            removeMovingObjectPreview(obj, velocityShadow);
             level.addMovingObjectToAdd(obj);
         }
 
@@ -406,10 +365,7 @@ public class LevelCreator {
                 if (obstacle != null) {
                     if (agreeTo("Save?")) {//&&animation.hasFreePlace(obstacle)) {
                         saveObstacle(obstacle);
-                        checkIntersections();
-                        //checkingAreaBoolean();
-                    } else {
-                        removeObstaclePreview(obstacle);
+
                     }
                 }
 
@@ -419,57 +375,6 @@ public class LevelCreator {
         }
     }
 
-    /*private void checkingAreaBoolean() {
-            if (level.getObstacles().size() >= 2) {
-
-
-                            ArrayList<Area> subdivisions = AreasMath.areaSplit(level.getObstacles().getLast(),level.getObstacles().get(
-                                    level.getObstacles().size()-2
-                            ));
-
-                            Random random = new Random();
-                            for (Area area : subdivisions) {
-                                if(! Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().contains(area.getPath())) {
-                                    Platform.runLater(() -> {
-
-                                        area.getPath().setFill(new Color(random.nextDouble(), random.nextDouble(), random.nextDouble(), 1));
-                                        Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().add(area.getPath());
-
-                                    });
-                                    try {
-                                        Thread.sleep(300);
-                                    } catch (InterruptedException e) {
-                                        throw new RuntimeException(e);
-                                    }
-                                }
-
-
-
-
-                }
-
-                removeObstaclePreview(level.getObstacles().getFirst());
-                level.getObstacles().removeFirst();
-
-
-            }
-        }*/
-    private void checkingAreaBoolean() {
-        if (level.getObstacles().size() >= 2) {
-            SimpleSimpleAreaBoolean simpleAreaBoolean = new SimpleSimpleAreaBoolean(level.getObstacles().getLast(), level.getObstacles().get(level.getObstacles().size() - 2));
-            ComplexArea sum = simpleAreaBoolean.sum();
-            ComplexArea intersection = simpleAreaBoolean.intersection();
-            //ComplexArea difference1 = simpleAreaBoolean.subtractAfromB();
-            //ComplexArea difference2 = simpleAreaBoolean.subtractBfromA();
-
-            addComplexAreaPreview(intersection);
-            addComplexAreaPreview(sum);
-
-            // addComplexAreaPreview(difference1);
-            //addComplexAreaPreview(difference2);
-
-        }
-    }
 
     private Area createNewArea() {
         Area area = null;
@@ -481,39 +386,10 @@ public class LevelCreator {
         return area;
     }
 
-    private void checkIntersections() {
-        ArrayList<Point2D> intersections = new ArrayList<>();
-        for (Area area : level.getObstacles()) {
-            for (Area area1 : level.getObstacles()) {
-                for (Segment segment : area.getSegments()) {
-                    for (Segment segment1 : area1.getSegments()) {
-                        intersections.addAll(segment.getIntersectionsWith(segment1));
-                    }
-
-                }
-
-                for (Point2D intersection : intersections) {
-                    Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().add(new Circle(intersection.getX(), intersection.getY(), 1, Color.BLUE)));
-                }
-
-
-            }
-        }
-    }
-
-    private void addObstaclePreview(Area obstacle) {
-        Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().add(obstacle.getPath()));
-    }
-
-    private void removeObstaclePreview(Area obstacle) {
-        Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().remove(obstacle.getPath()));
-    }
-
     private void saveObstacle(Area obstacle) {
         if (objectInStartState) {
             level.addObstacle(obstacle);
         } else {
-            Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().preview.getChildren().remove(obstacle.getPath()));
             level.addObstacleToAdd(obstacle);
         }
 
@@ -527,7 +403,7 @@ public class LevelCreator {
     private RectangleArea modifyRectangle(RectangleArea rectangle) {
         while (true) {
             RectangleArea temp = rectangle;
-            addObstaclePreview(temp);
+
             switch ((int) getNumber("Change property:0-no 1- corner 1,2-rotation,3-corner 3")) {
                 case 0 -> {
                     return rectangle;
@@ -539,7 +415,7 @@ public class LevelCreator {
                 case 3 ->
                         rectangle = new RectangleArea(rectangle.getCorners().get(0), getPoint("Corner 3:"), rectangle.getRotation());
             }
-            removeObstaclePreview(temp);
+
         }
     }
 
@@ -552,7 +428,6 @@ public class LevelCreator {
     private OvalArea modifyOval(OvalArea oval) {
         while (true) {
             OvalArea temp = oval;
-            addObstaclePreview(temp);
             switch ((int) getNumber("Change property:0-no 1- center ,2-rotation,3-radius X 4-radius Y")) {
                 case 0 -> {
                     return oval;
@@ -566,7 +441,6 @@ public class LevelCreator {
                 case 4 ->
                         oval = new OvalArea(oval.getMassCenter(), oval.getRadiusX(), getDimension("Radius Y:", oval.getMassCenter()), oval.getRotation());
             }
-            removeObstaclePreview(temp);
         }
 
     }
@@ -574,7 +448,6 @@ public class LevelCreator {
     private Area getPolyLine() {
         Point2D start = getPoint("Start:");
         PolylineArea plObst = new PolylineArea(start);
-        addObstaclePreview(plObst);
         return modifyPolyLine(plObst);
 
 
@@ -642,69 +515,8 @@ public class LevelCreator {
 
     }
 
-    private double getGravity() {
-
-        double value = getNumber("Gravity strength 0-1000");
-        if (value >= 0 && value < 1000) {
-            return value;
-        } else {
-            return getGravity() * Properties.SIZE_FACTOR();
-        }
-
-    }
-
-    private double getDimension(String message, Point2D reference) {
-        Model.getInstance().controllers().getLevelCreatorController().setSelectedPoint(reference);
-        while (true) {
-            String userInput = getStringInput(message);
-            if (Model.getInstance().controllers().getLevelCreatorController().getLastEvent() instanceof KeyEvent) {
-                Double value = getTextValue(userInput);
-                if (value != null) return Math.abs(value);
-            } else {
-                return Model.getInstance().controllers().getLevelCreatorController().getPickedDistance();
-            }
-        }
-    }
-
-    public double getNumber(String message) {
-        while (true) {
-            String userInput = getStringInput(message);
-            Double value = getTextValue(userInput);
-            if (value != null) return value;
-        }
-
-    }
-
-    public boolean agreeTo(String message) {
-        while (true) {
-            switch (getStringInput(message)) {
-                case "Y", "y", "1" -> {
-                    return true;
-                }
-                case "N", "n", "0" -> {
-                    return false;
-                }
-                default ->
-                        Platform.runLater(() -> Model.getInstance().controllers().getLevelCreatorController().messageLabel.textProperty().setValue("Wrong value"));
-
-            }
-
-        }
 
 
-    }
-
-    public Point2D getPoint(String message) {
-        double x = getDimension(message + " X:", null);
-        if (!(Model.getInstance().controllers().getLevelCreatorController().getLastEvent() instanceof KeyEvent)) {
-            return Model.getInstance().controllers().getLevelCreatorController().getSelectedPoint();
-        }
-        double y = getDimension(message + " Y:", null);
-        if (!(Model.getInstance().controllers().getLevelCreatorController().getLastEvent() instanceof KeyEvent)) {
-            return Model.getInstance().controllers().getLevelCreatorController().getSelectedPoint();
-        }
-        return new Point2D(x, y);
-    }
 
     private void saveLevel(String name) {
         name = name.replace(" ", "_");
@@ -727,9 +539,4 @@ public class LevelCreator {
         }
     }
 
-    private void setPreviewBoundaries(int HEIGHT, int WIDTH) {
-        Model.getInstance().controllers().getLevelCreatorController().preview.setMinSize(WIDTH / Properties.SIZE_FACTOR(), HEIGHT / Properties.SIZE_FACTOR());
-        Model.getInstance().controllers().getLevelCreatorController().preview.setMaxSize(WIDTH / Properties.SIZE_FACTOR(), HEIGHT / Properties.SIZE_FACTOR());
-        Model.getInstance().controllers().getLevelCreatorController().preview.backgroundProperty().set(Background.fill(Color.BEIGE));
-    }
 }

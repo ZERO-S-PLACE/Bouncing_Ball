@@ -12,11 +12,12 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.zeros.bouncy_balls.App.LevelCreatorApplication;
+import org.zeros.bouncy_balls.Applications.CreatorApplication.App;
 import org.zeros.bouncy_balls.DisplayUtil.CustomTooltip;
 import org.zeros.bouncy_balls.DisplayUtil.NodeAnimations;
 import org.zeros.bouncy_balls.Applications.GameApplication.Model.Model;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -81,7 +82,11 @@ public class WelcomePanelController implements Initializable {
             throw new RuntimeException(e);
         }
         new Thread(() -> Platform.runLater(() -> {
-            new LevelCreatorApplication().start(new Stage());
+            try {
+                new App().start(new Stage());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             Model.getInstance().getViewFactory().getWelcomePanel().getScene().getWindow().hide();
         })).start();
     }

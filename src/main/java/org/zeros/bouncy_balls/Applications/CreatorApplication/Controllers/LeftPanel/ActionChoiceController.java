@@ -9,7 +9,7 @@ import org.zeros.bouncy_balls.Applications.CreatorApplication.Models.CreatorMode
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class ActionChoicePanelController extends LeftPanelController {
+public class ActionChoiceController extends LeftPanelController {
 
     public Button movingObjectButton;
     public Button obstacleButton;

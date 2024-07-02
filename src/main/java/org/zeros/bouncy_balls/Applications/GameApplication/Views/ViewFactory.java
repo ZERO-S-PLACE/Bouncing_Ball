@@ -36,12 +36,6 @@ public class ViewFactory {
 
     }
 
-    public void showLevelCreator() {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/GameApplication/2c_LevelCreator/LevelCreator.fxml"));
-        loader.setController(Model.getInstance().controllers().getLevelCreatorController());
-        createStage(loader);
-    }
-
     public BorderPane getWelcomePanel() {
         if (welcomePanel == null) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/GameApplication/1_WelcomePanel/WelcomePanel.fxml"));
@@ -160,12 +154,13 @@ public class ViewFactory {
     }
 
     public AnimationPane getNewAnimationPane(Level level) {
-        gameAnimation = new AnimationPane(level);
+        gameAnimation = new AnimationPane(level,true);
         BackgroundImages.setGameBackground(gameAnimation.getAnimationPane(), true);
         return gameAnimation;
     }
 
     public AnimationPane getCurrentAnimationPane() {
+
         return gameAnimation;
     }
 
@@ -187,7 +182,7 @@ public class ViewFactory {
 
     public AnimationPane getBackgroundAnimation() {
         if (backAnimationPane == null) {
-            backAnimationPane = new AnimationPane("program_data/background_animations/A1.ser");
+            backAnimationPane = new AnimationPane("program_data/background_animations/A1.ser",true);
         }
         BackgroundImages.setGameBackground(backAnimationPane.getAnimationPane(), false);
 

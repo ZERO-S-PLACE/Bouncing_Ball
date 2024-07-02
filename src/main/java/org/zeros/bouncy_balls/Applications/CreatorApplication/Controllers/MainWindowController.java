@@ -2,7 +2,6 @@ package org.zeros.bouncy_balls.Applications.CreatorApplication.Controllers;
 
 import javafx.fxml.Initializable;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.SplitPane;
 import javafx.scene.layout.AnchorPane;
 import org.zeros.bouncy_balls.Applications.CreatorApplication.Models.CreatorModel;
 
@@ -12,7 +11,6 @@ import java.util.ResourceBundle;
 public class MainWindowController implements Initializable {
 
     public ScrollPane mainImageContainer;
-    public SplitPane rightContainer;
     public AnchorPane topPane;
     public AnchorPane leftPane;
     public AnchorPane bottomPane;
@@ -20,7 +18,7 @@ public class MainWindowController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        mainImageContainer.setContent(CreatorModel.getInstance().getViewFactory().getViewOfImageEditionPanel());
+        mainImageContainer.setContent(CreatorModel.getInstance().getViewFactory().getLevelEditionPanel());
 
         topPane.getChildren().add(CreatorModel.getInstance().getViewFactory().getViewOfTopPanel());
         AnchorPane.setRightAnchor(CreatorModel.getInstance().getViewFactory().getViewOfTopPanel(),0.0);
