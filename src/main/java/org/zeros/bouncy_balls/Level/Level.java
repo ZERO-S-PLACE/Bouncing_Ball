@@ -8,10 +8,8 @@ import org.zeros.bouncy_balls.Objects.SerializableObjects.LevelSerializable;
 import org.zeros.bouncy_balls.Objects.VectorArea.ComplexArea.ComplexArea;
 import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.Area;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
+import java.io.*;
+import java.nio.file.FileSystemException;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.locks.Lock;
@@ -61,6 +59,23 @@ public class Level implements Serializable {
             return null;
         } else {
             return save.deserialize();
+        }
+    }
+    private void save(String name)throws FileSystemException {
+        name = name.replace(" ", "_");
+        name = name.replace(".", "_");
+        setNAME(name);
+        LevelSerializable save = new LevelSerializable(this);
+        name = name + ".ser";
+        if (PROPERTIES().getTYPE().equals(AnimationType.GAME)) {
+            name = "program_data/user_levels/" + name;
+        } else {
+            name = "program_data/user_simulations/" + name;
+        }
+        try (FileOutputStream fileOut = new FileOutputStream(name); ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
+            out.writeObject(save);
+        } catch (IOException e) {
+            throw new FileSystemException("Wrong name");
         }
     }
 

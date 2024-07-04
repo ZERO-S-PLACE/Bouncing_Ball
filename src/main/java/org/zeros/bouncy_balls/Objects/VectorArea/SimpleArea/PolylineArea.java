@@ -113,21 +113,23 @@ public class PolylineArea extends Area {
     }
 
     public void closeAndSave() {
-        if (!cornerPoints.getLast().equals(cornerPoints.getFirst())) {
-            if(cornerPoints.getLast().distance(cornerPoints.getFirst())<=Properties.ACCURACY()){
-                ArrayList<Point2D> points=segments.getLast().getPoints();
-                points.removeLast();
-                points.add(cornerPoints.getFirst());
-                removeLastSegment();
-                addSegment(points);
-            }else {
-                addStraightLineTo(cornerPoints.getFirst());
+        if(editable) {
+            if (!cornerPoints.getLast().equals(cornerPoints.getFirst())) {
+                if (cornerPoints.getLast().distance(cornerPoints.getFirst()) <= Properties.ACCURACY()) {
+                    ArrayList<Point2D> points = segments.getLast().getPoints();
+                    points.removeLast();
+                    points.add(cornerPoints.getFirst());
+                    removeLastSegment();
+                    addSegment(points);
+                } else {
+                    addStraightLineTo(cornerPoints.getFirst());
+                }
             }
+            editable = false;
+            calculateBoundaryLines();
+            calculateRoughBinds();
+            calculateRoughMassCenter();
         }
-        editable = false;
-        calculateBoundaryLines();
-        calculateRoughBinds();
-        calculateRoughMassCenter();
     }
 
     public void removeLastSegment() {
@@ -137,6 +139,31 @@ public class PolylineArea extends Area {
             cornerPoints.removeLast();
             segments.removeLast();
         }
+
+    }
+    public static boolean isSelfIntersecting(PolylineArea plObst) {
+
+        if (!plObst.getSegments().isEmpty()) {
+            for (Segment segment1 : plObst.getSegments()) {
+                for (Segment segment2 : plObst.getSegments()) {
+                    if (!segment1.equals(segment2)) {
+                        ArrayList<Point2D> intersections = segment1.getIntersectionsWith(segment2);
+                        for (Point2D intersection : intersections) {
+                            if (!(intersection.distance(segment1.getPoints().getFirst()) <= Properties.ACCURACY()
+                                    || intersection.distance(segment1.getPoints().getLast()) <= Properties.ACCURACY()
+                                    || intersection.distance(segment2.getPoints().getFirst()) <=Properties.ACCURACY()
+                                    || intersection.distance(segment2.getPoints().getLast()) <= Properties.ACCURACY())) {
+                                return true;
+                            }
+
+                        }
+
+
+                    }
+                }
+            }
+        }
+        return false;
 
     }
 

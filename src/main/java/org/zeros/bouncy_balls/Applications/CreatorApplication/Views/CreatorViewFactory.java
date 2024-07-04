@@ -7,7 +7,12 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import org.zeros.bouncy_balls.Animation.Animation.AnimationPane;
+import org.zeros.bouncy_balls.Animation.Animation.AnimationProperties;
+import org.zeros.bouncy_balls.Applications.CreatorApplication.TrackingPane.TrackingPane;
 import org.zeros.bouncy_balls.Applications.CreatorApplication.Models.CreatorModel;
+import org.zeros.bouncy_balls.Applications.CreatorApplication.Models.CreatorParameters;
+import org.zeros.bouncy_balls.Level.Level;
 
 import java.io.IOException;
 
@@ -23,8 +28,9 @@ public class CreatorViewFactory {
     private BorderPane bottomPanel;
     private AnchorPane generalSettingsPane;
     private AnchorPane physicsSettingsPane;
-    private AnchorPane imageEditionPanel;
-    private AnchorPane trackingPane;
+    private AnchorPane levelEditionPanel;
+    private TrackingPane trackingPane;
+    private AnimationPane animationPane;
 
 
     public void showMainWindow() {
@@ -33,20 +39,20 @@ public class CreatorViewFactory {
         createStage(loader);
     }
 
-    public AnchorPane getViewOfImageEditionPanel() {
+    public AnchorPane getLevelEditionPanel() {
 
-        if (imageEditionPanel == null) {
+        if (levelEditionPanel == null) {
             try {
                 FXMLLoader loader=new FXMLLoader(getClass().getResource("/FXML/CreatorApplication/ImageEditionPanel.fxml"));
-                loader.setController(CreatorModel.getInstance().controllers().getImageEditionPanelController());
-                imageEditionPanel =loader.load();
+                loader.setController(CreatorModel.getInstance().controllers().getLevelEditionController());
+                levelEditionPanel =loader.load();
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
 
         }
 
-        return imageEditionPanel;
+        return levelEditionPanel;
     }
 
     public BorderPane getViewOfTopPanel() {
@@ -134,7 +140,7 @@ public class CreatorViewFactory {
         }
         return polyLineDrawingPanel;
     }
-    public AnchorPane getShapeChoicePanel() {
+    public AnchorPane getShapeChoicePanel(boolean includeComplex) {
         if (shapeChoicePanel == null) {
             try {
                 FXMLLoader loader=new FXMLLoader(getClass().getResource("/FXML/CreatorApplication/LeftPanels/ShapeChoicePanel.fxml"));
@@ -144,6 +150,8 @@ public class CreatorViewFactory {
                 throw new RuntimeException(e);
             }
         }
+        if(includeComplex)CreatorModel.getInstance().controllers().getShapeChoiceController().setComplexView();
+        else CreatorModel.getInstance().controllers().getShapeChoiceController().setSimpleView();
         return shapeChoicePanel;
     }
 
@@ -172,44 +180,26 @@ public class CreatorViewFactory {
         return physicsSettingsPane;
     }
 
-
-
-
-
-
-
-
-
-
-    public AnchorPane getTrackingPane() {
+    public TrackingPane getTrackingPane() {
         if(this.trackingPane==null){
-            this.trackingPane = new AnchorPane();
+            this.trackingPane = new TrackingPane();
         }
         return trackingPane;
     }
-    public void updateTrackingPaneOverlay(){
-        trackingPane.getChildren().removeAll(trackingPane.getChildren());
-       /* Rectangle rectangle1=new Rectangle(trackingPane.getBoundsInLocal().getWidth(), background.offsetCoordinatesProperty().get().getY());
-        Rectangle rectangle2=new Rectangle(trackingPane.getBoundsInLocal().getWidth(),
-                trackingPane.getBoundsInLocal().getHeight()- background.offsetCoordinatesProperty().get().getY()- background.heightProperty().get());
-        Rectangle rectangle3=new Rectangle(background.offsetCoordinatesProperty().get().getX(),trackingPane.getBoundsInLocal().getHeight());
-        Rectangle rectangle4=new Rectangle(trackingPane.getBoundsInLocal().getWidth()- background.offsetCoordinatesProperty().get().getX()-
-                background.widthProperty().get(),trackingPane.getBoundsInLocal().getHeight());
-        rectangle1.setFill(Parameters.getSidesOverlayColor());
-        rectangle2.setFill(Parameters.getSidesOverlayColor());
-        rectangle3.setFill(Parameters.getSidesOverlayColor());
-        rectangle4.setFill(Parameters.getSidesOverlayColor());
-
-        AnchorPane.setTopAnchor(rectangle1,0.0);
-        AnchorPane.setBottomAnchor(rectangle2,0.0);
-        AnchorPane.setLeftAnchor(rectangle3,0.0);
-        AnchorPane.setRightAnchor(rectangle4,0.0);
-        trackingPane.getChildren().addAll(rectangle1,rectangle2,rectangle3,rectangle4);*/
-
-
+    public AnimationPane getCurrentAnimationPane(){
+        if(animationPane==null){
+            Level level=new Level(new AnimationProperties((int)(1080*0.5),(int)(1920*0.5)));
+            animationPane=new AnimationPane(level,false);
+            animationPane.getAnimationPane().setStyle("-fx-background-color: #243253; ");
+            AnchorPane.setLeftAnchor(animationPane.getAnimationPane(), (double)CreatorParameters.getDEFAULT_X_OFFSET());
+            AnchorPane.setTopAnchor(animationPane.getAnimationPane(), (double)CreatorParameters.getDEFAULT_Y_OFFSET());
+        }
+        return animationPane;
     }
-
-
+    public AnimationPane getNextAnimationPane(){
+        animationPane=null;
+        return getCurrentAnimationPane();
+    }
 
     private static void createStage(FXMLLoader loader) {
         Scene scene;

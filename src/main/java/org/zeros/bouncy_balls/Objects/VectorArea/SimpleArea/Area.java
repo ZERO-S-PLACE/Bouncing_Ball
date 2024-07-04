@@ -3,13 +3,13 @@ package org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
+import org.zeros.bouncy_balls.Applications.GameApplication.Model.Properties;
 import org.zeros.bouncy_balls.Calculations.AreasMath.AreasMath;
 import org.zeros.bouncy_balls.Calculations.Equations.Equation;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
-import org.zeros.bouncy_balls.Applications.GameApplication.Model.Properties;
 import org.zeros.bouncy_balls.Objects.SerializableObjects.AreaSerializable;
-import org.zeros.bouncy_balls.Objects.VectorArea.PolyLineSegment.CurveSegment;
 import org.zeros.bouncy_balls.Objects.VectorArea.PolyLineSegment.LineSegment;
+import org.zeros.bouncy_balls.Objects.VectorArea.PolyLineSegment.CurveSegment;
 import org.zeros.bouncy_balls.Objects.VectorArea.PolyLineSegment.Segment;
 import org.zeros.bouncy_balls.Objects.VectorArea.VectorArea;
 

@@ -5,7 +5,6 @@ import org.zeros.bouncy_balls.Applications.GameApplication.Controllers.P0_Login.
 import org.zeros.bouncy_balls.Applications.GameApplication.Controllers.P1_WelcomePanel.WelcomePanelController;
 import org.zeros.bouncy_balls.Applications.GameApplication.Controllers.P2a_LevelTypeChoice.LevelTypeChoiceController;
 import org.zeros.bouncy_balls.Applications.GameApplication.Controllers.P2b_Leaderboard.LeaderboardPanelController;
-import org.zeros.bouncy_balls.Applications.GameApplication.Controllers.P2c_LevelCreator.LevelCreatorController;
 import org.zeros.bouncy_balls.Applications.GameApplication.Controllers.P2d_Settings.SettingsPaneController;
 import org.zeros.bouncy_balls.Applications.GameApplication.Controllers.P3_LevelSubtypeChoice.LevelSubtypeChoiceController;
 import org.zeros.bouncy_balls.Applications.GameApplication.Controllers.P4_LevelSelection.LevelSelectionController;
@@ -18,7 +17,7 @@ public class ControllersBase {
     private LevelTypeChoiceController levelTypeChoiceController;
     private LeaderboardPanelController leaderboardPanelController;
     private SettingsPaneController settingsPaneController;
-    private LevelCreatorController levelCreatorController;
+
     private LevelSubtypeChoiceController levelSubtypeChoiceController;
     private LevelSelectionController levelSelectionController;
     private GameCountDownController gameCountDownController;
@@ -59,12 +58,6 @@ public class ControllersBase {
         return settingsPaneController;
     }
 
-    public LevelCreatorController getLevelCreatorController() {
-        if (this.levelCreatorController == null) {
-            this.levelCreatorController = new LevelCreatorController();
-        }
-        return levelCreatorController;
-    }
 
     public LevelSubtypeChoiceController getLevelSubtypeChoiceController() {
         if (this.levelSubtypeChoiceController == null) {

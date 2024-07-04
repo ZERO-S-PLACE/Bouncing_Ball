@@ -18,14 +18,19 @@
             <Line endX="-102.45674133300781" endY="25.69289207458496" fill="#231818" startX="-88.76382446289062" startY="13.279661178588867" stroke="#d1b0b0" styleClass="left-panel-icon-lines" />
          </graphic>
       </Button>
-      <Button fx:id="cubicCurveButton" mnemonicParsing="false" styleClass="left-panel-lines">
+      <Button fx:id="quadCurveButton" mnemonicParsing="false" styleClass="left-panel-lines">
          <graphic>
             <CubicCurve controlX1="-142.40699768066406" controlX2="-130.38787841796875" controlY1="-4.672672748565674" controlY2="-3.979468822479248" endX="-142.406982421875" endY="16.697113037109375" fill="#1f93ff00" startX="-150.0" stroke="BLACK" styleClass="left-panel-icon-lines" />
          </graphic>
       </Button>
-      <Button fx:id="quadCurveButton" mnemonicParsing="false" styleClass="left-panel-lines">
+      <Button fx:id="cubicCurveButton" mnemonicParsing="false" styleClass="left-panel-lines">
          <graphic>
             <CubicCurve controlX1="-156.0465087890625" controlX2="-130.38787841796875" controlY1="18.148290634155273" controlY2="-3.979468822479248" endX="-142.406982421875" endY="16.697113037109375" fill="#1f93ff00" startX="-150.0" stroke="BLACK" styleClass="left-panel-icon-lines" />
+         </graphic>
+      </Button>
+      <Button fx:id="removeLastButton" mnemonicParsing="false">
+         <graphic>
+            <FontAwesomeIconView glyphName="UNDO" size="15.0" styleClass="left-panel-shapes" text="" />
          </graphic>
       </Button>
       <Line endX="25.0" layoutX="16.0" layoutY="549.0" />

@@ -1,5 +1,6 @@
 package org.zeros.bouncy_balls.Applications.CreatorApplication.Models;
 
+import javafx.geometry.Point2D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
@@ -26,6 +27,7 @@ public class CreatorParameters {
     public static int getDEFAULT_Y_OFFSET() {
         return DEFAULT_Y_OFFSET;
     }
+    public static Point2D getDEFAULT_OFFSET_POINT(){return new Point2D(CreatorParameters.getDEFAULT_X_OFFSET(),CreatorParameters.getDEFAULT_Y_OFFSET());}
     public static KeyCode getSWITCH_KEY_CODE() {
         return SWITCH_KEY_CODE;
     }
