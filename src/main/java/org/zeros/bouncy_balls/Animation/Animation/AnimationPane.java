@@ -255,7 +255,7 @@ public class AnimationPane {
         ComplexArea.addComplexAreaToPane(animation.getLevel().getTargetArea(), Color.web("#081633"), gameBackground);
         for (Area obstacle : animation.getLevel().getObstacles()) {
             gameBackground.getChildren().add(obstacle.getPath());
-            obstacle.getPath().setFill(Properties.OBSTACLE_COLOR());
+            BackgroundImages.setObstacleBackground(obstacle);
         }
         for (MovingObject object : animation.getLevel().getMovingObjects()) {
             BackgroundImages.setBallStandardBackground(object.getShape());
@@ -268,6 +268,8 @@ public class AnimationPane {
             BackgroundImages.setBallCannotEnterBackground(object.getShape());
         }
     }
+
+
 
     private void setBackground() {
         gameBackground.setMinHeight(animation.getPROPERTIES().getHEIGHT() / Properties.SIZE_FACTOR());

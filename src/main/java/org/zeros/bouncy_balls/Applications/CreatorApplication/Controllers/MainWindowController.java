@@ -24,10 +24,7 @@ public class MainWindowController implements Initializable {
         AnchorPane.setRightAnchor(CreatorModel.getInstance().getViewFactory().getViewOfTopPanel(),0.0);
         AnchorPane.setLeftAnchor(CreatorModel.getInstance().getViewFactory().getViewOfTopPanel(), 0.0);
 
-        leftPane.getChildren().add(CreatorModel.getInstance().getViewFactory().getActionChoicePanel());
-        AnchorPane.setBottomAnchor(CreatorModel.getInstance().getViewFactory().getActionChoicePanel(),0.0);
-        AnchorPane.setTopAnchor(CreatorModel.getInstance().getViewFactory().getActionChoicePanel(), 0.0);
-
+        setLeftPanel(CreatorModel.getInstance().getViewFactory().getActionChoicePanel());
 
         bottomPane.getChildren().add(CreatorModel.getInstance().getViewFactory().getViewOfBottomPanel());
         AnchorPane.setRightAnchor(CreatorModel.getInstance().getViewFactory().getViewOfBottomPanel(),0.0);
@@ -35,7 +32,13 @@ public class MainWindowController implements Initializable {
 
         mainImageContainer.fitToHeightProperty().set(true);
         mainImageContainer.fitToWidthProperty().set(true);
+    }
 
-
+    public void setLeftPanel(AnchorPane panel) {
+        leftPane.getChildren().removeAll(leftPane.getChildren());
+        leftPane.getChildren().add(panel);
+        CreatorModel.getInstance().getViewFactory().setCurrentLeftPanel(panel);
+        AnchorPane.setBottomAnchor(panel,0.0);
+        AnchorPane.setTopAnchor(panel, 0.0);
     }
 }

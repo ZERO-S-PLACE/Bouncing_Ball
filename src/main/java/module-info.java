@@ -49,6 +49,8 @@ module org.zeros.bouncy_balls {
     exports org.zeros.bouncy_balls.Applications.CreatorApplication.Controllers.CreatorSettings;
     exports org.zeros.bouncy_balls.Applications.GameApplication;
     opens org.zeros.bouncy_balls.Applications.GameApplication to javafx.fxml;
+    exports org.zeros.bouncy_balls.Applications.CreatorApplication.TrackingPane;
+    exports org.zeros.bouncy_balls.Level.Enums;
 
 
 }

@@ -9,7 +9,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.zeros.bouncy_balls.Animation.Animation.AnimationPane;
 import org.zeros.bouncy_balls.Animation.Animation.AnimationProperties;
-import org.zeros.bouncy_balls.Applications.CreatorApplication.Controllers.TrackingPane;
+import org.zeros.bouncy_balls.Applications.CreatorApplication.TrackingPane.TrackingPane;
 import org.zeros.bouncy_balls.Applications.CreatorApplication.Models.CreatorModel;
 import org.zeros.bouncy_balls.Applications.CreatorApplication.Models.CreatorParameters;
 import org.zeros.bouncy_balls.Level.Level;
@@ -140,7 +140,7 @@ public class CreatorViewFactory {
         }
         return polyLineDrawingPanel;
     }
-    public AnchorPane getShapeChoicePanel() {
+    public AnchorPane getShapeChoicePanel(boolean includeComplex) {
         if (shapeChoicePanel == null) {
             try {
                 FXMLLoader loader=new FXMLLoader(getClass().getResource("/FXML/CreatorApplication/LeftPanels/ShapeChoicePanel.fxml"));
@@ -150,6 +150,8 @@ public class CreatorViewFactory {
                 throw new RuntimeException(e);
             }
         }
+        if(includeComplex)CreatorModel.getInstance().controllers().getShapeChoiceController().setComplexView();
+        else CreatorModel.getInstance().controllers().getShapeChoiceController().setSimpleView();
         return shapeChoicePanel;
     }
 
