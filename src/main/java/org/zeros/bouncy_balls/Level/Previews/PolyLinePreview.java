@@ -20,6 +20,7 @@ public class PolyLinePreview extends Preview {
     private ArrayList<Point2D> currentElement = new ArrayList<>();
     private final EventHandler<MouseEvent> elementCreationHandler = this::pathElementCreationPreview;
 
+
     public PolyLinePreview(Point2D startPoint) {
         startPoint = rescaleToLayout(startPoint);
         currentElement.add(startPoint);
@@ -28,18 +29,18 @@ public class PolyLinePreview extends Preview {
 
     private void configurePathPreview(Point2D startPoint) {
         prewievPath.setFill(Color.TRANSPARENT);
-        prewievPath.setStroke(Properties.OBSTACLE_COLOR());
+        prewievPath.setStroke(LINE_COLOR);
         prewievPath.setStrokeWidth(2);
         linePreview.setFill(Color.TRANSPARENT);
-        linePreview.setStroke(Properties.OBSTACLE_COLOR());
+        linePreview.setStroke(LINE_COLOR);
         linePreview.setStrokeWidth(2);
         linePreview.setVisible(false);
         quadCurvePreview.setFill(Color.TRANSPARENT);
-        quadCurvePreview.setStroke(Properties.OBSTACLE_COLOR());
+        quadCurvePreview.setStroke(LINE_COLOR);
         quadCurvePreview.setStrokeWidth(2);
         linePreview.setVisible(false);
         cubicCurvePreview.setFill(Color.TRANSPARENT);
-        cubicCurvePreview.setStroke(Properties.OBSTACLE_COLOR());
+        cubicCurvePreview.setStroke(LINE_COLOR);
         cubicCurvePreview.setStrokeWidth(2);
         linePreview.setVisible(false);
         prewievPath.getElements().add(new MoveTo(startPoint.getX(), startPoint.getY()));
@@ -59,6 +60,20 @@ public class PolyLinePreview extends Preview {
         });
         trackingPane.addEventHandler(MouseEvent.MOUSE_MOVED, elementCreationHandler);
         setStartPoints();
+    }
+
+    @Override
+    public void pause() {
+        prewievPath.setFill(Properties.OBSTACLE_COLOR());
+        prewievPath.setStrokeWidth(0);
+        trackingPane.removeEventHandler(MouseEvent.MOUSE_MOVED, elementCreationHandler);
+    }
+
+    @Override
+    public void resume() {
+        prewievPath.setFill(Color.TRANSPARENT);
+        prewievPath.setStrokeWidth(2);
+        trackingPane.addEventHandler(MouseEvent.MOUSE_MOVED, elementCreationHandler);
     }
 
     private void pathElementCreationPreview(MouseEvent mouseEvent) {
@@ -185,8 +200,15 @@ public class PolyLinePreview extends Preview {
 
     }
 
+
+
     public void dismissElement() {
         currentElement = new ArrayList<>(List.of(currentElement.getFirst()));
         setStartPoints();
     }
+    @Override
+    public Shape getShape() {
+        return prewievPath;
+    }
+
 }

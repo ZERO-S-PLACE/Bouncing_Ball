@@ -1,6 +1,7 @@
 package org.zeros.bouncy_balls.Applications.CreatorApplication.Views;
 
 
+import javafx.event.EventTarget;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -17,6 +18,7 @@ import org.zeros.bouncy_balls.Level.Level;
 import java.io.IOException;
 
 public class CreatorViewFactory {
+    private Scene scene;
 
     private AnchorPane currentLeftPanel;
     private AnchorPane actionChoicePanel;
@@ -141,6 +143,13 @@ public class CreatorViewFactory {
         return polyLineDrawingPanel;
     }
     public AnchorPane getShapeChoicePanel(boolean includeComplex) {
+        getShapeChoicePanel();
+        if(includeComplex)CreatorModel.getInstance().controllers().getShapeChoiceController().setComplexView();
+        else CreatorModel.getInstance().controllers().getShapeChoiceController().setSimpleView();
+        return shapeChoicePanel;
+    }
+
+    public AnchorPane getShapeChoicePanel() {
         if (shapeChoicePanel == null) {
             try {
                 FXMLLoader loader=new FXMLLoader(getClass().getResource("/FXML/CreatorApplication/LeftPanels/ShapeChoicePanel.fxml"));
@@ -150,8 +159,6 @@ public class CreatorViewFactory {
                 throw new RuntimeException(e);
             }
         }
-        if(includeComplex)CreatorModel.getInstance().controllers().getShapeChoiceController().setComplexView();
-        else CreatorModel.getInstance().controllers().getShapeChoiceController().setSimpleView();
         return shapeChoicePanel;
     }
 
@@ -201,8 +208,7 @@ public class CreatorViewFactory {
         return getCurrentAnimationPane();
     }
 
-    private static void createStage(FXMLLoader loader) {
-        Scene scene;
+    private  void createStage(FXMLLoader loader) {
         try {
             scene = new Scene(loader.load());
         } catch (IOException e) {
@@ -217,5 +223,7 @@ public class CreatorViewFactory {
     }
 
 
-
+    public Scene getScene() {
+        return scene;
+    }
 }

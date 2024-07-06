@@ -12,6 +12,7 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
         CreatorModel.getInstance().getViewFactory().showMainWindow();
        new Thread(()-> {
+           CreatorModel.getInstance().controllers().getLevelEditionController().addTrackingPane();
            CreatorModel.getInstance().getLevelCreator().create();
        }).start();
     }

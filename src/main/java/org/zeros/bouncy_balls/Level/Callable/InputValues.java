@@ -32,7 +32,7 @@ public class InputValues {
     }
     public  boolean attachPolyLineSegment(PolylineArea area, PolyLinePreview polyLinePreview, PolyLineSegmentActions polyLineSegment) {
         ExecutorService executorService = Executors.newSingleThreadExecutor();
-        servicesRunning.add(executorService);
+        //servicesRunning.add(executorService);
         Future<Boolean> attachNext = executorService.submit(new PolyLineInput(area, polyLinePreview, polyLineSegment));
         try {
             boolean finished= attachNext.get();

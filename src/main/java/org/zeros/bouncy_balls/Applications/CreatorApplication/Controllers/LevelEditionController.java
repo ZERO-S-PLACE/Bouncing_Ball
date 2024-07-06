@@ -16,6 +16,9 @@ public class LevelEditionController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+    }
+
+    public void addTrackingPane() {
         AnchorPane.setLeftAnchor(CreatorModel.getInstance().getViewFactory().getTrackingPane(), 0.0);
         AnchorPane.setRightAnchor(CreatorModel.getInstance().getViewFactory().getTrackingPane(), 0.0);
         AnchorPane.setTopAnchor(CreatorModel.getInstance().getViewFactory().getTrackingPane(), 0.0);

@@ -14,6 +14,7 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import org.jetbrains.annotations.NotNull;
+import org.zeros.bouncy_balls.Applications.CreatorApplication.Models.CreatorModel;
 import org.zeros.bouncy_balls.Applications.CreatorApplication.Models.CreatorParameters;
 import org.zeros.bouncy_balls.Applications.GameApplication.Model.Properties;
 
@@ -29,17 +30,23 @@ public class TrackingPane extends AnchorPane {
     private final ObjectProperty<Point2D> referencePointProperty=new SimpleObjectProperty<>();
     private final ObjectProperty<Point2D> previousPointProperty=new SimpleObjectProperty<>();
 
+
+
+
     public TrackingPane() {
+        setFocusTraversable(false);
         BackgroundFill backgroundFill = new BackgroundFill(Color.TRANSPARENT, null, null);
         setBackground(new Background(backgroundFill));
         setOnMouseClicked(this::pointPicked);
         selectedPointProperty.addListener(selectedPointListener());
         referencePointProperty.addListener(referencePointListener());
         previousPointProperty.addListener(previousPointListener());
-        addEventHandler(KeyEvent.KEY_PRESSED,this::orthoKeyPressHandler);
-        addEventHandler(KeyEvent.KEY_RELEASED,this::orthoKeyReleaseHandler);
+        CreatorModel.getInstance().getViewFactory().getScene().addEventHandler(KeyEvent.KEY_PRESSED,this::orthoKeyPressHandler);
+        CreatorModel.getInstance().getViewFactory().getScene().addEventHandler(KeyEvent.KEY_RELEASED,this::orthoKeyReleaseHandler);
         setPickPointSign(previousPointSign,Color.RED,3);
         setPickPointSign(referencePointSign,Color.BLUE,3);
+        getChildren().add(previousPointSign);
+        getChildren().add(referencePointSign);
     }
     private ChangeListener<Point2D> selectedPointListener() {
         return (observable, oldValue, newValue) -> {
@@ -52,24 +59,22 @@ public class TrackingPane extends AnchorPane {
     private ChangeListener<Point2D> referencePointListener() {
         return (observable, oldValue, newValue) -> {
             if (newValue != null) {
-                if (!getChildren().contains(referencePointSign)){
-                    Platform.runLater(()->getChildren().add(referencePointSign));
-                }
                 referencePointSign.setCenterX(newValue.getX());
                 referencePointSign.setCenterY(newValue.getY());
+                referencePointSign.setVisible(true);
             } else {
-                Platform.runLater(()-> getChildren().remove(referencePointSign));
+                referencePointSign.setVisible(false);
             }
         };
     }
     private ChangeListener<Point2D> previousPointListener() {
         return (observable, oldValue, newValue) -> {
             if (newValue != null) {
-                if (!getChildren().contains(previousPointSign)) {
-                    Platform.runLater(() -> getChildren().add(previousPointSign));
-                }
+                previousPointSign.setVisible(true);
                 previousPointSign.setCenterX(newValue.getX());
                 previousPointSign.setCenterY(newValue.getY());
+            }else {
+                previousPointSign.setVisible(false);
             }
         };
     }
@@ -86,6 +91,7 @@ public class TrackingPane extends AnchorPane {
         circle.setStrokeWidth(radius/4);
         circle.setStroke(color);
         circle.setRadius(radius);
+        circle.setVisible(false);
     }
     private void pointPicked(MouseEvent mouseEvent) {
 
@@ -119,6 +125,9 @@ public class TrackingPane extends AnchorPane {
         if(referencePointProperty.get()!=null)return referencePointProperty.get();
         else if(previousPointProperty.get()!=null)return previousPointProperty.get();
         return new Point2D(0,0).add(CreatorParameters.getDEFAULT_OFFSET_POINT().multiply(Properties.SIZE_FACTOR()));
+    }
+    public ObjectProperty<Point2D> previousPointProperty() {
+        return previousPointProperty;
     }
 
 }

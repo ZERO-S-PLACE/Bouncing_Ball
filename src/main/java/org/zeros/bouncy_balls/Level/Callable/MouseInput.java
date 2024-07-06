@@ -12,7 +12,6 @@ public class MouseInput implements Callable<Point2D> {
 
     public MouseInput(CountDownLatch latch) {
         this.latch=latch;
-
     }
 
     @Override

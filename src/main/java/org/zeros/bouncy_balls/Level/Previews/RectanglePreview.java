@@ -1,14 +1,19 @@
 package org.zeros.bouncy_balls.Level.Previews;
 
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
+import org.jetbrains.annotations.NotNull;
 import org.zeros.bouncy_balls.DisplayUtil.BackgroundImages;
 
 public class RectanglePreview extends Preview {
     private final Rectangle previewRectangle = new Rectangle();
     private final Point2D rectangleReference;
+    private EventHandler<MouseEvent> rectangleCreationHandler= this::createRectangle;
     public RectanglePreview(Point2D corner) {
         rectangleReference = rescaleToLayout(corner);
     }
@@ -26,6 +31,8 @@ public class RectanglePreview extends Preview {
 
         previewRectangle.setMouseTransparent(true);
         BackgroundImages.setObstacleBackground(previewRectangle);
+        previewRectangle.setStroke(LINE_COLOR);
+        previewRectangle.setStrokeWidth(0.2);
         previewRectangle.setX(rectangleReference.getX());
         previewRectangle.setY(rectangleReference.getY());
         previewRectangle.setHeight(1);
@@ -35,13 +42,34 @@ public class RectanglePreview extends Preview {
                 trackingPane.getChildren().add(previewRectangle);
             }
         });
-        trackingPane.addEventHandler(MouseEvent.MOUSE_MOVED, this::createRectangle);
+        trackingPane.addEventHandler(MouseEvent.MOUSE_MOVED, rectangleCreationHandler);
 
+    }
+
+
+
+
+
+    @Override
+    public void pause() {
+        trackingPane.removeEventHandler(MouseEvent.MOUSE_MOVED, rectangleCreationHandler);
+    }
+
+    @Override
+    public void resume() {
+        trackingPane.addEventHandler(MouseEvent.MOUSE_MOVED, rectangleCreationHandler);
     }
 
     @Override
     public void remove() {
-        trackingPane.removeEventHandler(MouseEvent.MOUSE_MOVED, this::createRectangle);
+        trackingPane.removeEventHandler(MouseEvent.MOUSE_MOVED, rectangleCreationHandler);
         Platform.runLater(() -> trackingPane.getChildren().remove(previewRectangle));
     }
+
+    @Override
+    public Shape getShape() {
+        return previewRectangle;
+    }
+
+
 }
