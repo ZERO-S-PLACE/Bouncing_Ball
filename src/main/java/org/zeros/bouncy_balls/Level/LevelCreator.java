@@ -565,7 +565,7 @@ public class LevelCreator {
     }
 
     private void addMovingObjectToLevel(MovingObject movingObject, boolean reload) {
-        if (animation.hasFreePlace((Ball) (movingObject))) {
+        if (animation.hasFreePlace((Ball) (movingObject))&&animation.getBorders().isInside((Ball) (movingObject))) {
             level.addMovingObject(movingObject);
             if (reload) reloadAnimationPane();
         } else {
@@ -798,7 +798,7 @@ public class LevelCreator {
     private void verifyNewPosition(MovingObject movingObject, MovingObject backup) {
         if (!editAction.equals(EditAction.DELETE)) {
             level.getMovingObjects().remove(movingObject);
-            if (animation.hasFreePlace((Ball) movingObject)) {
+            if (animation.hasFreePlace((Ball) (movingObject))&&animation.getBorders().isInside((Ball) (movingObject))) {
                 level.getMovingObjects().add(movingObject);
             } else {
                 level.getMovingObjects().add(backup);

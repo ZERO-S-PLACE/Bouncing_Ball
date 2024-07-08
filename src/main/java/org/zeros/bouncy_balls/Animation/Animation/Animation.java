@@ -26,6 +26,9 @@ public class Animation {
     private final TreeSet<Double> timesElapsed = new TreeSet<>();
     private final LongProperty timeElapsedNanos = new SimpleLongProperty(0);
     private final ObjectProperty<GameState> gameState = new SimpleObjectProperty<>();
+
+
+
     private Borders borders;
     private int movingObjectCurrent;
     private String animationIdentifier;
@@ -33,7 +36,7 @@ public class Animation {
 
     public Animation(Level level) {
         this.level = level;
-        borders = new Borders(this);
+        borders = new Borders(level.PROPERTIES());
         setAnimationIdentifier(level.getNAME());
         Model.getInstance().addAnimation(this);
         for (MovingObject object : level.getMovingObjects()) {
@@ -230,9 +233,6 @@ public class Animation {
 
     public boolean hasFreePlace(Ball ball) {
 
-        if (!borders.isInside(ball)) {
-            return false;
-        } else {
             for (MovingObject object : level.getMovingObjects()) {
                 if (object.getType().equals(MovingObjectType.BALL) && !object.equals(ball)) {
                     if (object.center().distance(ball.center()) <= ((Ball) object).getRadius() + ball.getRadius()) {
@@ -246,7 +246,7 @@ public class Animation {
                 }
             }
             return true;
-        }
+
     }
 
     public boolean hasFreePlace(Area obstacle) {
@@ -314,7 +314,10 @@ public class Animation {
     }
 
     public void reloadBorders() {
-        borders = new Borders(this);
+        borders = new Borders(level.PROPERTIES());
+    }
+    public Borders getBorders() {
+        return borders;
     }
 
 
