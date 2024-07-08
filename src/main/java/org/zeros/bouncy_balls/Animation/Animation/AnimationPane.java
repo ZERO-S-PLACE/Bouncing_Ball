@@ -244,11 +244,12 @@ public class AnimationPane {
         timeMeasurement.getController().setSize(gameBackground.getHeight() / 6);
         if (movingObjectsToAddCounter != null) {
             movingObjectsToAddCounter.getController().setSize(gameBackground.getHeight() / 9);
+            updateCountersValues();
         }
         if (obstaclesToAddCounter != null) {
             obstaclesToAddCounter.getController().setSize(gameBackground.getHeight() / 9);
         }
-        updateCountersValues();
+
     }
 
     private void reloadAnimationElements() {

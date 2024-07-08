@@ -156,6 +156,7 @@ public class Animation {
         movingObjectCurrent = 0;
         for (; movingObjectCurrent < level.getMovingObjects().size(); movingObjectCurrent++) {
             if (level.getMovingObjects().get(movingObjectCurrent).frameElapsed() <= frameElapsed) {
+
                 if (crossesBorder()) {
                     timesElapsed.add(level.getMovingObjects().get(movingObjectCurrent).frameElapsed());
                 } else if (bouncedAgainstObstacle()) {
@@ -199,7 +200,6 @@ public class Animation {
     }
 
     private boolean bouncedByAnother(double frameElapsed) {
-
         int closestObj = -1;
         double shortestTime = Double.MAX_VALUE;
         for (int j = 0; j < level.getMovingObjects().size(); j++) {
@@ -209,8 +209,7 @@ public class Animation {
                 Point2D intersection = level.getMovingObjects().get(movingObjectCurrent).trajectory().intersection(level.getMovingObjects().get(j).trajectory());
                 boolean trajectoriesIntersect;
                 if (intersection != null) {
-                    trajectoriesIntersect = BindsCheck.isBetweenPoints(intersection, level.getMovingObjects().get(movingObjectCurrent).center(), level.getMovingObjects().get(movingObjectCurrent).nextCenter())
-                            && BindsCheck.isBetweenPoints(intersection, level.getMovingObjects().get(j).center(), level.getMovingObjects().get(j).nextCenter());
+                    trajectoriesIntersect = BindsCheck.isBetweenPoints(intersection, level.getMovingObjects().get(movingObjectCurrent).center(), level.getMovingObjects().get(movingObjectCurrent).nextCenter()) && BindsCheck.isBetweenPoints(intersection, level.getMovingObjects().get(j).center(), level.getMovingObjects().get(j).nextCenter());
                     if ((distance <= minDistanceAllow || trajectoriesIntersect)) {
                         Double t = Bounce.calculateTimeToCollision((Ball) level.getMovingObjects().get(movingObjectCurrent).clone(), (Ball) level.getMovingObjects().get(j).clone());
                         if (t != null) {
@@ -230,14 +229,10 @@ public class Animation {
     }
 
     public boolean hasFreePlace(Ball ball) {
+
         if (!borders.isInside(ball)) {
             return false;
         } else {
-            for (Area obstacle2 : level.getObstacles()) {
-                if (BindsCheck.intersectsWithObstacleExact(ball, obstacle2)) {
-                    return false;
-                }
-            }
             for (MovingObject object : level.getMovingObjects()) {
                 if (object.getType().equals(MovingObjectType.BALL) && !object.equals(ball)) {
                     if (object.center().distance(ball.center()) <= ((Ball) object).getRadius() + ball.getRadius()) {
@@ -245,7 +240,11 @@ public class Animation {
                     }
                 }
             }
-
+            for (Area obstacle2 : level.getObstacles()) {
+                if (BindsCheck.intersectsWithObstacleExact(ball, obstacle2)) {
+                    return false;
+                }
+            }
             return true;
         }
     }
@@ -317,5 +316,9 @@ public class Animation {
     public void reloadBorders() {
         borders = new Borders(this);
     }
+
+
+
+
 }
 
