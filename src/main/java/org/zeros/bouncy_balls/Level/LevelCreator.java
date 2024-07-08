@@ -622,7 +622,7 @@ public class LevelCreator {
             ArrayList<MovingObject> objects = new ArrayList<>();
             for (int i = 0; i < objectsU; i++) {
                 for (int j = 0; j < objectsV; j++) {
-                    MovingObject object = movingObject.clone();
+                    MovingObject object = movingObject.copy();
                     object.updateCenter(object.center().add(spacingVectorU.multiply(i)).add(spacingVectorV.multiply(j)));
                     object.updateNextCenter(object.center());
                     objects.add(object);
