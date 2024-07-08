@@ -4,10 +4,10 @@ import javafx.geometry.Point2D;
 import javafx.scene.shape.Shape;
 import org.zeros.bouncy_balls.Animation.Animation.Animation;
 import org.zeros.bouncy_balls.Animation.Animation.AnimationProperties;
-import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
 import org.zeros.bouncy_balls.Applications.GameApplication.Model.Model;
 import org.zeros.bouncy_balls.Applications.GameApplication.Model.Properties;
-import org.zeros.bouncy_balls.Objects.SerializableObjects.MovingObjectSerializable;
+import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
+
 
 public abstract class MovingObject implements Cloneable {
 
@@ -168,9 +168,22 @@ public abstract class MovingObject implements Cloneable {
     @Override
     public MovingObject clone() {
         try {
-            super.clone();
-            MovingObjectSerializable temp =new MovingObjectSerializable(this);
-            return temp.deserialize(getAnimation());
+            MovingObject clone = (MovingObject) super.clone();
+            clone.type = this.getType();
+            clone.animationProperties = this.animationProperties;
+            clone.animationName = this.animationName;
+            clone.shape = this.shape;
+            clone.furthestSpan = this.furthestSpan;
+            clone.friction = this.friction;
+            clone.mass = this.mass;
+            clone.trajectory = this.trajectory;
+            clone.velocity = this.velocity;
+            clone.acceleration = this.acceleration;
+            clone.centerPoint = this.centerPoint;
+            clone.nextCenterPoint = this.nextCenterPoint;
+            clone.frameElapsed = 0;
+            clone.charge = this.charge;
+            return clone;
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
         }
@@ -179,10 +192,7 @@ public abstract class MovingObject implements Cloneable {
     @Override
     public boolean equals(Object obj) {
         if (obj.getClass().equals(this.getClass())) {
-
             return ((MovingObject) obj).getType().equals(this.type) && ((MovingObject) obj).centerPoint.equals(this.centerPoint) && ((MovingObject) obj).velocity.equals(this.velocity);
-
-
         }
         return false;
     }
