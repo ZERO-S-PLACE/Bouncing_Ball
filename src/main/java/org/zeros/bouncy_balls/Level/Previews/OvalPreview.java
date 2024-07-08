@@ -17,7 +17,6 @@ import org.zeros.bouncy_balls.Applications.GameApplication.Model.Properties;
 import org.zeros.bouncy_balls.DisplayUtil.BackgroundImages;
 
 public class OvalPreview extends Preview{
-    private final TrackingPane trackingPane= CreatorModel.getInstance().getViewFactory().getTrackingPane();
     private final Ellipse previewOval=new Ellipse();
     private final Point2D ovalCenter;
     private double ovalRadiusPicked;

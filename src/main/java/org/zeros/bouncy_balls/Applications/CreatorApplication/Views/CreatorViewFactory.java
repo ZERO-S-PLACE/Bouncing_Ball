@@ -1,7 +1,6 @@
 package org.zeros.bouncy_balls.Applications.CreatorApplication.Views;
 
 
-import javafx.event.EventTarget;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -171,6 +170,8 @@ public class CreatorViewFactory {
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
+        }else {
+            CreatorModel.getInstance().controllers().getGeneralSettingsController().setInitialValues();
         }
         return generalSettingsPane;
     }
@@ -183,6 +184,8 @@ public class CreatorViewFactory {
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
+        }else {
+            CreatorModel.getInstance().controllers().getPhysicsSettingsController().setInitialValues();
         }
         return physicsSettingsPane;
     }
@@ -196,10 +199,7 @@ public class CreatorViewFactory {
     public AnimationPane getCurrentAnimationPane(){
         if(animationPane==null){
             Level level=new Level(new AnimationProperties((int)(1080*0.5),(int)(1920*0.5)));
-            animationPane=new AnimationPane(level,false);
-            animationPane.getAnimationPane().setStyle("-fx-background-color: #243253; ");
-            AnchorPane.setLeftAnchor(animationPane.getAnimationPane(), (double)CreatorParameters.getDEFAULT_X_OFFSET());
-            AnchorPane.setTopAnchor(animationPane.getAnimationPane(), (double)CreatorParameters.getDEFAULT_Y_OFFSET());
+            configureAnimationPane(level);
         }
         return animationPane;
     }
@@ -207,6 +207,19 @@ public class CreatorViewFactory {
         animationPane=null;
         return getCurrentAnimationPane();
     }
+    public AnimationPane getNextAnimationPane(Level level) {
+        configureAnimationPane(level);
+        return animationPane;
+    }
+
+    private void configureAnimationPane(Level level) {
+        animationPane=new AnimationPane(level,false);
+        animationPane.getAnimationPane().setStyle("-fx-background-color: #243253; ");
+        AnchorPane.setLeftAnchor(animationPane.getAnimationPane(), (double)CreatorParameters.getDEFAULT_X_OFFSET());
+        AnchorPane.setTopAnchor(animationPane.getAnimationPane(), (double)CreatorParameters.getDEFAULT_Y_OFFSET());
+    }
+
+
 
     private  void createStage(FXMLLoader loader) {
         try {

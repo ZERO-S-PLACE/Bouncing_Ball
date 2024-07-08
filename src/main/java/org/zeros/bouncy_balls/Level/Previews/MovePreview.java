@@ -36,9 +36,11 @@ public class MovePreview extends Preview {
         shape.setSmooth(true);
         shape.setLayoutX(initial.getX()+CreatorParameters.getDEFAULT_X_OFFSET());
         shape.setLayoutY(initial.getY()+CreatorParameters.getDEFAULT_Y_OFFSET());
-        if(!trackingPane.getChildren().contains(shape)){
-            Platform.runLater(()->trackingPane.getChildren().add(shape) );
-        }
+        Platform.runLater(()-> {
+                    if (!trackingPane.getChildren().contains(shape)) {
+                       trackingPane.getChildren().add(shape);
+                    }
+                });
         trackingPane.addEventHandler(MouseEvent.MOUSE_MOVED,mouseMovedHandler);
 
     }

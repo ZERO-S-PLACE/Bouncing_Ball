@@ -7,6 +7,7 @@ import org.zeros.bouncy_balls.Animation.Animation.AnimationProperties;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
 import org.zeros.bouncy_balls.Applications.GameApplication.Model.Model;
 import org.zeros.bouncy_balls.Applications.GameApplication.Model.Properties;
+import org.zeros.bouncy_balls.Objects.SerializableObjects.MovingObjectSerializable;
 
 public abstract class MovingObject implements Cloneable {
 
@@ -167,22 +168,9 @@ public abstract class MovingObject implements Cloneable {
     @Override
     public MovingObject clone() {
         try {
-            MovingObject clone = (MovingObject) super.clone();
-            clone.type = this.getType();
-            clone.animationProperties = this.animationProperties;
-            clone.animationName = this.animationName;
-            clone.shape = this.shape;
-            clone.furthestSpan = this.furthestSpan;
-            clone.friction = this.friction;
-            clone.mass = this.mass;
-            clone.trajectory = this.trajectory;
-            clone.velocity = this.velocity;
-            clone.acceleration = this.acceleration;
-            clone.centerPoint = this.centerPoint;
-            clone.nextCenterPoint = this.nextCenterPoint;
-            clone.frameElapsed = 0;
-            clone.charge = this.charge;
-            return clone;
+            super.clone();
+            MovingObjectSerializable temp =new MovingObjectSerializable(this);
+            return temp.deserialize(getAnimation());
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
         }

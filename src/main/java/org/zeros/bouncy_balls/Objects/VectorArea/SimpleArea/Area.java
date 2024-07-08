@@ -341,9 +341,9 @@ public class Area extends VectorArea implements Cloneable {
     @Override
     public Area clone() {
         try {
-            Area clone = (Area) super.clone();
-            rewriteValues(clone);
-            return clone;
+           super.clone();
+            AreaSerializable temp=new AreaSerializable(this);
+            return temp.deserialize();
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
         }

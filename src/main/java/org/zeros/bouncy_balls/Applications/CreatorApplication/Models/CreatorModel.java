@@ -39,9 +39,9 @@ public class CreatorModel {
         }
         return levelCreator;
     }
-    public LevelCreator getNextLevelCreator() {
+    public LevelCreator getNewLevelCreator() {
        levelCreator=null;
-        return getLevelCreator();
+       return getLevelCreator();
     }
 
 }

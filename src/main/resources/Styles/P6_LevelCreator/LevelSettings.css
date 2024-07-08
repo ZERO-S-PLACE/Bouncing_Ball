@@ -35,7 +35,7 @@
     -fx-min-width:300;
 
 }
-.type_selector.label{
+.type_selector .label{
     -fx-text-fill:#a2b4c0;
     -fx-font-size:1.1em;
     -fx-font-family: "Calibri";
@@ -100,4 +100,9 @@
     -fx-stroke: #F4716E;
     -fx-stroke-width:0.1;
     -fx-alignment:center;
+}
+.error-text{
+    -fx-fill: #F4716E;
+    -fx-font-size: 0.8em;
+
 }
