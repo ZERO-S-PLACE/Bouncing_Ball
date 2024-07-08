@@ -13,7 +13,6 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import org.jetbrains.annotations.NotNull;
 import org.zeros.bouncy_balls.Applications.CreatorApplication.Models.CreatorModel;
 import org.zeros.bouncy_balls.Applications.CreatorApplication.Models.CreatorParameters;
 import org.zeros.bouncy_balls.Applications.GameApplication.Model.Properties;

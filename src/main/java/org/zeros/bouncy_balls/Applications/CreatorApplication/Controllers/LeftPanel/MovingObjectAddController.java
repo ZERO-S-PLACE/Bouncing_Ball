@@ -3,9 +3,8 @@ package org.zeros.bouncy_balls.Applications.CreatorApplication.Controllers.LeftP
 import javafx.beans.value.ChangeListener;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
-import org.jetbrains.annotations.NotNull;
 import org.zeros.bouncy_balls.Applications.CreatorApplication.Models.CreatorModel;
-import org.zeros.bouncy_balls.Applications.GameApplication.Model.Model;
+
 import org.zeros.bouncy_balls.DisplayUtil.CustomTooltip;
 import org.zeros.bouncy_balls.Level.Enums.MovingObjectFunction;
 

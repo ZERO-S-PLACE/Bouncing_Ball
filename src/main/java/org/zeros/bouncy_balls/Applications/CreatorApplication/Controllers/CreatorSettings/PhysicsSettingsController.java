@@ -35,8 +35,8 @@ public class PhysicsSettingsController implements Initializable {
         downwardGravityFactorField.textProperty().set(String.valueOf(level.PROPERTIES().getGRAVITY()));
     }
     private void setButtonsFunctions() {
-        acceptButton.setOnAction(_->checkAndSaveValues());
-        dismissButton.setOnAction(_->returnToLevelCreation());
+        acceptButton.setOnAction(e->checkAndSaveValues());
+        dismissButton.setOnAction(e->returnToLevelCreation());
     }
 
     private void checkAndSaveValues() {

@@ -6,7 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
-import org.controlsfx.control.PropertySheet;
+
 import org.zeros.bouncy_balls.Animation.Animation.AnimationType;
 import org.zeros.bouncy_balls.Animation.Borders.BordersType;
 import org.zeros.bouncy_balls.Applications.CreatorApplication.Models.CreatorModel;

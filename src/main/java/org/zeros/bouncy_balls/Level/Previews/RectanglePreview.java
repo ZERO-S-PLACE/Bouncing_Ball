@@ -7,7 +7,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
-import org.jetbrains.annotations.NotNull;
+
 import org.zeros.bouncy_balls.DisplayUtil.BackgroundImages;
 
 public class RectanglePreview extends Preview {
