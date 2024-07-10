@@ -3,6 +3,7 @@ package org.zeros.bouncy_balls.Animation.Borders;
 import javafx.geometry.Point2D;
 import org.zeros.bouncy_balls.Animation.Animation.Animation;
 import org.zeros.bouncy_balls.Animation.Animation.AnimationProperties;
+import org.zeros.bouncy_balls.Applications.GameApplication.Model.Properties;
 import org.zeros.bouncy_balls.Calculations.Bounce;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
 import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;
@@ -14,18 +15,17 @@ import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.Area;
 import java.util.ArrayList;
 
 public class Borders {
-    private final int WIDTH;
-    private final int HEIGHT;
     private final LinearEquation OX = new LinearEquation(0, 0);
     private final LinearEquation OY = new LinearEquation(0, Double.NaN);
     private final LinearEquation OY2;
     private final LinearEquation OX2;
     private final ArrayList<LineSegment> boundaryLines = new ArrayList<>();
+    private final int WIDTH;
+    private final int HEIGHT;
 
-    public Borders(Animation animation) {
-        AnimationProperties PROPERTIES = animation.getPROPERTIES();
-        WIDTH = PROPERTIES.getWIDTH();
-        HEIGHT = PROPERTIES.getHEIGHT();
+    public Borders(AnimationProperties animationProperties) {
+        WIDTH = animationProperties.getWIDTH();
+        HEIGHT = animationProperties.getHEIGHT();
         OY2 = new LinearEquation(WIDTH, Double.NaN);
         OX2 = new LinearEquation(0, HEIGHT);
         boundaryLines.add(new LineSegment(new Point2D(0, 0), new Point2D(0, HEIGHT)));
@@ -39,8 +39,16 @@ public class Borders {
     }
 
     public boolean isInside(Ball ball) {
-        double radius = ball.getRadius();
-        return ball.center().getX() >= radius && ball.center().getX() <= WIDTH - radius && ball.center().getY() >= radius && ball.center().getY() <= HEIGHT - radius;
+        System.out.println(ball.center().multiply(1/ Properties.SIZE_FACTOR()));
+        System.out.println(ball.getRadius()*(1/ Properties.SIZE_FACTOR()));
+        System.out.println(WIDTH*(1/ Properties.SIZE_FACTOR()));
+        System.out.println(HEIGHT*(1/ Properties.SIZE_FACTOR()));
+
+        double radius = ball.getFurthestSpan();
+        return ball.center().getX() >= radius &&
+                ball.center().getX() <= WIDTH - radius &&
+                ball.center().getY() >= radius &&
+                ball.center().getY() <= HEIGHT - radius;
     }
 
     public boolean isInside(Point2D center, double spanMax) {
@@ -70,6 +78,8 @@ public class Borders {
             return false;
         }
         return true;
+
+
     }
 
     public boolean moveToOtherSide(MovingObject obj) {

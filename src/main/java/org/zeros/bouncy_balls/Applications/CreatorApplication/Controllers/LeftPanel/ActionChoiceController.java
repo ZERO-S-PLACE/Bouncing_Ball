@@ -5,6 +5,7 @@ import org.zeros.bouncy_balls.Applications.CreatorApplication.Models.CreatorMode
 import org.zeros.bouncy_balls.DisplayUtil.CustomTooltip;
 import org.zeros.bouncy_balls.Level.Enums.AreaPurpose;
 import org.zeros.bouncy_balls.Level.Enums.ComplexAreaInput;
+import org.zeros.bouncy_balls.Level.Enums.EditAction;
 import org.zeros.bouncy_balls.Level.Enums.MovingObjectPurpose;
 
 import java.net.URL;
@@ -29,8 +30,38 @@ public class ActionChoiceController extends LeftPanelController {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setButtonsFunctions();
         setTooltips();
+        setOnActionPick();
+    }
+
+    public void setOnActionPick() {
         acceptButton.setVisible(false);
         dismissButton.setVisible(false);
+        movingObjectButton.setDisable(false);
+        obstacleButton.setDisable(false);
+        targetAreaButton.setDisable(false);
+        movingObjectToAddButton.setDisable(false);
+        obstacleToAddButton.setDisable(false);
+        inputAreaButton.setDisable(false);
+        moveButton.setDisable(false);
+        rotateButton.setDisable(false);
+        deleteButton.setDisable(false);
+        acceptButton.setDisable(true);
+        dismissButton.setDisable(true);
+    }
+    public void setOnTransform() {
+        acceptButton.setVisible(true);
+        dismissButton.setVisible(true);
+        movingObjectButton.setDisable(true);
+        obstacleButton.setDisable(true);
+        targetAreaButton.setDisable(true);
+        movingObjectToAddButton.setDisable(true);
+        obstacleToAddButton.setDisable(true);
+        inputAreaButton.setDisable(true);
+        moveButton.setDisable(true);
+        rotateButton.setDisable(true);
+        deleteButton.setDisable(true);
+        acceptButton.setDisable(false);
+        dismissButton.setDisable(false);
     }
 
     private void setTooltips() {
@@ -54,11 +85,11 @@ public class ActionChoiceController extends LeftPanelController {
         movingObjectToAddButton.setOnAction(e->CreatorModel.getInstance().getLevelCreator().initializeMovingObjectsInput(MovingObjectPurpose.MOVING_OBJECT_TO_ADD));
         obstacleToAddButton.setOnAction(e->CreatorModel.getInstance().getLevelCreator().initializeObstacleInput(AreaPurpose.OBSTACLE_TO_ADD));;
         inputAreaButton.setOnAction(e->CreatorModel.getInstance().getLevelCreator().initializeComplexAreaInput(ComplexAreaInput.INPUT));
-        /*
-        moveButton;
-        rotateButton;
-        deleteButton;
-        acceptButton;*/
+
+        moveButton.setOnAction(e->CreatorModel.getInstance().getLevelCreator().setEditAction(EditAction.MOVE));
+        rotateButton.setOnAction(e->CreatorModel.getInstance().getLevelCreator().setEditAction(EditAction.ROTATE));
+        deleteButton.setOnAction(e->CreatorModel.getInstance().getLevelCreator().setEditAction(EditAction.DELETE));
+        acceptButton.setOnAction(e->CreatorModel.getInstance().getLevelCreator().setEditAction(EditAction.NONE));
         dismissButton.setOnAction(e->CreatorModel.getInstance().getLevelCreator().dismissAction());
     }
 

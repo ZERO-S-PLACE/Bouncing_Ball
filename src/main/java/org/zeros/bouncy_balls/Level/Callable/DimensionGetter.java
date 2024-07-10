@@ -38,7 +38,6 @@ public class DimensionGetter implements Callable<Double> {
             if (numberEnteredValue > 0) return numberEnteredValue*Properties.SIZE_FACTOR();
         }
         if (pickedPointValue != null) {
-            System.out.println(pickedPointValue+" "+reference+" "+pickedPointValue.distance(reference));
             return pickedPointValue.distance(reference)*Properties.SIZE_FACTOR();
         }
         return null;

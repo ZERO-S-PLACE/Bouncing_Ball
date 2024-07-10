@@ -127,7 +127,7 @@ public class InputOnRunMovingObject extends InputOnRun {
         if (!centerPicked) {
             object.updateCenter(pickedPoint);
             object.updateNextCenter(object.center());
-            if (animation.hasFreePlace((Ball) object)) {
+            if (animation.hasFreePlace((Ball) (object))) {
                 object.getShape().setOpacity(0.7);
                 ((Circle) object.getShape()).setCenterX(mouseEvent.getX());
                 ((Circle) object.getShape()).setCenterY(mouseEvent.getY());

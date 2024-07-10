@@ -94,7 +94,7 @@ public class AnimationPane {
     public void pauseGame() {
         dismissInputOnRun();
         animation.pause();
-        pauseButton.setVisible(false);
+        if(pauseButton!=null)pauseButton.setVisible(false);
     }
 
     private void dismissInputOnRun() {
@@ -198,7 +198,7 @@ public class AnimationPane {
     private void addNewMovingObjectOnRun() {
         if (!animation.getLevel().getMovingObjectsToAdd().isEmpty()) {
             measurementsBox.setMouseTransparent(true);
-            ComplexArea.addComplexAreaToPane(animation.getLevel().getInputArea(), Color.web("#435477"), gameBackground);
+            ComplexArea.addComplexAreaPreview(animation.getLevel().getInputArea(), Color.web("#435477"), gameBackground);
             MovingObject object = animation.getLevel().getMovingObjectsToAdd().getFirst();
             inputOnRun = new InputOnRunMovingObject(object, gameBackground);
             new Thread(() -> inputOnRun.insert()).start();
@@ -206,7 +206,7 @@ public class AnimationPane {
                 if (newValue) {
                     Platform.runLater(() -> {
                         measurementsBox.setMouseTransparent(false);
-                        ComplexArea.addComplexAreaToPane(animation.getLevel().getInputArea(), Color.TRANSPARENT, getAnimationPane());
+                        ComplexArea.addComplexAreaPreview(animation.getLevel().getInputArea(), Color.TRANSPARENT, getAnimationPane());
                         inputOnRun = null;
                         updateCountersValues();
                     });
@@ -218,8 +218,8 @@ public class AnimationPane {
 
     public void reloadNodes(double scaleFactor) {
         rescaleAnimation(scaleFactor);
-        animation.reloadBorders();
         setBackground();
+        animation.reloadBorders();
         gameBackground.getChildren().removeAll(gameBackground.getChildren());
         reloadAnimationElements();
         if (pauseButton != null && measurementsBox != null) {
@@ -230,13 +230,13 @@ public class AnimationPane {
     }
 
     private void rescaleAnimation(double scaleFactor) {
-        if (scaleFactor > 0 && scaleFactor != 1) {
+
             try {
                 animation.getLevel().rescale(scaleFactor);
             } catch (Exception e) {
                 throw new RuntimeException("Animation cannot be rescaled");
             }
-        }
+
     }
 
     private void rescaleOverlay() {
@@ -244,15 +244,16 @@ public class AnimationPane {
         timeMeasurement.getController().setSize(gameBackground.getHeight() / 6);
         if (movingObjectsToAddCounter != null) {
             movingObjectsToAddCounter.getController().setSize(gameBackground.getHeight() / 9);
+            updateCountersValues();
         }
         if (obstaclesToAddCounter != null) {
             obstaclesToAddCounter.getController().setSize(gameBackground.getHeight() / 9);
         }
-        updateCountersValues();
+
     }
 
     private void reloadAnimationElements() {
-        ComplexArea.addComplexAreaToPane(animation.getLevel().getTargetArea(), Color.web("#081633"), gameBackground);
+        ComplexArea.addComplexAreaPreview(animation.getLevel().getTargetArea(), Color.web("#081633"), gameBackground);
         for (Area obstacle : animation.getLevel().getObstacles()) {
             gameBackground.getChildren().add(obstacle.getPath());
             BackgroundImages.setObstacleBackground(obstacle);

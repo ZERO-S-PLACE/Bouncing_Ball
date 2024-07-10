@@ -1,6 +1,8 @@
 package org.zeros.bouncy_balls.Applications.CreatorApplication.Controllers.LeftPanel;
 
+import javafx.application.Platform;
 import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
 import org.zeros.bouncy_balls.Applications.CreatorApplication.Models.CreatorModel;
 import org.zeros.bouncy_balls.DisplayUtil.CustomTooltip;
 import org.zeros.bouncy_balls.Level.Enums.ComplexAreaInput;
@@ -9,6 +11,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class ShapeChoiceController extends LeftPanelController {
+
     public Button rectangleButton;
     public Button ovalButton;
     public Button polylineButton;
@@ -22,8 +25,10 @@ public class ShapeChoiceController extends LeftPanelController {
     public void initialize(URL location, ResourceBundle resources) {
         setButtonsFunctions();
         setTooltips();
-
+        setStandardView();
     }
+
+
     private void setTooltips() {
         rectangleButton.setTooltip(new CustomTooltip("Draw rectangle"));
         ovalButton.setTooltip(new CustomTooltip("Draw oval"));
@@ -40,9 +45,9 @@ public class ShapeChoiceController extends LeftPanelController {
         ovalButton.setOnAction(e->CreatorModel.getInstance().getLevelCreator().drawOval());
         polylineButton.setOnAction(e->CreatorModel.getInstance().getLevelCreator().initializePolyLineDrawing());
         complexAreaButton.setOnAction(e->CreatorModel.getInstance().getLevelCreator().initializeComplexAreaInput(ComplexAreaInput.OBSTACLE));
-        moveElementButton.setTooltip(new CustomTooltip("Move"));
-        rotateButton.setTooltip(new CustomTooltip("Rotate"));
-        acceptButton.setTooltip(new CustomTooltip("Save"));
+        moveElementButton.setOnAction(e->CreatorModel.getInstance().getLevelCreator().moveCurrentObstacle());
+        rotateButton.setOnAction(e->CreatorModel.getInstance().getLevelCreator().rotateCurrentObstacle());
+        acceptButton.setOnAction(e->CreatorModel.getInstance().getLevelCreator().acceptArea());
         dismissButton.setOnAction(e->CreatorModel.getInstance().getLevelCreator().dismissAction());
     }
 
@@ -52,5 +57,27 @@ public class ShapeChoiceController extends LeftPanelController {
 
     public void setSimpleView() {
         complexAreaButton.setVisible(false);
+    }
+    public void setViewOnTransform(){
+        rectangleButton.setDisable(true);
+        ovalButton.setDisable(true);
+        polylineButton.setDisable(true);
+        complexAreaButton.setDisable(true);
+
+        moveElementButton.setDisable(false);
+        rotateButton.setDisable(false);
+        acceptButton.setDisable(false);
+    }
+    public void setStandardView(){
+        rectangleButton.setDisable(false);
+        ovalButton.setDisable(false);
+        polylineButton.setDisable(false);
+        complexAreaButton.setDisable(false);
+
+        moveElementButton.setDisable(true);
+        rotateButton.setDisable(true);
+        acceptButton.setDisable(true);
+
+
     }
 }

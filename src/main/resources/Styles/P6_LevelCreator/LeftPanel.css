@@ -116,7 +116,7 @@
 /*buttons shape choice*/
 
 .polyline-area-button{
-    -fx-background-image: url("../../Icons/P6_CreatorIcons/IconPolyline.png");
+    -fx-background-image: url("../../Icons/P6_CreatorIcons/IconPolyLine.png");
     -fx-background-size: 60%;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;

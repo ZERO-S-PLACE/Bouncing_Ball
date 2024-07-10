@@ -74,6 +74,12 @@ public class VectorMath {
         }
         return true;
     }
+
+    public static boolean rotationIsClockWise(Point2D start, Point2D end, Point2D center) {
+        Point2D startLeadingVector=start.subtract(center);
+        Point2D endLeadingVector=end.subtract(center);
+        return startLeadingVector.crossProduct(endLeadingVector).getZ()>0;
+    }
 }
 
 

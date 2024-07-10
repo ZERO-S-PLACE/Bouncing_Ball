@@ -7,6 +7,7 @@ import org.zeros.bouncy_balls.Applications.GameApplication.Model.Properties;
 import org.zeros.bouncy_balls.Calculations.AreasMath.AreasMath;
 import org.zeros.bouncy_balls.Calculations.Equations.Equation;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
+import org.zeros.bouncy_balls.Calculations.VectorMath;
 import org.zeros.bouncy_balls.Objects.SerializableObjects.AreaSerializable;
 import org.zeros.bouncy_balls.Objects.VectorArea.PolyLineSegment.LineSegment;
 import org.zeros.bouncy_balls.Objects.VectorArea.PolyLineSegment.CurveSegment;
@@ -56,12 +57,23 @@ public class Area extends VectorArea implements Cloneable {
         this.roughMin = area.roughMin;
         this.roughMax = area.roughMax;
     }
+    private void rewriteValuesAtRotate(Area area) {
+        this.path = area.getPath();
+        this.segmentPoints = area.segmentPoints;
+        this.cornerPoints = area.cornerPoints;
+        this.cornerLines = area.getCornerLines();
+        this.segmentLines = area.getSegmentLines();
+        this.segments = area.segments;
+        this.roughMin = area.roughMin;
+        this.roughMax = area.roughMax;
+    }
 
     protected void calculateRoughMassCenter() {
         Point2D sumPoint = new Point2D(0, 0);
         for (Point2D point : getAllPoints()) {
             sumPoint = sumPoint.add(point);
         }
+
 
         massCenter = sumPoint.multiply((double) 1 / getAllPoints().size());
     }
@@ -144,8 +156,8 @@ public class Area extends VectorArea implements Cloneable {
             points.replaceAll(point2D -> point2D.add(vector));
         }
         cornerPoints.replaceAll(point2D -> point2D.add(vector));
-        path.setTranslateX(path.getTranslateX() + vector.getX() / Properties.SIZE_FACTOR());
-        path.setTranslateY(path.getTranslateY() + vector.getY() / Properties.SIZE_FACTOR());
+        path.setLayoutX(path.getLayoutX() + vector.getX() / Properties.SIZE_FACTOR());
+        path.setLayoutY(path.getLayoutY() + vector.getY() / Properties.SIZE_FACTOR());
         calculateBoundaryLines();
         calculateRoughBinds();
     }
@@ -181,8 +193,7 @@ public class Area extends VectorArea implements Cloneable {
             AreaSerializable temp = new AreaSerializable(this);
             temp.rotate(rotation, massCenter);
             Area area = temp.deserialize();
-            rewriteValues(area);
-
+            rewriteValuesAtRotate(area);
         }
     }
 
@@ -316,13 +327,23 @@ public class Area extends VectorArea implements Cloneable {
             if (AreasMath.isInsideArea(this, point)) return point;
         }
     }
+    public static double rotateAreaInReference(Point2D center,Point2D reference,Point2D trackedPoint, Area area) {
+        double rotation = center.angle(trackedPoint, reference);
+        rotation = rotation / 360 * 2 * Math.PI;
+        LinearEquation line = new LinearEquation(center, reference);
+        if (line.distance(VectorMath.rotatePoint(trackedPoint, center, rotation)) > line.distance(trackedPoint)) {
+            rotation = -rotation;
+        }
+        area.setRotation(rotation);
+        return rotation;
+    }
 
     @Override
     public Area clone() {
         try {
-            Area clone = (Area) super.clone();
-            rewriteValues(clone);
-            return clone;
+           super.clone();
+            AreaSerializable temp=new AreaSerializable(this);
+            return temp.deserialize();
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
         }

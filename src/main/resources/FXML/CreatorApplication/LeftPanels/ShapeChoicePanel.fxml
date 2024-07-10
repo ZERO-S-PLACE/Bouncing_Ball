@@ -16,12 +16,12 @@
       <Line endX="25.0" layoutX="16.0" layoutY="23.0" />
       <Button fx:id="rectangleButton" mnemonicParsing="false" styleClass="left-panel-shapes">
          <graphic>
-            <Rectangle arcHeight="5.0" arcWidth="5.0"  height="12.0" stroke="BLACK" strokeType="INSIDE" styleClass="left-panel-shapes" width="16.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" height="12.0" stroke="BLACK" strokeType="INSIDE" styleClass="left-panel-shapes" width="16.0" />
          </graphic>
       </Button>
       <Button fx:id="ovalButton" mnemonicParsing="false">
          <graphic>
-            <Ellipse  radiusX="9.0" radiusY="6.0" stroke="BLACK" strokeType="INSIDE" styleClass="left-panel-shapes" />
+            <Ellipse radiusX="9.0" radiusY="6.0" stroke="BLACK" strokeType="INSIDE" styleClass="left-panel-shapes" />
          </graphic>
       </Button>
       <Button fx:id="polylineButton" mnemonicParsing="false" prefHeight="32.0" prefWidth="22.0" styleClass="polyline-area-button" />
