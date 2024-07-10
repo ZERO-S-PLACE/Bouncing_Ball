@@ -52,7 +52,7 @@ public class TopPanelController implements Initializable {
 
     private boolean saveLevel() {
         Level level = CreatorModel.getInstance().getViewFactory().getCurrentAnimationPane().getLevel();
-        if (level.PROPERTIES().getTYPE().equals(AnimationType.GAME)) {
+       /* if (level.PROPERTIES().getTYPE().equals(AnimationType.GAME)) {
             if (level.getMovingObjects().isEmpty() && level.getMovingObjectsToAdd().isEmpty()) {
                 showErrorDialog("Not a game", "No moving objects available");
                 return false;
@@ -73,7 +73,7 @@ public class TopPanelController implements Initializable {
                 showErrorDialog("Not a game", "No input area to add moving objects");
                 return false;
             }
-        }
+        }*/
         try {
             level.save();
             showPopUp("File saved successfully..");

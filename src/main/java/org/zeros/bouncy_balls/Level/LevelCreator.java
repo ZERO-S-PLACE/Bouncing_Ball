@@ -547,7 +547,8 @@ public class LevelCreator {
             trackingPane.resetView();
             Platform.runLater(() -> animationPane.getAnimationPane().getChildren().remove(movingObject.getShape()));
             switch (movingObjectPurpose) {
-                case MOVING_OBJECT -> addMovingObjectToLevel(movingObject, reload);
+                case MOVING_OBJECT -> {addMovingObjectToLevel(movingObject, reload);
+                    addMovingObjectFunctions(movingObject);}
                 case MOVING_OBJECT_TO_ADD -> {
                     level.addMovingObjectToAdd(movingObject);
                     addMovingObjectFunctions(movingObject);
