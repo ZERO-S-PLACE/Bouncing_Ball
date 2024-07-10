@@ -218,8 +218,8 @@ public class AnimationPane {
 
     public void reloadNodes(double scaleFactor) {
         rescaleAnimation(scaleFactor);
-        animation.reloadBorders();
         setBackground();
+        animation.reloadBorders();
         gameBackground.getChildren().removeAll(gameBackground.getChildren());
         reloadAnimationElements();
         if (pauseButton != null && measurementsBox != null) {
@@ -230,13 +230,13 @@ public class AnimationPane {
     }
 
     private void rescaleAnimation(double scaleFactor) {
-        if (scaleFactor > 0 && scaleFactor != 1) {
+
             try {
                 animation.getLevel().rescale(scaleFactor);
             } catch (Exception e) {
                 throw new RuntimeException("Animation cannot be rescaled");
             }
-        }
+
     }
 
     private void rescaleOverlay() {
@@ -244,11 +244,12 @@ public class AnimationPane {
         timeMeasurement.getController().setSize(gameBackground.getHeight() / 6);
         if (movingObjectsToAddCounter != null) {
             movingObjectsToAddCounter.getController().setSize(gameBackground.getHeight() / 9);
+            updateCountersValues();
         }
         if (obstaclesToAddCounter != null) {
             obstaclesToAddCounter.getController().setSize(gameBackground.getHeight() / 9);
         }
-        updateCountersValues();
+
     }
 
     private void reloadAnimationElements() {

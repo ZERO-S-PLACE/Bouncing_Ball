@@ -1,10 +1,12 @@
 package org.zeros.bouncy_balls.Applications.CreatorApplication.Controllers.LeftPanel;
 
+import javafx.beans.value.ChangeListener;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import org.zeros.bouncy_balls.Applications.CreatorApplication.Models.CreatorModel;
+
 import org.zeros.bouncy_balls.DisplayUtil.CustomTooltip;
-import org.zeros.bouncy_balls.Level.Enums.ComplexAreaInput;
+import org.zeros.bouncy_balls.Level.Enums.MovingObjectFunction;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -42,15 +44,36 @@ public class MovingObjectAddController extends LeftPanelController {
             ballsArrayButton.setOnAction(e->CreatorModel.getInstance().getLevelCreator().addMovingBallsArray());
             moveElementButton.setOnAction(e->CreatorModel.getInstance().getLevelCreator().moveCurrentMovingObject());
             rotateButton.setOnAction(e->CreatorModel.getInstance().getLevelCreator().rotateCurrentMovingObject());
-            acceptButton.setOnAction(e->CreatorModel.getInstance().getLevelCreator().acceptArea());
+            acceptButton.setOnAction(e->CreatorModel.getInstance().getLevelCreator().acceptMovingObject());
             dismissButton.setOnAction(e->CreatorModel.getInstance().getLevelCreator().dismissAction());
-
-            haveToEnterButton.setOnAction(e->setMovingObjectFunction());
-            cannotEnterButton.setOnAction(e->setMovingObjectFunction());
+            haveToEnterButton.selectedProperty().addListener(getHaveToEnterChangeListener());
+            cannotEnterButton.selectedProperty().addListener(getCannotEnterChangeListener());
         }
 
-    private void setMovingObjectFunction() {
 
+    private ChangeListener<Boolean> getHaveToEnterChangeListener() {
+        return (observable, oldValue, newValue) -> {
+            if(!oldValue.equals(newValue)) {
+                if (newValue.equals(true)) {
+                    cannotEnterButton.selectedProperty().set(false);
+                    CreatorModel.getInstance().getLevelCreator().changeMovingObjectFunction(MovingObjectFunction.HAVE_TO_ENTER_TARGET);
+                }else if (!cannotEnterButton.selectedProperty().get()) {
+                    CreatorModel.getInstance().getLevelCreator().changeMovingObjectFunction(MovingObjectFunction.NONE);
+                }
+            }
+        };
+    }
+    private ChangeListener<Boolean> getCannotEnterChangeListener() {
+        return (observable, oldValue, newValue) -> {
+            if(!oldValue.equals(newValue)) {
+                if (newValue.equals(true)) {
+                    haveToEnterButton.selectedProperty().set(false);
+                    CreatorModel.getInstance().getLevelCreator().changeMovingObjectFunction(MovingObjectFunction.CANNOT_ENTER_TARGET);
+                }else if (!haveToEnterButton.selectedProperty().get()){
+                    CreatorModel.getInstance().getLevelCreator().changeMovingObjectFunction(MovingObjectFunction.NONE);
+                }
+            }
+        };
     }
 
 

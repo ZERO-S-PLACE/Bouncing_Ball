@@ -13,7 +13,6 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import org.jetbrains.annotations.NotNull;
 import org.zeros.bouncy_balls.Applications.CreatorApplication.Models.CreatorModel;
 import org.zeros.bouncy_balls.Applications.CreatorApplication.Models.CreatorParameters;
 import org.zeros.bouncy_balls.Applications.GameApplication.Model.Properties;
@@ -29,12 +28,9 @@ public class TrackingPane extends AnchorPane {
     private final ObjectProperty<Point2D> selectedPointProperty=new SimpleObjectProperty<>();
     private final ObjectProperty<Point2D> referencePointProperty=new SimpleObjectProperty<>();
     private final ObjectProperty<Point2D> previousPointProperty=new SimpleObjectProperty<>();
-
-
-
-
     public TrackingPane() {
         setFocusTraversable(false);
+        setAnchors();
         BackgroundFill backgroundFill = new BackgroundFill(Color.TRANSPARENT, null, null);
         setBackground(new Background(backgroundFill));
         setOnMouseClicked(this::pointPicked);
@@ -48,6 +44,14 @@ public class TrackingPane extends AnchorPane {
         getChildren().add(previousPointSign);
         getChildren().add(referencePointSign);
     }
+
+    private void setAnchors() {
+        AnchorPane.setLeftAnchor(this, 0.0);
+        AnchorPane.setRightAnchor(this, 0.0);
+        AnchorPane.setTopAnchor(this, 0.0);
+        AnchorPane.setBottomAnchor(this, 0.0);
+    }
+
     private ChangeListener<Point2D> selectedPointListener() {
         return (observable, oldValue, newValue) -> {
             if (oldValue != null) {
@@ -94,7 +98,6 @@ public class TrackingPane extends AnchorPane {
         circle.setVisible(false);
     }
     private void pointPicked(MouseEvent mouseEvent) {
-
         setSelectedPoint( new Point2D(mouseEvent.getX() , mouseEvent.getY()));
     }
     public ObjectProperty<Point2D> selectedPointProperty() {
@@ -130,4 +133,12 @@ public class TrackingPane extends AnchorPane {
         return previousPointProperty;
     }
 
+    public void resetView() {
+        Platform.runLater(() -> {
+                    getChildren().clear();
+                    getChildren().add(previousPointSign);
+                    getChildren().add(referencePointSign);
+                }
+        );
+    }
 }

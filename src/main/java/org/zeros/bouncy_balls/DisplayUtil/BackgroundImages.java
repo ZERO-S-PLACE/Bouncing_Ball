@@ -48,7 +48,7 @@ public class BackgroundImages {
     }
 
     public static void setBallHaveToEnterBackground(Node node) {
-        String imagePath = Objects.requireNonNull(LevelListCellController.class.getResource("/Icons/General/CircleBlue.png")).toExternalForm();
+        String imagePath = Objects.requireNonNull(LevelListCellController.class.getResource("/Icons/General/CircleYellow.png")).toExternalForm();
         node.setStyle("-fx-fill: url('" + imagePath + "');");
     }
 

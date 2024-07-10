@@ -1,18 +1,7 @@
 module org.zeros.bouncy_balls {
     requires javafx.controls;
     requires javafx.fxml;
-
-    requires org.controlsfx.controls;
-    requires net.synedra.validatorfx;
-    requires org.kordamp.ikonli.javafx;
-    requires org.kordamp.bootstrapfx.core;
-    requires com.almasb.fxgl.all;
     requires commons.math3;
-    requires annotations;
-    requires javafx.web;
-
-
-    requires eu.hansolo.tilesfx;
     requires de.jensd.fx.glyphs.fontawesome;
 
     exports org.zeros.bouncy_balls.Applications.GameApplication.Model;
@@ -47,10 +36,11 @@ module org.zeros.bouncy_balls {
     exports org.zeros.bouncy_balls.Applications.CreatorApplication.Models;
     exports org.zeros.bouncy_balls.Applications.CreatorApplication.Controllers.LeftPanel;
     exports org.zeros.bouncy_balls.Applications.CreatorApplication.Controllers.CreatorSettings;
-    exports org.zeros.bouncy_balls.Applications.GameApplication;
-    opens org.zeros.bouncy_balls.Applications.GameApplication to javafx.fxml;
     exports org.zeros.bouncy_balls.Applications.CreatorApplication.TrackingPane;
     exports org.zeros.bouncy_balls.Level.Enums;
+    exports org.zeros.bouncy_balls.Applications.GameApplication;
+
+    opens org.zeros.bouncy_balls;
 
 
 }

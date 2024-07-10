@@ -2,7 +2,6 @@ package org.zeros.bouncy_balls.Applications.GameApplication.Controllers.P1_Welco
 
 import javafx.animation.Animation;
 import javafx.animation.RotateTransition;
-import javafx.application.Platform;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
@@ -10,14 +9,12 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
-import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.zeros.bouncy_balls.Applications.CreatorApplication.App;
+import org.zeros.bouncy_balls.Applications.CreatorApplication.LevelCreatorApplication;
 import org.zeros.bouncy_balls.DisplayUtil.CustomTooltip;
 import org.zeros.bouncy_balls.DisplayUtil.NodeAnimations;
 import org.zeros.bouncy_balls.Applications.GameApplication.Model.Model;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -81,16 +78,9 @@ public class WelcomePanelController implements Initializable {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        new Thread(() -> Platform.runLater(() -> {
-            try {
-                new App().start(new Stage());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            Model.getInstance().getViewFactory().getWelcomePanel().getScene().getWindow().hide();
-        })).start();
+        LevelCreatorApplication.openNewLevelCreator();
+        Model.getInstance().getViewFactory().getWelcomePanel().getScene().getWindow().hide();
     }
-
 
 
     private void setEnterAnimation() {

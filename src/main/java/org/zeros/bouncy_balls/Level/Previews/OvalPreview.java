@@ -9,7 +9,7 @@ import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Shape;
-import org.jetbrains.annotations.NotNull;
+
 import org.zeros.bouncy_balls.Applications.CreatorApplication.TrackingPane.TrackingPane;
 import org.zeros.bouncy_balls.Applications.CreatorApplication.Models.CreatorModel;
 import org.zeros.bouncy_balls.Applications.CreatorApplication.Models.CreatorParameters;
@@ -17,7 +17,6 @@ import org.zeros.bouncy_balls.Applications.GameApplication.Model.Properties;
 import org.zeros.bouncy_balls.DisplayUtil.BackgroundImages;
 
 public class OvalPreview extends Preview{
-    private final TrackingPane trackingPane= CreatorModel.getInstance().getViewFactory().getTrackingPane();
     private final Ellipse previewOval=new Ellipse();
     private final Point2D ovalCenter;
     private double ovalRadiusPicked;

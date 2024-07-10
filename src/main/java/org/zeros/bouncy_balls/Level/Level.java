@@ -61,7 +61,8 @@ public class Level implements Serializable {
             return save.deserialize();
         }
     }
-    private void save(String name)throws FileSystemException {
+    public void save()throws FileSystemException {
+        String name= getNAME();
         name = name.replace(" ", "_");
         name = name.replace(".", "_");
         setNAME(name);
