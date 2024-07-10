@@ -20,9 +20,13 @@ Tool for creating game boards for part 1. Enables to create simple shapes,
 closed poly lines, and, also complex areas created by closed shapes boolean algebra-
 they are not piles of overlapping shapes but calculated poly line vector boundaries of inner and outer areas.
 
+
 It is first, test version of a project, and it is prepared for being extended by:
 
 -adding different shapes of moving objects
+
 -adding electromagnetic forces between objects
+
 -adding leaderboards and user accounts
+
 -more...
