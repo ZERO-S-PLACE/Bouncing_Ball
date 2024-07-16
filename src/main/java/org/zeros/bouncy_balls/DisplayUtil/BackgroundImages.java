@@ -16,7 +16,8 @@ import java.util.Objects;
 public class BackgroundImages {
     public static void setObstacleBackground(Area obstacle) {
         obstacle.getPath().setFill(Properties.OBSTACLE_COLOR());
-        obstacle.getPath().setStrokeWidth(0);
+        obstacle.getPath().setStrokeWidth(0.7);
+        obstacle.getPath().setStroke(Properties.OBSTACLE_COLOR().brighter());
     }
     public static void setObstacleBackground(Shape obstacle) {
         obstacle.setFill(Properties.OBSTACLE_COLOR());

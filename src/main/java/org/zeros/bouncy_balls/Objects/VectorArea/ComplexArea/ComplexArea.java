@@ -89,6 +89,7 @@ public class ComplexArea extends VectorArea implements Serializable {
 
         for (ComplexAreaPart part : included) {
             part.area().getPath().setFill(color);
+            part.area().getPath().setStroke(Color.TRANSPARENT);
             excluded.addAll(part.excluded());
             Platform.runLater(() -> {
                 pane.getChildren().remove(part.area().getPath());

@@ -13,7 +13,7 @@ public class Properties {
     private static double SIZE_FACTOR = Math.pow(10, 5);
     private static Color BACKGROUND_COLOR = Color.web("#243253");
     private static double ACCURACY = Math.pow(0.1, 3);
-    private static double FRAME_RATE = 350;
+    private static double FRAME_RATE = 250;
     private static int MAX_EVALUATIONS = 150;
     private static String USER_NAME = "User";
 

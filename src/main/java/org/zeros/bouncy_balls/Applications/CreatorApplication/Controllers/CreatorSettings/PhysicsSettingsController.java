@@ -7,6 +7,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import org.zeros.bouncy_balls.Applications.CreatorApplication.Models.CreatorModel;
 import org.zeros.bouncy_balls.Level.Level;
+import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObject;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -44,8 +45,20 @@ public class PhysicsSettingsController implements Initializable {
             double friction = Double.parseDouble(frictionFactorField.textProperty().get());
             double gravity = Double.parseDouble(downwardGravityFactorField.textProperty().get());
             if (friction >= 0 && friction < 1 && gravity >= 0 && gravity <= 100) {
-                level.PROPERTIES().setGRAVITY(gravity * 100);
+                level.PROPERTIES().setGRAVITY(gravity * 10);
                 level.PROPERTIES().setFRICTION(friction);
+                for(MovingObject object:level.getMovingObjects()){
+                    object.setFriction(friction);
+                }
+                for(MovingObject object:level.getMovingObjectsToAdd()){
+                    object.setFriction(friction);
+                }
+                for(MovingObject object:level.getMovingObjectsCannotEnter()){
+                    object.setFriction(friction);
+                }
+                for(MovingObject object:level.getMovingObjectsHaveToEnter()){
+                    object.setFriction(friction);
+                }
                 returnToLevelCreation();
                 Platform.runLater(() -> CreatorModel.getInstance().getViewFactory().getCurrentAnimationPane().reloadNodes(1));
             } else {
