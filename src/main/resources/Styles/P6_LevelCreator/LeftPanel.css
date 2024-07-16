@@ -1,0 +1,195 @@
+.left-panel-container{
+-fx-background-color:#101f23;
+-fx-padding: 1 1 1 1;
+}
+.left-panel-menu{
+-fx-background-color:#274a55;
+-fx-spacing:3;
+-fx-border-radius:3;
+-fx-border-width:2;
+-fx-border-color:#101f23;
+-fx-padding: 10 1 10 1 ;
+
+}
+
+.left-panel-menu Button{
+-fx-background-color:#274a55;
+-fx-border-radius:3;
+    -fx-pref-width:35;
+    -fx-pref-height:25;
+     -fx-font-size:1.3em;
+    -fx-stroke-width: 0px;
+
+
+}
+/*buttons action choice*/
+
+.left-panel-menu Button:focused{
+    -fx-background-color:#778792;
+}
+.left-panel-menu Button:hover{
+    -fx-background-color:#6A7B84;
+}
+
+
+.left-panel-menu Text {
+    -fx-fill: #a2b4c0;
+    -fx-font-size: 0.8em;
+}
+
+.left-panel-menu Line {
+    -fx-stroke: #101f23;
+    -fx-stroke-width: 1.1;
+    -fx-padding: 1 1 1 1;
+}
+
+.left-panel-icon-lines{
+    -fx-stroke: #a2b4c0;
+    -fx-stroke-width:1;
+    -fx-alignment:center;
+}
+
+.left-panel-shapes{
+    -fx-fill: #a2b4c0;
+    -fx-stroke: #a2b4c0;
+    -fx-stroke-width:0.1;
+    -fx-alignment:center;
+}
+.accept-shape{
+    -fx-fill: #B8CC8B;
+    -fx-stroke: #B8CC8B;
+    -fx-stroke-width:0.1;
+    -fx-alignment:center;
+
+}
+.dismiss-shape{
+    -fx-fill: #F4716E;
+    -fx-stroke: #F4716E;
+    -fx-stroke-width:0.1;
+    -fx-alignment:center;
+}
+
+.left-panel-shapes-selection{
+    -fx-fill: rgba(0, 0, 0, 0);
+    -fx-stroke: #a2b4c0;
+    -fx-stroke-width:0.5;
+    -fx-alignment:center;
+    -fx-stroke-dash-array: 1 2;
+}
+.moving-object-button{
+    -fx-background-image: url("../../Icons/P6_CreatorIcons/IconBallMoving.png");
+    -fx-background-size: 60%;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+.obstacle-button{
+    -fx-background-image: url("../../Icons/P6_CreatorIcons/IconObstacle.png");
+    -fx-background-size: 60%;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.target-area-button{
+    -fx-background-image: url("../../Icons/P6_CreatorIcons/IconTargetArea.png");
+    -fx-background-size: 60%;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+.moving-object-to-add-button{
+    -fx-background-image: url("../../Icons/P6_CreatorIcons/IconBallMovingToAdd.png");
+    -fx-background-size: 60%;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+.obstacle-to-add-button{
+    -fx-background-image: url("../../Icons/P6_CreatorIcons/IconObstacleToAdd.png");
+    -fx-background-size: 60%;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+.input-area-button{
+    -fx-background-image: url("../../Icons/P6_CreatorIcons/IconInputArea.png");
+    -fx-background-size: 60%;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+/*buttons shape choice*/
+
+.polyline-area-button{
+    -fx-background-image: url("../../Icons/P6_CreatorIcons/IconPolyLine.png");
+    -fx-background-size: 60%;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+.complex-area-button{
+    -fx-background-image: url("../../Icons/P6_CreatorIcons/IconComplexArea.png");
+    -fx-background-size: 60%;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+/*buttons moving object*/
+
+.single-ball-button{
+    -fx-background-image: url("../../Icons/P6_CreatorIcons/IconBallMoving.png");
+    -fx-background-size: 60%;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+.ball-array-button{
+    -fx-background-image: url("../../Icons/P6_CreatorIcons/IconObjectsArray.png");
+    -fx-background-size: 60%;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+.velocity-button{
+    -fx-background-image: url("../../Icons/P6_CreatorIcons/IconVelocity.png");
+    -fx-background-size: 60%;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.radio-button {
+    -fx-padding: 1px;
+}
+.radio-button .radio {
+    -fx-mark-color: #a2b4c0;
+    -fx-background-color: #274a55;
+    -fx-border-color: #a2b4c0;
+    -fx-border-radius: 50%;
+}
+
+.radio-button:hover .radio {
+    -fx-background-color: #a2b4c0;
+}
+
+/*buttons complex area */
+
+.sum-button{
+    -fx-background-image: url("../../Icons/P6_CreatorIcons/IconSumAB.png");
+    -fx-background-size: 60%;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+.intersection-button{
+    -fx-background-image: url("../../Icons/P6_CreatorIcons/IconIntersectionAB.png");
+    -fx-background-size: 60%;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+.subtract-from-complex-button{
+    -fx-background-image: url("../../Icons/P6_CreatorIcons/IconSubtractBformA.png");
+    -fx-background-size: 60%;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+.subtract-complex-button{
+    -fx-background-image: url("../../Icons/P6_CreatorIcons/IconSubtractAfromB.png");
+    -fx-background-size: 60%;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+
+
+
+

@@ -1,0 +1,55 @@
+.top-panel-container{
+    -fx-background-color:#101f23;
+    -fx-padding:  1 1 1;
+}
+.menu-bar {
+    -fx-background-color:#274a55;
+    -fx-border-radius:3;
+    -fx-border-width:2;
+    -fx-border-color:#101f23;
+    -fx-padding: 3 10 3 10 ;
+}
+
+/* Customize the menu button */
+
+.menu-bar .menu {
+    -fx-background-color:#274a55;
+    -fx-font-size:1.0em;
+}
+.menu-bar .menu .text{
+    -fx-fill: #a2b4c0;
+}
+
+
+
+.menu-bar .menu:hover {
+    -fx-background-color: #335e68;
+}
+.menu-bar .menu:focused {
+    -fx-background-color: #335e68;
+}
+
+/* Customize the menu items */
+
+.menu-item {
+    -fx-background-color:#365f63;
+    -fx-font-size:1.0em;
+}
+.menu-item .text{
+    -fx-fill: #ffffff;
+}
+
+.menu-item:hover {
+    -fx-background-color: #4c858e;
+}
+
+
+.menu-item:focused {
+    -fx-background-color: #4c858e;
+}
+
+.context-menu {
+    -fx-background-color: #365f63;
+}
+
+

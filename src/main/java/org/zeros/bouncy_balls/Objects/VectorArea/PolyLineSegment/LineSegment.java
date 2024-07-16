@@ -3,7 +3,7 @@ package org.zeros.bouncy_balls.Objects.VectorArea.PolyLineSegment;
 import javafx.geometry.Point2D;
 import org.zeros.bouncy_balls.Calculations.BindsCheck;
 import org.zeros.bouncy_balls.Calculations.Equations.LinearEquation;
-import org.zeros.bouncy_balls.Model.Properties;
+import org.zeros.bouncy_balls.Applications.GameApplication.Model.Properties;
 
 import java.util.ArrayList;
 import java.util.Arrays;

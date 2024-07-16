@@ -4,7 +4,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import org.zeros.bouncy_balls.Animation.Animation.Animation;
-import org.zeros.bouncy_balls.Model.Properties;
+import org.zeros.bouncy_balls.Applications.GameApplication.Model.Properties;
 
 public class Ball extends MovingObject {
     public Ball(double radius, Animation animation) {

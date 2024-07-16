@@ -4,7 +4,7 @@ import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import org.zeros.bouncy_balls.Calculations.AreasMath.AreasMath;
-import org.zeros.bouncy_balls.Model.Properties;
+import org.zeros.bouncy_balls.Applications.GameApplication.Model.Properties;
 import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.Area;
 import org.zeros.bouncy_balls.Objects.VectorArea.VectorArea;
 
@@ -77,7 +77,7 @@ public class ComplexArea extends VectorArea implements Serializable {
         }
         return excludedAreas;
     }
-    public static void addComplexAreaToPane(ComplexArea complexArea, Color color, Pane pane) {
+    public static void addComplexAreaPreview(ComplexArea complexArea, Color color, Pane pane) {
         if (complexArea != null) {
             ArrayList<ComplexAreaPart> included = complexArea.partAreas();
             addAreaLayer(included, color,pane);
@@ -88,7 +88,9 @@ public class ComplexArea extends VectorArea implements Serializable {
         ArrayList<ComplexAreaPart> excluded = new ArrayList<>();
 
         for (ComplexAreaPart part : included) {
+            part.area().getPath().setOpacity(0.6);
             part.area().getPath().setFill(color);
+            part.area().getPath().setStroke(Color.TRANSPARENT);
             excluded.addAll(part.excluded());
             Platform.runLater(() -> {
                 pane.getChildren().remove(part.area().getPath());
@@ -106,6 +108,14 @@ public class ComplexArea extends VectorArea implements Serializable {
         }
         if (!included2.isEmpty()) {
             addAreaLayer(included2, color,pane);
+        }
+    }
+    public static void removeComplexAreaPreview(ComplexArea complexArea,Pane pane) {
+        for (Area area : complexArea.getAllIncludedAreas()) {
+            Platform.runLater(() -> pane.getChildren().remove(area.getPath()));
+        }
+        for (Area area : complexArea.getAllExcludedAreas()) {
+            Platform.runLater(() -> pane.getChildren().remove(area.getPath()));
         }
     }
 }

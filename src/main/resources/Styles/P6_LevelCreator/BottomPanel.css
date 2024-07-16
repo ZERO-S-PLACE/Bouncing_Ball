@@ -1,0 +1,35 @@
+.panel-container{
+    -fx-background-color:#101f23;
+    -fx-padding: 1 1 1 1;
+}
+
+.bottom-panel {
+    -fx-background-color:#274a55;
+    -fx-border-radius:3;
+    -fx-border-width:2;
+    -fx-border-color:#101f23;
+    -fx-padding: 3 1 3 1 ;
+}
+
+.bottom-panel-text-label {
+    -fx-text-fill: #a2b4c0;
+    -fx-font-family: "Calibri";
+    -fx-pref-width:450;
+    -fx-font-size: 1.1em;
+}
+.bottom-panel-transparent-label {
+    -fx-bakground-color: transparent;
+    -fx-border-width:0;
+    -fx-pref-width:450;
+
+}
+
+.bottom-panel TextField {
+    -fx-background-color: #203d44;
+    -fx-text-fill: #a2b4c0;
+    -fx-font-family: "Calibri";
+    -fx-font-size: 1.1em;
+
+}
+
+
