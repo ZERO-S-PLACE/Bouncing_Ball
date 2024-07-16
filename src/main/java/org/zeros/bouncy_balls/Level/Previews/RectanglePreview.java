@@ -4,16 +4,15 @@ import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
-
 import org.zeros.bouncy_balls.DisplayUtil.BackgroundImages;
 
 public class RectanglePreview extends Preview {
     private final Rectangle previewRectangle = new Rectangle();
     private final Point2D rectangleReference;
-    private EventHandler<MouseEvent> rectangleCreationHandler= this::createRectangle;
+    private final EventHandler<MouseEvent> rectangleCreationHandler = this::createRectangle;
+
     public RectanglePreview(Point2D corner) {
         rectangleReference = rescaleToLayout(corner);
     }
@@ -45,9 +44,6 @@ public class RectanglePreview extends Preview {
         trackingPane.addEventHandler(MouseEvent.MOUSE_MOVED, rectangleCreationHandler);
 
     }
-
-
-
 
 
     @Override

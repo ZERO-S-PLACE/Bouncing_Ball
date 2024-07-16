@@ -6,9 +6,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import org.zeros.bouncy_balls.Applications.GameApplication.Model.Properties;
 import org.zeros.bouncy_balls.Calculations.AreasMath.AreasMath;
 import org.zeros.bouncy_balls.DisplayUtil.BackgroundImages;
-import org.zeros.bouncy_balls.Applications.GameApplication.Model.Properties;
 import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObject;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObjectType;
@@ -18,6 +18,7 @@ public class InputOnRunMovingObject extends InputOnRun {
     private final MovingObject object;
     private final Point2D maxVelocity;
     private Circle velocityMarker;
+
     public InputOnRunMovingObject(MovingObject object, AnchorPane panel) {
         super(object.getAnimation(), panel);
         this.object = object;
@@ -34,6 +35,7 @@ public class InputOnRunMovingObject extends InputOnRun {
             panel.getChildren().removeAll(trajectoryMarkers);
         });
     }
+
     @Override
     protected void configureMarkerAtCenterPick() {
         if (object.getType().equals(MovingObjectType.BALL)) {

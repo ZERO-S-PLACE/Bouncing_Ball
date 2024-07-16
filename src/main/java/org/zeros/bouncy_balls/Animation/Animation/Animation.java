@@ -26,9 +26,6 @@ public class Animation {
     private final TreeSet<Double> timesElapsed = new TreeSet<>();
     private final LongProperty timeElapsedNanos = new SimpleLongProperty(0);
     private final ObjectProperty<GameState> gameState = new SimpleObjectProperty<>();
-
-
-
     private Borders borders;
     private int movingObjectCurrent;
     private String animationIdentifier;
@@ -44,6 +41,7 @@ public class Animation {
         }
         gameState.set(GameState.LOADED);
     }
+
     private final AnimationTimer timer = new AnimationTimer() {
         @Override
         public void handle(long now) {

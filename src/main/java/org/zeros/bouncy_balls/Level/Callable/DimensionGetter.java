@@ -12,14 +12,14 @@ public class DimensionGetter implements Callable<Double> {
     private final String message;
 
     public DimensionGetter(Point2D reference, String message) {
-        this.reference = reference.multiply(1/Properties.SIZE_FACTOR()).add(CreatorParameters.getDEFAULT_OFFSET_POINT());
+        this.reference = reference.multiply(1 / Properties.SIZE_FACTOR()).add(CreatorParameters.getDEFAULT_OFFSET_POINT());
         this.message = message;
     }
 
     @Override
     public Double call() throws InterruptedException {
 
-        CreatorModel.getInstance().getViewFactory().getTrackingPane().getReferencePointProperty().set(reference );
+        CreatorModel.getInstance().getViewFactory().getTrackingPane().getReferencePointProperty().set(reference);
         ExecutorService service = Executors.newFixedThreadPool(2);
         CountDownLatch latch = new CountDownLatch(1);
         Future<Point2D> pickedPoint = service.submit(new MouseInput(latch));
@@ -35,10 +35,10 @@ public class DimensionGetter implements Callable<Double> {
         CreatorModel.getInstance().getViewFactory().getTrackingPane().getReferencePointProperty().set(null);
 
         if (numberEnteredValue != null) {
-            if (numberEnteredValue > 0) return numberEnteredValue*Properties.SIZE_FACTOR();
+            if (numberEnteredValue > 0) return numberEnteredValue * Properties.SIZE_FACTOR();
         }
         if (pickedPointValue != null) {
-            return pickedPointValue.distance(reference)*Properties.SIZE_FACTOR();
+            return pickedPointValue.distance(reference) * Properties.SIZE_FACTOR();
         }
         return null;
     }

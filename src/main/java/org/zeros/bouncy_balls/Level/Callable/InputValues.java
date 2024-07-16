@@ -30,16 +30,13 @@ public class InputValues {
         if(value!=null)return value.multiply(Properties.SIZE_FACTOR());
         throw new RuntimeException("Input exception");
     }
-    public  boolean attachPolyLineSegment(PolylineArea area, PolyLinePreview polyLinePreview, PolyLineSegmentActions polyLineSegment) {
+    public void attachPolyLineSegment(PolylineArea area, PolyLinePreview polyLinePreview, PolyLineSegmentActions polyLineSegment) {
         ExecutorService executorService = Executors.newSingleThreadExecutor();
-        //servicesRunning.add(executorService);
         Future<Boolean> attachNext = executorService.submit(new PolyLineInput(area, polyLinePreview, polyLineSegment));
         try {
-            boolean finished= attachNext.get();
-            return finished;
+            attachNext.get();
         } catch (InterruptedException | ExecutionException e) {
             polyLinePreview.dismissElement();
-            return false;
         }
     }
     public  void terminateInput(){

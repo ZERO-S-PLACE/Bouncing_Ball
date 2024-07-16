@@ -36,6 +36,7 @@ import java.util.Map;
 import java.util.Stack;
 import java.util.concurrent.*;
 
+@SuppressWarnings("ResultOfMethodCallIgnored")
 public class LevelCreator {
     private final TrackingPane trackingPane = CreatorModel.getInstance().getViewFactory().getTrackingPane();
     private final Stack<AnchorPane> previousLeftPanes = new Stack<>();

@@ -48,6 +48,7 @@ public class ActionChoiceController extends LeftPanelController {
         acceptButton.setDisable(true);
         dismissButton.setDisable(true);
     }
+
     public void setOnTransform() {
         acceptButton.setVisible(true);
         dismissButton.setVisible(true);
@@ -79,18 +80,18 @@ public class ActionChoiceController extends LeftPanelController {
     }
 
     private void setButtonsFunctions() {
-        movingObjectButton.setOnAction(e->CreatorModel.getInstance().getLevelCreator().initializeMovingObjectsInput(MovingObjectPurpose.MOVING_OBJECT));
-        obstacleButton.setOnAction(e->CreatorModel.getInstance().getLevelCreator().initializeObstacleInput(AreaPurpose.OBSTACLE));
-        targetAreaButton.setOnAction(e->CreatorModel.getInstance().getLevelCreator().initializeComplexAreaInput(ComplexAreaInput.TARGET));
-        movingObjectToAddButton.setOnAction(e->CreatorModel.getInstance().getLevelCreator().initializeMovingObjectsInput(MovingObjectPurpose.MOVING_OBJECT_TO_ADD));
-        obstacleToAddButton.setOnAction(e->CreatorModel.getInstance().getLevelCreator().initializeObstacleInput(AreaPurpose.OBSTACLE_TO_ADD));;
-        inputAreaButton.setOnAction(e->CreatorModel.getInstance().getLevelCreator().initializeComplexAreaInput(ComplexAreaInput.INPUT));
+        movingObjectButton.setOnAction(e -> CreatorModel.getInstance().getLevelCreator().initializeMovingObjectsInput(MovingObjectPurpose.MOVING_OBJECT));
+        obstacleButton.setOnAction(e -> CreatorModel.getInstance().getLevelCreator().initializeObstacleInput(AreaPurpose.OBSTACLE));
+        targetAreaButton.setOnAction(e -> CreatorModel.getInstance().getLevelCreator().initializeComplexAreaInput(ComplexAreaInput.TARGET));
+        movingObjectToAddButton.setOnAction(e -> CreatorModel.getInstance().getLevelCreator().initializeMovingObjectsInput(MovingObjectPurpose.MOVING_OBJECT_TO_ADD));
+        obstacleToAddButton.setOnAction(e -> CreatorModel.getInstance().getLevelCreator().initializeObstacleInput(AreaPurpose.OBSTACLE_TO_ADD));
+        inputAreaButton.setOnAction(e -> CreatorModel.getInstance().getLevelCreator().initializeComplexAreaInput(ComplexAreaInput.INPUT));
 
-        moveButton.setOnAction(e->CreatorModel.getInstance().getLevelCreator().setEditAction(EditAction.MOVE));
-        rotateButton.setOnAction(e->CreatorModel.getInstance().getLevelCreator().setEditAction(EditAction.ROTATE));
-        deleteButton.setOnAction(e->CreatorModel.getInstance().getLevelCreator().setEditAction(EditAction.DELETE));
-        acceptButton.setOnAction(e->CreatorModel.getInstance().getLevelCreator().setEditAction(EditAction.NONE));
-        dismissButton.setOnAction(e->CreatorModel.getInstance().getLevelCreator().dismissAction());
+        moveButton.setOnAction(e -> CreatorModel.getInstance().getLevelCreator().setEditAction(EditAction.MOVE));
+        rotateButton.setOnAction(e -> CreatorModel.getInstance().getLevelCreator().setEditAction(EditAction.ROTATE));
+        deleteButton.setOnAction(e -> CreatorModel.getInstance().getLevelCreator().setEditAction(EditAction.DELETE));
+        acceptButton.setOnAction(e -> CreatorModel.getInstance().getLevelCreator().setEditAction(EditAction.NONE));
+        dismissButton.setOnAction(e -> CreatorModel.getInstance().getLevelCreator().dismissAction());
     }
 
 

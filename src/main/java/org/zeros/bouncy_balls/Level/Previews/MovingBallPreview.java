@@ -8,19 +8,17 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
 import org.zeros.bouncy_balls.DisplayUtil.BackgroundImages;
 
-public class MovingBallPreview extends Preview{
-    private final Circle ballPreview=new Circle();
-    private final Circle velocityPreview=new Circle();
+public class MovingBallPreview extends Preview {
+    private final Circle ballPreview = new Circle();
+    private final Circle velocityPreview = new Circle();
     private final Point2D ballCenter;
-    private double radiusPicked;
-    private boolean isBallRadiusPicked=false;
-    private final EventHandler<MouseEvent> ballCreationHandler =this::valueChanged;
+    private boolean isBallRadiusPicked = false;
+    private final EventHandler<MouseEvent> ballCreationHandler = this::valueChanged;
 
 
     public MovingBallPreview(Point2D center) {
         this.ballCenter = rescaleToLayout(center);
     }
-
 
 
     @Override
@@ -35,15 +33,14 @@ public class MovingBallPreview extends Preview{
         velocityPreview.setCenterX(ballCenter.getX());
         velocityPreview.setCenterY(ballCenter.getY());
         ballPreview.setRadius(1);
-        Platform.runLater(()->{
-            if(!trackingPane.getChildren().contains(ballPreview)){
+        Platform.runLater(() -> {
+            if (!trackingPane.getChildren().contains(ballPreview)) {
                 trackingPane.getChildren().add(ballPreview);
             }
         });
         trackingPane.addEventHandler(MouseEvent.MOUSE_MOVED, ballCreationHandler);
 
     }
-
 
 
     @Override
@@ -57,11 +54,11 @@ public class MovingBallPreview extends Preview{
     }
 
     private void valueChanged(MouseEvent mouseEvent) {
-        Point2D pointPicked=new Point2D(mouseEvent.getX(),mouseEvent.getY());
+        Point2D pointPicked = new Point2D(mouseEvent.getX(), mouseEvent.getY());
 
-        if(!isBallRadiusPicked){
+        if (!isBallRadiusPicked) {
             ballPreview.setRadius(ballCenter.distance(pointPicked));
-        }else {
+        } else {
             velocityPreview.setCenterX(pointPicked.getX());
             velocityPreview.setCenterY(pointPicked.getY());
         }
@@ -70,20 +67,21 @@ public class MovingBallPreview extends Preview{
     @Override
     public void remove() {
         trackingPane.removeEventHandler(MouseEvent.MOUSE_MOVED, ballCreationHandler);
-        Platform.runLater(()->trackingPane.getChildren().remove(ballPreview));
-        Platform.runLater(()->trackingPane.getChildren().remove(velocityPreview));
+        Platform.runLater(() -> trackingPane.getChildren().remove(ballPreview));
+        Platform.runLater(() -> trackingPane.getChildren().remove(velocityPreview));
     }
+
     @Override
     public Shape getShape() {
         return ballPreview;
     }
 
     public void setRadius(double radius) {
-        this.radiusPicked = rescaleToLayout(radius);
-        isBallRadiusPicked=true;
+        double radiusPicked = rescaleToLayout(radius);
+        isBallRadiusPicked = true;
         velocityPreview.setRadius(radiusPicked);
-        Platform.runLater(()->{
-            if(!trackingPane.getChildren().contains(velocityPreview)){
+        Platform.runLater(() -> {
+            if (!trackingPane.getChildren().contains(velocityPreview)) {
                 trackingPane.getChildren().add(velocityPreview);
             }
         });

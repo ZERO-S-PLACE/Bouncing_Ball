@@ -21,21 +21,17 @@ public record GameScore(String user, String subType, String levelName, double sc
         return save;
     }
 
-    public void save() {
-        String path = Level.getDirectoryPath(AnimationType.GAME, subType) + "/Scores/" + levelName + ".ser";
-        try (FileOutputStream fileOut = new FileOutputStream(path);
-             ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
-            out.writeObject(this);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public static double getScore(Level level) {
+        return level.getOneStarBound() + level.getMovingObjectsCannotEnter().size() * 300 + level.getMovingObjectsToAdd().size() * 400 + level.getObstaclesToAdd().size() * 500 + 30 * (level.PROPERTIES().getTIME() - (double) Model.getInstance().getViewFactory().getCurrentAnimationPane().getAnimation().getTimeElapsedNanos() / 1_000_000_000);
     }
 
-    public static double getScore(Level level) {
-        return level.getOneStarBound() + level.getMovingObjectsCannotEnter().size() * 300 +
-                level.getMovingObjectsToAdd().size() * 400 + level.getObstaclesToAdd().size() * 500
-                + 30 * (level.PROPERTIES().getTIME() -
-                (double) Model.getInstance().getViewFactory().getCurrentAnimationPane().getAnimation().getTimeElapsedNanos() / 1_000_000_000);
+    public void save() {
+        String path = Level.getDirectoryPath(AnimationType.GAME, subType) + "/Scores/" + levelName + ".ser";
+        try (FileOutputStream fileOut = new FileOutputStream(path); ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
+            out.writeObject(this);
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot save");
+        }
     }
 
 }

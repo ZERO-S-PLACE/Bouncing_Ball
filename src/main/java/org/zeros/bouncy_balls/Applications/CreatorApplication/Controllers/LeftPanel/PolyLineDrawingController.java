@@ -8,11 +8,11 @@ import org.zeros.bouncy_balls.Level.Enums.PolyLineSegmentActions;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class PolyLineDrawingController extends LeftPanelController{
+public class PolyLineDrawingController extends LeftPanelController {
     public Button straightLineButton;
     public Button cubicCurveButton;
     public Button quadCurveButton;
-    public  Button removeLastButton;
+    public Button removeLastButton;
     public Button acceptButton;
     public Button dismissButton;
 
@@ -21,6 +21,7 @@ public class PolyLineDrawingController extends LeftPanelController{
         setButtonsFunctions();
         setTooltips();
     }
+
     private void setTooltips() {
         straightLineButton.setTooltip(new CustomTooltip("Add straight segment"));
         quadCurveButton.setTooltip(new CustomTooltip("Add quad curve"));
@@ -31,16 +32,11 @@ public class PolyLineDrawingController extends LeftPanelController{
     }
 
     private void setButtonsFunctions() {
-        straightLineButton.setOnAction(
-                e-> CreatorModel.getInstance().getLevelCreator().changeSegmentAction(PolyLineSegmentActions.LINE));
-        quadCurveButton.setOnAction(
-                e-> CreatorModel.getInstance().getLevelCreator().changeSegmentAction(PolyLineSegmentActions.QUAD_CURVE));
-        cubicCurveButton.setOnAction(
-                e-> CreatorModel.getInstance().getLevelCreator().changeSegmentAction(PolyLineSegmentActions.CUBIC_CURVE));
-        removeLastButton.setOnAction(
-                e-> CreatorModel.getInstance().getLevelCreator().changeSegmentAction(PolyLineSegmentActions.REMOVE_LAST));
-        acceptButton.setOnAction(
-                e-> CreatorModel.getInstance().getLevelCreator().changeSegmentAction(PolyLineSegmentActions.NONE));
-        dismissButton.setOnAction(e->CreatorModel.getInstance().getLevelCreator().dismissAction());
+        straightLineButton.setOnAction(e -> CreatorModel.getInstance().getLevelCreator().changeSegmentAction(PolyLineSegmentActions.LINE));
+        quadCurveButton.setOnAction(e -> CreatorModel.getInstance().getLevelCreator().changeSegmentAction(PolyLineSegmentActions.QUAD_CURVE));
+        cubicCurveButton.setOnAction(e -> CreatorModel.getInstance().getLevelCreator().changeSegmentAction(PolyLineSegmentActions.CUBIC_CURVE));
+        removeLastButton.setOnAction(e -> CreatorModel.getInstance().getLevelCreator().changeSegmentAction(PolyLineSegmentActions.REMOVE_LAST));
+        acceptButton.setOnAction(e -> CreatorModel.getInstance().getLevelCreator().changeSegmentAction(PolyLineSegmentActions.NONE));
+        dismissButton.setOnAction(e -> CreatorModel.getInstance().getLevelCreator().dismissAction());
     }
 }

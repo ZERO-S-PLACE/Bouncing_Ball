@@ -20,7 +20,7 @@ public class BottomPanelController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        textEntered=new SimpleStringProperty();
+        textEntered = new SimpleStringProperty();
         inputTextField.addEventHandler(KeyEvent.KEY_PRESSED, confirmHandler);
     }
 
@@ -29,9 +29,11 @@ public class BottomPanelController implements Initializable {
             textEntered.setValue(inputTextField.textProperty().getValue());
         }
     }
+
     public StringProperty textEnteredProperty() {
         return textEntered;
     }
+
     public void setTextEntered(String textEntered) {
         this.textEntered.setValue(textEntered);
         inputTextField.textProperty().setValue(textEntered);

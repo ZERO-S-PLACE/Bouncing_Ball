@@ -1,7 +1,6 @@
 package org.zeros.bouncy_balls.Applications.CreatorApplication.Models;
 
 
-import org.zeros.bouncy_balls.Applications.CreatorApplication.Controllers.LeftPanel.ShapeChoiceController;
 import org.zeros.bouncy_balls.Applications.CreatorApplication.Views.ControllersBaseCreator;
 import org.zeros.bouncy_balls.Applications.CreatorApplication.Views.CreatorViewFactory;
 import org.zeros.bouncy_balls.Level.LevelCreator;
@@ -33,15 +32,17 @@ public class CreatorModel {
     public CreatorViewFactory getViewFactory() {
         return viewFactory;
     }
+
     public LevelCreator getLevelCreator() {
-        if(this.levelCreator ==null){
+        if (this.levelCreator == null) {
             this.levelCreator = new LevelCreator();
         }
         return levelCreator;
     }
+
     public LevelCreator getNewLevelCreator() {
-       levelCreator=null;
-       return getLevelCreator();
+        levelCreator = null;
+        return getLevelCreator();
     }
 
 }

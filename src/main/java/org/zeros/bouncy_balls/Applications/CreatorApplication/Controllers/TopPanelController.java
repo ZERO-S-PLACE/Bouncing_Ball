@@ -15,7 +15,6 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.zeros.bouncy_balls.Animation.Animation.AnimationType;
 import org.zeros.bouncy_balls.Applications.CreatorApplication.Models.CreatorModel;
 import org.zeros.bouncy_balls.Applications.GameApplication.Model.Properties;
 import org.zeros.bouncy_balls.Level.Level;
@@ -86,8 +85,6 @@ public class TopPanelController implements Initializable {
     }
 
 
-
-
     private void openNewProject() {
         if (saveLevel()) {
             CreatorModel.getInstance().controllers().getLevelEditionController().changeAnimationPane(null);
@@ -112,15 +109,12 @@ public class TopPanelController implements Initializable {
 
         fileChooser.setTitle("Open a File");
 
-        fileChooser.setInitialDirectory(new File(Level.getDirectoryPath(CreatorModel.getInstance().getViewFactory()
-                .getCurrentAnimationPane().getLevel().PROPERTIES().getTYPE(),"User")));
+        fileChooser.setInitialDirectory(new File(Level.getDirectoryPath(CreatorModel.getInstance().getViewFactory().getCurrentAnimationPane().getLevel().PROPERTIES().getTYPE(), "User")));
 
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Bouncy Balls levels", "*.ser")
-        );
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Bouncy Balls levels", "*.ser"));
 
         File selectedFile = fileChooser.showOpenDialog(new Stage());
-        if(selectedFile!=null) {
+        if (selectedFile != null) {
             if (selectedFile.isFile()) {
                 try {
                     return Level.load(selectedFile.getAbsolutePath());

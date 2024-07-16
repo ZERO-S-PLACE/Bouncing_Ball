@@ -1,8 +1,6 @@
 package org.zeros.bouncy_balls.Applications.CreatorApplication.Controllers.LeftPanel;
 
-import javafx.application.Platform;
 import javafx.scene.control.Button;
-import javafx.scene.layout.VBox;
 import org.zeros.bouncy_balls.Applications.CreatorApplication.Models.CreatorModel;
 import org.zeros.bouncy_balls.DisplayUtil.CustomTooltip;
 import org.zeros.bouncy_balls.Level.Enums.ComplexAreaInput;
@@ -41,14 +39,14 @@ public class ShapeChoiceController extends LeftPanelController {
     }
 
     private void setButtonsFunctions() {
-        rectangleButton.setOnAction(e->CreatorModel.getInstance().getLevelCreator().drawRectangle());
-        ovalButton.setOnAction(e->CreatorModel.getInstance().getLevelCreator().drawOval());
-        polylineButton.setOnAction(e->CreatorModel.getInstance().getLevelCreator().initializePolyLineDrawing());
-        complexAreaButton.setOnAction(e->CreatorModel.getInstance().getLevelCreator().initializeComplexAreaInput(ComplexAreaInput.OBSTACLE));
-        moveElementButton.setOnAction(e->CreatorModel.getInstance().getLevelCreator().moveCurrentObstacle());
-        rotateButton.setOnAction(e->CreatorModel.getInstance().getLevelCreator().rotateCurrentObstacle());
-        acceptButton.setOnAction(e->CreatorModel.getInstance().getLevelCreator().acceptArea());
-        dismissButton.setOnAction(e->CreatorModel.getInstance().getLevelCreator().dismissAction());
+        rectangleButton.setOnAction(e -> CreatorModel.getInstance().getLevelCreator().drawRectangle());
+        ovalButton.setOnAction(e -> CreatorModel.getInstance().getLevelCreator().drawOval());
+        polylineButton.setOnAction(e -> CreatorModel.getInstance().getLevelCreator().initializePolyLineDrawing());
+        complexAreaButton.setOnAction(e -> CreatorModel.getInstance().getLevelCreator().initializeComplexAreaInput(ComplexAreaInput.OBSTACLE));
+        moveElementButton.setOnAction(e -> CreatorModel.getInstance().getLevelCreator().moveCurrentObstacle());
+        rotateButton.setOnAction(e -> CreatorModel.getInstance().getLevelCreator().rotateCurrentObstacle());
+        acceptButton.setOnAction(e -> CreatorModel.getInstance().getLevelCreator().acceptArea());
+        dismissButton.setOnAction(e -> CreatorModel.getInstance().getLevelCreator().dismissAction());
     }
 
     public void setComplexView() {
@@ -58,26 +56,24 @@ public class ShapeChoiceController extends LeftPanelController {
     public void setSimpleView() {
         complexAreaButton.setVisible(false);
     }
-    public void setViewOnTransform(){
+
+    public void setViewOnTransform() {
         rectangleButton.setDisable(true);
         ovalButton.setDisable(true);
         polylineButton.setDisable(true);
         complexAreaButton.setDisable(true);
-
         moveElementButton.setDisable(false);
         rotateButton.setDisable(false);
         acceptButton.setDisable(false);
     }
-    public void setStandardView(){
+
+    public void setStandardView() {
         rectangleButton.setDisable(false);
         ovalButton.setDisable(false);
         polylineButton.setDisable(false);
         complexAreaButton.setDisable(false);
-
         moveElementButton.setDisable(true);
         rotateButton.setDisable(true);
         acceptButton.setDisable(true);
-
-
     }
 }

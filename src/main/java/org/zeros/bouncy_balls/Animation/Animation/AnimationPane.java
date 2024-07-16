@@ -14,10 +14,10 @@ import javafx.scene.paint.Color;
 import org.zeros.bouncy_balls.Animation.InputOnRun.InputOnRun;
 import org.zeros.bouncy_balls.Animation.InputOnRun.InputOnRunMovingObject;
 import org.zeros.bouncy_balls.Animation.InputOnRun.InputOnRunObstacle;
+import org.zeros.bouncy_balls.Applications.GameApplication.Model.Properties;
 import org.zeros.bouncy_balls.DisplayUtil.BackgroundImages;
 import org.zeros.bouncy_balls.DisplayUtil.ClockMeasurement;
 import org.zeros.bouncy_balls.Level.Level;
-import org.zeros.bouncy_balls.Applications.GameApplication.Model.Properties;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObject;
 import org.zeros.bouncy_balls.Objects.VectorArea.ComplexArea.ComplexArea;
 import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.Area;
@@ -34,17 +34,17 @@ public class AnimationPane {
     private final EventHandler<MouseEvent> inputOnRunHandler = this::inputOnRunHandler;
     private final EventHandler<KeyEvent> escHandler = this::escHandler;
 
-    public AnimationPane(String path,boolean rescale) {
+    public AnimationPane(String path, boolean rescale) {
         gameBackground = new AnchorPane();
         loadLevel(path);
-        if(rescale) addRescaling();
+        if (rescale) addRescaling();
 
     }
 
-    public AnimationPane(Level level,boolean rescale) {
+    public AnimationPane(Level level, boolean rescale) {
         gameBackground = new AnchorPane();
         animation = new Animation(level);
-        if(rescale) addRescaling();
+        if (rescale) addRescaling();
 
     }
 
@@ -94,7 +94,7 @@ public class AnimationPane {
     public void pauseGame() {
         dismissInputOnRun();
         animation.pause();
-        if(pauseButton!=null)pauseButton.setVisible(false);
+        if (pauseButton != null) pauseButton.setVisible(false);
     }
 
     private void dismissInputOnRun() {
@@ -231,11 +231,11 @@ public class AnimationPane {
 
     private void rescaleAnimation(double scaleFactor) {
 
-            try {
-                animation.getLevel().rescale(scaleFactor);
-            } catch (Exception e) {
-                throw new RuntimeException("Animation cannot be rescaled");
-            }
+        try {
+            animation.getLevel().rescale(scaleFactor);
+        } catch (Exception e) {
+            throw new RuntimeException("Animation cannot be rescaled");
+        }
 
     }
 
@@ -269,7 +269,6 @@ public class AnimationPane {
             BackgroundImages.setBallCannotEnterBackground(object.getShape());
         }
     }
-
 
 
     private void setBackground() {

@@ -27,33 +27,32 @@ public class PhysicsSettingsController implements Initializable {
     }
 
 
-
     public void setInitialValues() {
-        level= CreatorModel.getInstance().getViewFactory().getCurrentAnimationPane().getLevel();
+        level = CreatorModel.getInstance().getViewFactory().getCurrentAnimationPane().getLevel();
         errorText.setVisible(false);
         frictionFactorField.textProperty().set(String.valueOf(level.PROPERTIES().getFRICTION()));
         downwardGravityFactorField.textProperty().set(String.valueOf(level.PROPERTIES().getGRAVITY()));
     }
+
     private void setButtonsFunctions() {
-        acceptButton.setOnAction(e->checkAndSaveValues());
-        dismissButton.setOnAction(e->returnToLevelCreation());
+        acceptButton.setOnAction(e -> checkAndSaveValues());
+        dismissButton.setOnAction(e -> returnToLevelCreation());
     }
 
     private void checkAndSaveValues() {
         try {
             double friction = Double.parseDouble(frictionFactorField.textProperty().get());
             double gravity = Double.parseDouble(downwardGravityFactorField.textProperty().get());
-            if(friction>=0&&friction<1&&gravity>=0&&gravity<=100){
-                level.PROPERTIES().setGRAVITY(gravity*100);
+            if (friction >= 0 && friction < 1 && gravity >= 0 && gravity <= 100) {
+                level.PROPERTIES().setGRAVITY(gravity * 100);
                 level.PROPERTIES().setFRICTION(friction);
                 returnToLevelCreation();
-                Platform.runLater(()->CreatorModel.getInstance().getViewFactory().getCurrentAnimationPane()
-                        .reloadNodes(1));
-            }else {
+                Platform.runLater(() -> CreatorModel.getInstance().getViewFactory().getCurrentAnimationPane().reloadNodes(1));
+            } else {
                 errorText.setVisible(true);
                 errorText.setText("Wrong value!");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             errorText.setVisible(true);
             errorText.setText("Wrong value!");
         }

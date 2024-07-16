@@ -61,24 +61,6 @@ public class Level implements Serializable {
             return save.deserialize();
         }
     }
-    public void save()throws FileSystemException {
-        String name= getNAME();
-        name = name.replace(" ", "_");
-        name = name.replace(".", "_");
-        setNAME(name);
-        LevelSerializable save = new LevelSerializable(this);
-        name = name + ".ser";
-        if (PROPERTIES().getTYPE().equals(AnimationType.GAME)) {
-            name = "program_data/user_levels/" + name;
-        } else {
-            name = "program_data/user_simulations/" + name;
-        }
-        try (FileOutputStream fileOut = new FileOutputStream(name); ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
-            out.writeObject(save);
-        } catch (IOException e) {
-            throw new FileSystemException("Wrong name");
-        }
-    }
 
     public static String getDirectoryPath(AnimationType type, String subtype) {
         String directoryPath;
@@ -96,6 +78,25 @@ public class Level implements Serializable {
             }
         }
         return directoryPath;
+    }
+
+    public void save() throws FileSystemException {
+        String name = getNAME();
+        name = name.replace(" ", "_");
+        name = name.replace(".", "_");
+        setNAME(name);
+        LevelSerializable save = new LevelSerializable(this);
+        name = name + ".ser";
+        if (PROPERTIES().getTYPE().equals(AnimationType.GAME)) {
+            name = "program_data/user_levels/" + name;
+        } else {
+            name = "program_data/user_simulations/" + name;
+        }
+        try (FileOutputStream fileOut = new FileOutputStream(name); ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
+            out.writeObject(save);
+        } catch (IOException e) {
+            throw new FileSystemException("Wrong name");
+        }
     }
 
     public void rescale(double factor) {
@@ -280,6 +281,7 @@ public class Level implements Serializable {
             movingObjectsHaveToEnterLock.unlock();
         }
     }
+
     public List<MovingObject> getMovingObjectsHaveToEnter() {
         movingObjectsHaveToEnterLock.lock();
         try {

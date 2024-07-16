@@ -201,11 +201,11 @@ public class PolyLinePreview extends Preview {
     }
 
 
-
     public void dismissElement() {
         currentElement = new ArrayList<>(List.of(currentElement.getFirst()));
         setStartPoints();
     }
+
     @Override
     public Shape getShape() {
         return prewievPath;

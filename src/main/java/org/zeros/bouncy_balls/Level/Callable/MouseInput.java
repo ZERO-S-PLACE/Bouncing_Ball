@@ -8,14 +8,21 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 
 public class MouseInput implements Callable<Point2D> {
-   private final CountDownLatch latch ;
+    private final CountDownLatch latch;
 
     public MouseInput(CountDownLatch latch) {
-        this.latch=latch;
+        this.latch = latch;
+    }
+
+    private static ChangeListener<Point2D> mouseInputListener(CountDownLatch latch) {
+        return (observable, oldValue, newValue) -> {
+            CreatorModel.getInstance().controllers().getBottomPanelController().textEnteredProperty().set("");
+            latch.countDown();
+        };
     }
 
     @Override
-    public Point2D call()  {
+    public Point2D call() {
         CreatorModel.getInstance().getViewFactory().getTrackingPane().selectedPointProperty().addListener(mouseInputListener(latch));
         try {
             latch.await();
@@ -23,13 +30,6 @@ public class MouseInput implements Callable<Point2D> {
             return null;
         }
         CreatorModel.getInstance().getViewFactory().getTrackingPane().selectedPointProperty().removeListener(mouseInputListener(latch));
-        return  CreatorModel.getInstance().getViewFactory().getTrackingPane().selectedPointProperty().get();
-    }
-
-    private static ChangeListener<Point2D> mouseInputListener(CountDownLatch latch) {
-        return (observable, oldValue, newValue) -> {
-                CreatorModel.getInstance().controllers().getBottomPanelController().textEnteredProperty().set("");
-                latch.countDown();
-        };
+        return CreatorModel.getInstance().getViewFactory().getTrackingPane().selectedPointProperty().get();
     }
 }
