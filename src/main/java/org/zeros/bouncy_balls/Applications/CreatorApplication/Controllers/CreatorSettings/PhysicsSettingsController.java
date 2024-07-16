@@ -18,7 +18,6 @@ public class PhysicsSettingsController implements Initializable {
     public Text errorText;
     public Button acceptButton;
     public Button dismissButton;
-
     private Level level;
 
     @Override
