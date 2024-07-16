@@ -1,7 +1,7 @@
 package org.zeros.bouncy_balls.Calculations;
 
 import javafx.geometry.Point2D;
-import org.zeros.bouncy_balls.Model.Properties;
+import org.zeros.bouncy_balls.Applications.GameApplication.Model.Properties;
 
 import java.util.ArrayList;
 
@@ -73,6 +73,12 @@ public class VectorMath {
             }
         }
         return true;
+    }
+
+    public static boolean rotationIsClockWise(Point2D start, Point2D end, Point2D center) {
+        Point2D startLeadingVector=start.subtract(center);
+        Point2D endLeadingVector=end.subtract(center);
+        return startLeadingVector.crossProduct(endLeadingVector).getZ()>0;
     }
 }
 

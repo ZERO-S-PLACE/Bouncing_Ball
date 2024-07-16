@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane styleClass="left-panel-container" stylesheets="@../../../Styles/P6_LevelCreator/LeftPanel.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <VBox alignment="TOP_CENTER" layoutX="3.2" layoutY="1.6" styleClass="left-panel-menu" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <Line endX="40.0" layoutX="114.0" layoutY="42.0" />
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Objects" />
+      <Line endX="25.0" layoutX="16.0" layoutY="23.0" />
+      <Button fx:id="movingBallButton" mnemonicParsing="false" prefHeight="464.0" prefWidth="0.0" styleClass="moving-object-button" />
+      <Button fx:id="ballsArrayButton" layoutX="10.0" layoutY="42.0" mnemonicParsing="false" styleClass="ball-array-button" />
+      <Line endX="40.0" />
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Target enter" textAlignment="CENTER" wrappingWidth="53.98750305175781" />
+      <Line endX="25.0" />
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Required" textAlignment="CENTER" wrappingWidth="46.3515625" />
+      <RadioButton fx:id="haveToEnterButton" mnemonicParsing="false" styleClass="radio" />
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Forbidden" textAlignment="CENTER" wrappingWidth="46.3515625" />
+      <RadioButton fx:id="cannotEnterButton" mnemonicParsing="false" />
+      <Line endX="40.0" layoutX="16.0" layoutY="23.0" />
+      <Text layoutX="98.0" layoutY="468.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Transform" />
+      <Line endX="25.0" layoutX="16.0" layoutY="23.0" />
+      <Button fx:id="moveElementButton" layoutX="96.0" layoutY="551.0" mnemonicParsing="false">
+         <graphic>
+            <FontAwesomeIconView glyphName="ARROWS" size="15.0" styleClass="left-panel-shapes" />
+         </graphic>
+      </Button>
+      <Button fx:id="rotateButton" mnemonicParsing="false">
+         <graphic>
+            <FontAwesomeIconView glyphName="REPEAT" selectionFill="#c14848" size="15.0" styleClass="left-panel-shapes" />
+         </graphic>
+      </Button>
+      <Line endX="25.0" />
+      <Button fx:id="acceptButton" mnemonicParsing="false">
+         <graphic>
+            <FontAwesomeIconView glyphName="CHECK" size="15.0" styleClass="accept-shape" />
+         </graphic>
+      </Button>
+      <Button fx:id="dismissButton" mnemonicParsing="false">
+         <graphic>
+            <FontAwesomeIconView glyphName="TIMES" size="15.0" styleClass="dismiss-shape" />
+         </graphic>
+      </Button>
+   </VBox>
+</AnchorPane>

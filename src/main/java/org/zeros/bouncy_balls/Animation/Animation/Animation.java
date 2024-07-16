@@ -12,8 +12,8 @@ import org.zeros.bouncy_balls.Calculations.AreasMath.AreasMath;
 import org.zeros.bouncy_balls.Calculations.BindsCheck;
 import org.zeros.bouncy_balls.Calculations.Bounce;
 import org.zeros.bouncy_balls.Level.Level;
-import org.zeros.bouncy_balls.Model.Model;
-import org.zeros.bouncy_balls.Model.Properties;
+import org.zeros.bouncy_balls.Applications.GameApplication.Model.Model;
+import org.zeros.bouncy_balls.Applications.GameApplication.Model.Properties;
 import org.zeros.bouncy_balls.Objects.MovingObjects.Ball;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObject;
 import org.zeros.bouncy_balls.Objects.MovingObjects.MovingObjectType;
@@ -33,7 +33,7 @@ public class Animation {
 
     public Animation(Level level) {
         this.level = level;
-        borders = new Borders(this);
+        borders = new Borders(level.PROPERTIES());
         setAnimationIdentifier(level.getNAME());
         Model.getInstance().addAnimation(this);
         for (MovingObject object : level.getMovingObjects()) {
@@ -41,6 +41,7 @@ public class Animation {
         }
         gameState.set(GameState.LOADED);
     }
+
     private final AnimationTimer timer = new AnimationTimer() {
         @Override
         public void handle(long now) {
@@ -200,7 +201,6 @@ public class Animation {
     }
 
     private boolean bouncedByAnother(double frameElapsed) {
-
         int closestObj = -1;
         double shortestTime = Double.MAX_VALUE;
         for (int j = 0; j < level.getMovingObjects().size(); j++) {
@@ -231,9 +231,6 @@ public class Animation {
 
     public boolean hasFreePlace(Ball ball) {
 
-        if (!borders.isInside(ball)) {
-            return false;
-        } else {
             for (MovingObject object : level.getMovingObjects()) {
                 if (object.getType().equals(MovingObjectType.BALL) && !object.equals(ball)) {
                     if (object.center().distance(ball.center()) <= ((Ball) object).getRadius() + ball.getRadius()) {
@@ -247,7 +244,7 @@ public class Animation {
                 }
             }
             return true;
-        }
+
     }
 
     public boolean hasFreePlace(Area obstacle) {
@@ -315,7 +312,10 @@ public class Animation {
     }
 
     public void reloadBorders() {
-        borders = new Borders(this);
+        borders = new Borders(level.PROPERTIES());
+    }
+    public Borders getBorders() {
+        return borders;
     }
 
 

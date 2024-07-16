@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane fx:id="layersContainer" minHeight="2000.0" minWidth="2000.0" prefHeight="2000.0" prefWidth="2000.0" styleClass="background" stylesheets="@../../Styles/P6_LevelCreator/CreatorMainPanel.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+
+</AnchorPane>

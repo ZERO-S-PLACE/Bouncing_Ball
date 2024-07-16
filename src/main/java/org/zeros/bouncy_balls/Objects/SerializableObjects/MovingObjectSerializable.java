@@ -17,9 +17,9 @@ public class MovingObjectSerializable implements Serializable {
     private final Point2DSerializable velocity;
     private final Point2DSerializable centerPoint;
     private final double charge;
-    private final String color;
 
-    protected MovingObjectSerializable(MovingObject object) {
+
+    public MovingObjectSerializable(MovingObject object) {
         this.type = object.getType();
         this.furthestSpan = object.getFurthestSpan();
         this.friction = object.getFriction();
@@ -27,7 +27,7 @@ public class MovingObjectSerializable implements Serializable {
         this.velocity = new Point2DSerializable(object.velocity());
         this.centerPoint = new Point2DSerializable(object.center());
         this.charge = object.getCharge();
-        this.color = object.getShape().fillProperty().getValue().toString();
+
     }
 
     public MovingObject deserialize(Animation animation) {
@@ -40,7 +40,7 @@ public class MovingObjectSerializable implements Serializable {
             object.updateCenter(centerPoint.deserialize());
             object.updateNextCenter(centerPoint.deserialize());
             object.setCharge(charge);
-            object.getShape().setFill(Paint.valueOf(color));
+
         }
         return object;
 

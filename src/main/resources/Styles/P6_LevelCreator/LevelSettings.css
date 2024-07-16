@@ -1,0 +1,108 @@
+.settings-panel-container{
+    -fx-background-color:#101f23;
+    -fx-padding: 1 1 1 1;
+}
+.settings-panel-menu{
+    -fx-background-color:#274a55;
+    -fx-spacing:3;
+    -fx-border-radius:3;
+    -fx-border-width:2;
+    -fx-border-color:#101f23;
+    -fx-padding: 10 1 10 1 ;
+}
+
+.settings-panel-menu Button{
+    -fx-background-color:#274a55;
+    -fx-border-radius:3;
+    -fx-pref-width:35;
+    -fx-pref-height:25;
+    -fx-font-size:1.3em;
+    -fx-stroke-width: 0px;
+}
+.settings-panel-menu TextField {
+    -fx-background-color: #203d44;
+    -fx-text-fill: #a2b4c0;
+    -fx-font-family: "Calibri";
+    -fx-font-size: 1.1em;
+    -fx-pref-width:300;
+    -fx-min-width:300;
+
+}
+
+.type_selector{
+    -fx-background-color:#203d44;
+    -fx-pref-width:300;
+    -fx-min-width:300;
+
+}
+.type_selector .label{
+    -fx-text-fill:#a2b4c0;
+    -fx-font-size:1.1em;
+    -fx-font-family: "Calibri";
+
+}
+.type_selector.arrow{
+    -fx-background-color:#a2b4c0;
+}
+#choice-box-popup-menu{
+    -fx-background-color:#203d44;
+}
+#choice-prompt-text{
+    -fx-font-weight:400;
+}
+/*buttons action choice*/
+
+.settings-panel-menu Button:focused{
+    -fx-background-color:#778792;
+}
+.settings-panel-menu Button:hover{
+    -fx-background-color:#6A7B84;
+}
+
+
+.settings-panel-menu Text {
+    -fx-fill: #a2b4c0;
+    -fx-font-size: 1.0em;
+}
+.settings-panel-menu-main-text {
+    -fx-fill: #a2b4c0;
+    -fx-font-size: 1.2em;
+    -fx-font-weight:600;
+}
+
+.settings-panel-menu Line {
+    -fx-stroke: #101f23;
+    -fx-stroke-width: 1.1;
+    -fx-padding: 1 1 1 1;
+}
+
+.settings-panel-icon-lines{
+    -fx-stroke: #a2b4c0;
+    -fx-stroke-width:1;
+    -fx-alignment:center;
+}
+
+.settings-panel-shapes{
+    -fx-fill: #a2b4c0;
+    -fx-stroke: #a2b4c0;
+    -fx-stroke-width:0.1;
+    -fx-alignment:center;
+}
+.accept-shape{
+    -fx-fill: #B8CC8B;
+    -fx-stroke: #B8CC8B;
+    -fx-stroke-width:0.1;
+    -fx-alignment:center;
+
+}
+.dismiss-shape{
+    -fx-fill: #F4716E;
+    -fx-stroke: #F4716E;
+    -fx-stroke-width:0.1;
+    -fx-alignment:center;
+}
+.error-text{
+    -fx-fill: #F4716E;
+    -fx-font-size: 0.8em;
+
+}

@@ -5,18 +5,28 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import org.zeros.bouncy_balls.Controllers.P4_LevelSelection.LevelListCellController;
-import org.zeros.bouncy_balls.Model.Model;
-import org.zeros.bouncy_balls.Model.Properties;
+import javafx.scene.shape.Shape;
+import org.zeros.bouncy_balls.Applications.GameApplication.Controllers.P4_LevelSelection.LevelListCellController;
+import org.zeros.bouncy_balls.Applications.GameApplication.Model.Model;
+import org.zeros.bouncy_balls.Applications.GameApplication.Model.Properties;
+import org.zeros.bouncy_balls.Objects.VectorArea.SimpleArea.Area;
 
 import java.util.Objects;
 
 public class BackgroundImages {
+    public static void setObstacleBackground(Area obstacle) {
+        obstacle.getPath().setFill(Properties.OBSTACLE_COLOR());
+        obstacle.getPath().setStrokeWidth(0.7);
+        obstacle.getPath().setStroke(Properties.OBSTACLE_COLOR().brighter());
+    }
+    public static void setObstacleBackground(Shape obstacle) {
+        obstacle.setFill(Properties.OBSTACLE_COLOR());
+        obstacle.setStrokeWidth(0);
+    }
     public static void setStarBackground(Node node, String color) {
         String imagePath = Objects.requireNonNull(LevelListCellController.class.getResource("/Icons/General/Star" + color + ".png")).toExternalForm();
         node.setStyle("-fx-background-image: url('" + imagePath + "');");
     }
-
     public static void setCircleBackground(Node node, String color) {
         String imagePath = Objects.requireNonNull(LevelListCellController.class.getResource("/Icons/General/Circle" + color + ".png")).toExternalForm();
         node.setStyle("-fx-background-image: url('" + imagePath + "');");
@@ -39,7 +49,7 @@ public class BackgroundImages {
     }
 
     public static void setBallHaveToEnterBackground(Node node) {
-        String imagePath = Objects.requireNonNull(LevelListCellController.class.getResource("/Icons/General/CircleBlue.png")).toExternalForm();
+        String imagePath = Objects.requireNonNull(LevelListCellController.class.getResource("/Icons/General/CircleYellow.png")).toExternalForm();
         node.setStyle("-fx-fill: url('" + imagePath + "');");
     }
 

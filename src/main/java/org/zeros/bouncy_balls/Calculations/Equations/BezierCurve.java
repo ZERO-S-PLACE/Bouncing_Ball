@@ -6,7 +6,7 @@ import org.apache.commons.math3.analysis.solvers.BrentSolver;
 import org.zeros.bouncy_balls.Calculations.ConvexHull.ConvexHull;
 import org.zeros.bouncy_balls.Calculations.BindsCheck;
 import org.zeros.bouncy_balls.Calculations.VectorMath;
-import org.zeros.bouncy_balls.Model.Properties;
+import org.zeros.bouncy_balls.Applications.GameApplication.Model.Properties;
 import org.zeros.bouncy_balls.Objects.VectorArea.PolyLineSegment.LineSegment;
 
 import java.util.ArrayList;
