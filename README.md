@@ -4,6 +4,7 @@ Almost whole mathematical background of application was coded from scratch by me
 
 To run application you should have JVM 21 installed o your computer, download whole repository 
 and run newest version of .jar file.
+Level creator only runs properly when run form InteliJ(to be fixed).
 
 Project consists of two major parts: 
 
