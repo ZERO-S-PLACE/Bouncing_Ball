@@ -25,7 +25,7 @@ A game-like simulation of **elastic collisions** and **object movements** in a 2
 ### **Level Creator**  
 A tool for designing custom game boards. Features include:  
 - Creating **simple shapes and closed polylines**.  
-- Advanced **boolean algebra operations** on shapes to form complex areas.  
+- **Boolean algebra operations** on shapes to form complex areas.  
 - The resulting game board consists of calculated **vector boundaries** rather than overlapping shapes.  
 
 ## **4. Future Enhancements**  
