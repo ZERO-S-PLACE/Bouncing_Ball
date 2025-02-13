@@ -1,38 +1,40 @@
-My first bigger Java FX project. 
+# **Bouncing Ball**  
 
-Almost whole mathematical background of application was coded from scratch by me.
+Bouncing Ball is my first bigger **JavaFX** project, where almost the entire mathematical background was coded from scratch. It consists of a **game-like simulation** of elastic collisions and a **level creator** for designing custom game boards.  
 
-To run application you should have JVM 21 installed o your computer, download whole repository 
-and run newest version of .jar file.
+## **2. How to Run the Application**  
 
-Level creator only runs properly when run form InteliJ(to be fixed).
-(run org/zeros/bouncy_balls/Applications/CreatorApplication/LevelCreatorApplication.java)
+To run the application, ensure you have **JVM 21** installed on your computer. Then:  
 
-Project consists of two major parts: 
+1. Download the entire repository.  
+2. Run the newest version of the `.jar` file.  
 
-Bouncy balls game
+⚠ **Note:** The **level creator** currently only runs properly when executed from **IntelliJ IDEA** (to be fixed). Run it using:  
+`org.zeros.bouncy_balls.Applications.CreatorApplication.LevelCreatorApplication.java`  
 
-Game-like application which simulates movements and elastic collisions
-of objects on 2D plane. Gravitational force and friction could be considered.
-Collision points and velocities are calculated precisely (assuming that move of an object between frames
-can be approximated as uniform rectilinear motion).
+## **3. Project Structure**  
 
-Goal of every level is to move all yellow objects to target area, without letting any 
-red objects to enter it.
+The project consists of two major parts:  
 
-Level creator
+### **Bouncy Balls Game**  
+A game-like simulation of **elastic collisions** and **object movements** in a 2D plane. The physics engine considers:  
+- **Gravitational force** and **friction** (optional).  
+- **Precise collision calculations** (assuming uniform rectilinear motion between frames).  
+- **Level objectives**: Move all **yellow objects** into the target area while preventing **red objects** from entering it.  
 
-Tool for creating game boards for part 1. Enables to create simple shapes, 
-closed poly lines, and, also complex areas created by closed shapes boolean algebra-
-they are not piles of overlapping shapes but calculated poly line vector boundaries of inner and outer areas.
+### **Level Creator**  
+A tool for designing custom game boards. Features include:  
+- Creating **simple shapes and closed polylines**.  
+- Advanced **boolean algebra operations** on shapes to form complex areas.  
+- The resulting game board consists of calculated **vector boundaries** rather than overlapping shapes.  
 
+## **4. Future Enhancements**  
+This is the **first test version** of the project, prepared for future extensions, such as:  
 
-It is first, test version of a project, and it is prepared for being extended by:
+- Adding **different shapes** of moving objects.
+- Adding **more levels** to make it truely playable game
+- Implementing **electromagnetic forces** between objects.  
+- Introducing **leaderboards and user accounts**.  
+- And more...  
 
--adding different shapes of moving objects
-
--adding electromagnetic forces between objects
-
--adding leaderboards and user accounts
-
--more...
+---
