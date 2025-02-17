@@ -4,12 +4,12 @@ Bouncing Ball is my first bigger **JavaFX** project, where almost the entire mat
 
 ## **2. How to Run the Application**  
 
-To run the application, ensure you have **JVM 21** installed on your computer. Then:  
+To run the application, you should have **JVM 21** installed on your computer. Then:  
 
 1. Download the entire repository.  
 2. Run the newest version of the `.jar` file.  
 
-⚠ **Note:** The **level creator** currently only runs properly when executed from **IntelliJ IDEA** (to be fixed). Run it using:  
+ **Note:** The level creator currently only runs properly when executed from IntelliJ IDEA (or other programming enviroment, to be fixed). Run it using:  
 `org.zeros.bouncy_balls.Applications.CreatorApplication.LevelCreatorApplication.java`  
 
 ## **3. Project Structure**  
@@ -17,8 +17,8 @@ To run the application, ensure you have **JVM 21** installed on your computer. T
 The project consists of two major parts:  
 
 ### **Bouncy Balls Game**  
-A game-like simulation of **elastic collisions** and **object movements** in a 2D plane. The physics engine considers:  
-- **Gravitational force** and **friction** (optional).  
+A game-like simulation of elastic collisions and object movements in a 2D plane. The physics engine considers:  
+- **Gravitational force and friction** (optional).  
 - **Precise collision calculations** (assuming uniform rectilinear motion between frames).  
 - **Level objectives**: Move all **yellow objects** into the target area while preventing **red objects** from entering it.  
 
